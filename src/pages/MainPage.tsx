@@ -74,4 +74,4 @@ const MainPage = () => {
   );
 };
 
-export default Main;
+export default MainPage;
