@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HeaderDeleteMode } from "../../components/Chat/ChatList/ChatListHeader";
+import HeaderDeleteMode from '../../components/ChatList/HeaderDeleteMode';
 import AlarmContainer from "../../components/Alarm/AlarmContainer";
 import AlarmHeader from "../../components/Alarm/AlarmHeader";
 
@@ -11,7 +11,7 @@ const AlarmPage = () =>{
         setIsDeleteMode(!isDeleteMode);
     };
     return (
-        <div className=' flex flex-col  w-full h-full  bg-main-100 '>
+        <div className=' flex flex-col  w-full  h-screen  bg-main-100 '>
 
             {isDeleteMode ? (
                 <>
