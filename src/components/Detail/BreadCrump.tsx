@@ -1,11 +1,16 @@
 import { BsChevronRight } from "react-icons/bs";
 
-const BreadCrump = () => {
+interface BreadCrumpProps {
+  category: 1 | 2;
+}
+
+const BreadCrump = (props: BreadCrumpProps) => {
   return (
     <ul className="flex gap-2 text-xs">
       <li>홈</li>
       <li className="flex items-center gap-2">
-        <BsChevronRight />방 있어요
+        <BsChevronRight />
+        {props.category === 1 ? "방 구해요" : "방 있어요"}
       </li>
     </ul>
   );
