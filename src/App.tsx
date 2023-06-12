@@ -1,5 +1,5 @@
 import "./App.css";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import PostPage from "./pages/PostPage";
 import DetailPage from "./pages/DetailPage";
@@ -18,7 +18,6 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
         <Routes>
           <Route path="/*" element={<MainPage />}></Route>
           <Route path="/" element={<MainPage />}></Route>
@@ -32,7 +31,6 @@ function App() {
           <Route path="/signup" element={<SignUp />}></Route>
           <Route path="/signin" element={<Signin />}></Route>
         </Routes>
-      </BrowserRouter>
     </QueryClientProvider>
   );
 }
