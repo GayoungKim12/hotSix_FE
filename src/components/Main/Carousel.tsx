@@ -9,19 +9,21 @@ const Carousel = () => {
   const [mouseDownClientY, setMouseDownClientY] = useState(0);
   const [mouseUpClientX, setMouseUpClientX] = useState(0);
   const [mouseUpClientY, setMouseUpClientY] = useState(0);
+  const [touchedX, setTouchedX] = useState(0);
+  const [touchedY, setTouchedY] = useState(0);
 
   const items = [
     {
       description: 1,
-      imageURL: "./../public/logo.png",
+      imageURL: "./logo.png",
     },
     {
       description: 2,
-      imageURL: "./../public/logo.png",
+      imageURL: "./logo.png",
     },
     {
       description: 3,
-      imageURL: "./../public/logo.png",
+      imageURL: "./logo.png",
     },
   ];
 
@@ -51,23 +53,33 @@ const Carousel = () => {
     const vector = dragSpaceX / dragSpaceY;
     if (mouseDownClientX !== 0 && dragSpaceX > 50 && vector > 2) {
       if (mouseUpClientX < mouseDownClientX) {
-        updateIndex((prev) => prev + 1);
+        updateIndex(activeIndex + 1);
       } else if (mouseUpClientX > mouseDownClientX) {
-        updateIndex((prev) => prev - 1);
+        updateIndex(activeIndex - 1);
       }
     }
-    console.log(vector);
-    console.log(mouseDownClientX);
-    console.log(mouseUpClientX);
   }, [mouseUpClientX]);
 
-  const handleTouchStart = () => {};
-  const handleTouchMove = () => {};
-  const handleTouchEnd = () => {};
+  //모바일에서 드래그
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchedX(e.changedTouches[0].pageX);
+    setTouchedY(e.changedTouches[0].pageY);
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const distanceX = touchedX - e.changedTouches[0].pageX;
+    const distanceY = touchedY - e.changedTouches[0].pageY;
+    const vector = Math.abs(distanceX / distanceY);
+    if (distanceX > 30 && vector > 2) {
+      updateIndex(activeIndex + 1);
+    } else if (distanceX < -30 && vector > 2) {
+      updateIndex(activeIndex - 1);
+    }
+  };
 
   return (
     <>
-      <div className=" flex flex-col justify-center overflow-hidden">
+      <div className="relative flex flex-col justify-center overflow-hidden">
         <div
           className="whitespace-nowrap transition-transform duration-300"
           //
@@ -76,9 +88,8 @@ const Carousel = () => {
           }}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           {items.map((item) => {
             return (
@@ -92,7 +103,7 @@ const Carousel = () => {
           })}
         </div>
         <div className="flex justify-evenly ">
-          <div className="flex absolute bottom-16">
+          <div className="flex absolute bottom-2">
             <button
               onClick={() => updateIndex(activeIndex - 1)}
               className="text-white cursor-default"
