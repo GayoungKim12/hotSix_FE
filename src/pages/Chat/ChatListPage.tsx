@@ -1,7 +1,8 @@
 
 
-import { ChatListHeader,HeaderDeleteMode } from '../../components/Chat/ChatList/ChatListHeader'
-import ChatList from '../../components/Chat/ChatList/ChatList'
+import { ChatListHeader } from '../../components/ChatList/ChatListHeader'
+import HeaderDeleteMode from '../../components/ChatList/HeaderDeleteMode';
+import ChatList from '../../components/ChatList/ChatList'
 import { useState } from "react";
 
 export default function ChatPage() {
@@ -14,7 +15,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className=' flex flex-col w-full h-full bg-main-100 '>
+    <div className=' flex flex-col w-full h-screen bg-main-100 '>
       {isDeleteMode ? (
         <>
           <HeaderDeleteMode DeleteMode={DeleteMode}/>
