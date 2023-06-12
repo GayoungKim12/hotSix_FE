@@ -19,7 +19,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path="/*" element={<MainPage />}></Route>
           <Route path="/" element={<MainPage />}></Route>
           <Route path="/post" element={<PostPage />}></Route>
           <Route path="/detail" element={<DetailPage />}></Route>
