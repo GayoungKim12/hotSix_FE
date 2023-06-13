@@ -1,16 +1,32 @@
 import BoardCard from "../components/Main/BoardCard";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import SearchCard from "../components/Main/SearchCard";
 import Footer from "../components/Main/Footer";
 import { FaPencilAlt } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 import { RxTriangleDown } from "react-icons/rx";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import PostToolButtons from "../components/common/PostToolButtons";
 
-const Search = () => {
+const SearchPage = () => {
   const navigate = useNavigate();
+  const [searchList, setSearchList] = useState([]);
   const backToMainPage = () => {
     navigate("/");
   };
+  const [showPostButtons, setShowPostButtons] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3001/postProjectionMainDtoList`)
+      .then((response) => {
+        setSearchList(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [searchList]);
   return (
     <>
       <div className="min-h-690">
@@ -32,8 +48,16 @@ const Search = () => {
               </button>
             </div>
           </section>
+
           <SearchCard />
-          <BoardCard />
+          {/* {searchList?.map((b, i) => {
+            return (
+              <div key={i}>
+                <BoardCard board={b} setShowPostButtons={setShowPostButtons} />;
+              </div>
+            );
+          })} */}
+
           <div className="flex justify-end mb-14 pt-1 pb-6 mr-5">
             <div className="fixed bottom-20 right-5 flex justify-center items-center w-12 h-12 bg-indigo-300 rounded-full">
               <FaPencilAlt className="cursor-pointer text-2xl" />
@@ -41,9 +65,12 @@ const Search = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer selected={false} />
+      {showPostButtons && (
+        <PostToolButtons handleShow={() => setShowPostButtons(false)} />
+      )}
     </>
   );
 };
 
-export default Search;
+export default SearchPage;

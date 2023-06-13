@@ -1,66 +1,32 @@
-const AreaModal = () => {
-  const address = [
-    {
-      시: "서울",
-      구: "강남구",
-    },
-    {
-      시: "서울",
-      구: "강동구",
-    },
-    {
-      시: "부산",
-      구: "강서구",
-    },
-    {
-      시: "부산",
-      구: "금정구",
-    },
-    {
-      시: "대구",
-      구: "남구",
-    },
-    {
-      시: "대구",
-      구: "북구",
-    },
-  ];
-  //주소데이터에서 '시' 만 가져오기(중복포함)
-  const siAddressOverlap = address.map((ad) => {
-    return ad.시;
-  });
-  //'시' 데이터 가져온 거 중복제거
-  const siAddress = siAddressOverlap.filter(
-    (ad, i) => siAddressOverlap.indexOf(ad) === i
-  );
+import { useState } from "react";
 
-  const SeoulAddress = address.filter((ad) => {
-    return ad.시.includes("서울");
+const AreaModal = ({ regionList, handleRegionArea, handleRegionAll }) => {
+  const regionListSidoes = regionList.map((r) => {
+    return r.sido;
   });
-  const guAddress = SeoulAddress.map((a) => {
-    return a.구;
+
+  const regionListSido = regionListSidoes.filter((el, i) => {
+    return regionListSidoes.indexOf(el) === i;
   });
-  console.log(guAddress);
 
   return (
     <>
-      <section className="flex absolute  w-full  border-t border-gray bg-white z-10 ">
-        <div className="bg-indigo-300">
-          <ul>
-            {siAddress.map((si) => {
-              return (
-                <li key={si} className="px-4 py-2">
-                  {si}
-                </li>
-              );
-            })}
-          </ul>
+      <section className="flex absolute  w-full  border-t border-gray bg-white z-10 shadow">
+        <div className="px-3 py-2 bg-indigo-300">
+          <ul onClick={handleRegionAll}>{regionListSido}</ul>
         </div>
         <div>
-          전체
-          <ul>
-            {guAddress.map((g) => {
-              return <li key={g}>{g}</li>;
+          <ul className="grid gap-1 grid-cols-4">
+            {regionList.map((region) => {
+              return (
+                <li
+                  key={region.region_id}
+                  className=" mb-1 text-sm text-center"
+                  onClick={() => handleRegionArea(region)}
+                >
+                  {region.sigg}
+                </li>
+              );
             })}
           </ul>
         </div>
