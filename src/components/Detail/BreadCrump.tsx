@@ -1,7 +1,7 @@
 import { BsChevronRight } from "react-icons/bs";
 
 interface BreadCrumpProps {
-  category: 1 | 2;
+  category: number;
 }
 
 const BreadCrump = (props: BreadCrumpProps) => {
