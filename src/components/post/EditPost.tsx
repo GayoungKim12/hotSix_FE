@@ -2,7 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { HiOutlinePlus } from "react-icons/hi2";
 
-interface PostCreateType {
+interface EditPostProps {
+  postId: string;
+}
+
+interface PostEditType {
   board_id: number;
   address_id: number;
   address: string;
@@ -16,9 +20,9 @@ interface RegionType {
   sigg: string;
 }
 
-const EditPost = () => {
+const EditPost = (props: EditPostProps) => {
   const URL = "http://localhost:3001";
-  const [postForm, setPostForm] = useState<PostCreateType>({
+  const [postForm, setPostForm] = useState<PostEditType>({
     board_id: 0,
     address_id: 0,
     address: "",
@@ -31,13 +35,9 @@ const EditPost = () => {
 
   useEffect(() => {
     (async () => {
-      try {
-        const response = await axios.get(`${URL}/regions`);
-        const data = response.data;
-        setResions(data);
-      } catch (err) {
-        console.log(err);
-      }
+      const response = await axios.get(`${URL}/regions`);
+      const data = response.data;
+      setResions(data);
     })();
   }, []);
 
@@ -53,6 +53,32 @@ const EditPost = () => {
 
     setSidos(allSidos);
   }, [regions]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(`${URL}/posts/${props.postId}`);
+        const data = response.data;
+        console.log(data);
+        setPostForm({
+          board_id: data.board_id,
+          address_id: data.address_id,
+          address: data.address,
+          content: data.content,
+          img_path: data.img_path,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [props.postId]);
+
+  useEffect(() => {
+    if (!regions || !postForm) return;
+
+    const siggsBySido = regions.filter((region) => region.sido === postForm.address.split(" ")[0]);
+    setSiggs(siggsBySido);
+  }, [postForm, regions]);
 
   const changePostForm = (type: "board_id" | "content", value: number | string) => {
     setPostForm((prev) => {
@@ -81,13 +107,14 @@ const EditPost = () => {
       return;
     }
 
+    console.log(postForm);
+
     (async () => {
       try {
-        const data = { userId: 0, ...postForm };
         await axios({
-          method: "post",
-          url: `${URL}/posts`,
-          data,
+          method: "patch",
+          url: `${URL}/posts/${props.postId}`,
+          data: postForm,
         });
       } catch (err) {
         console.log(err);
@@ -187,7 +214,7 @@ const EditPost = () => {
               })}
           </select>
         </div>
-        <div className="mt-4 mb-2 text-base">내용</div>
+        <div className="mt-4 mb-2 text-base">{`내용`}</div>
         <textarea
           className="block w-full h-60 px-4 py-4 rounded-xl border-2 border-inherit text-sm resize-none focus:outline-main-400"
           placeholder="내용을 입력해주세요."
