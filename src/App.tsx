@@ -7,7 +7,7 @@ import ProfilePage from "./pages/ProfilePage";
 import ChatRoomPage from "./pages/Chat/ChatRoomPage";
 import ChatPage from "./pages/Chat/ChatListPage";
 import AlarmPage from "./pages/Alarm/AlarmPage";
-import SignUp from "./components/Singup/Singup";
+import SignUp from "./pages/SignupPage";
 import Signin from "./components/Signin/Signin";
 import { QueryClient, QueryClientProvider } from "react-query";
 import CartPage from "./pages/CartPage";
