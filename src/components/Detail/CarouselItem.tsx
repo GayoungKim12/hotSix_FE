@@ -1,16 +1,11 @@
-interface PropsItem {
-  item: { description: number; imageURL: string };
+interface CarouselItemProps {
+  item: string;
 }
 
-const CarouselItem = ({ item }: PropsItem) => {
+const CarouselItem = (props: CarouselItemProps) => {
   return (
     <>
-      <img
-        src={item.imageURL}
-        className=" w-full rounded-lg bg-black"
-        draggable="false"
-      />
-      <div>{item.description}</div>
+      <img src={props.item} className=" w-full rounded-lg bg-black" draggable="false" />
     </>
   );
 };
