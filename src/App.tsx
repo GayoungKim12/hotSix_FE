@@ -11,6 +11,7 @@ import SignUp from "./pages/SignupPage";
 import Signin from "./components/Signin/Signin";
 import { QueryClient, QueryClientProvider } from "react-query";
 import CartPage from "./pages/CartPage";
+import Editprofile from "./pages/Editprofile";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/AlarmPage" element={<AlarmPage></AlarmPage>}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/signin" element={<Signin />}></Route>
+        <Route path="/editprofile" element={<Editprofile/>}></Route>
       </Routes>
     </QueryClientProvider>
   );
