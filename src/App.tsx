@@ -21,8 +21,9 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />}></Route>
         <Route path="/post" element={<PostPage />}></Route>
+        <Route path="/edit/:postId" element={<PostPage />}></Route>
+        <Route path="/detail/:postId" element={<DetailPage />}></Route>
         <Route path="/cart" element={<CartPage />}></Route>
-        <Route path="/detail" element={<DetailPage />}></Route>
         <Route path="/profile" element={<ProfilePage />}></Route>
         <Route path="/ChatListPage" element={<ChatPage></ChatPage>}></Route>
         <Route path="/ChatRoom" element={<ChatRoomPage></ChatRoomPage>}></Route>
