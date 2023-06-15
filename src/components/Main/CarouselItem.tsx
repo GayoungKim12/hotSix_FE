@@ -10,7 +10,6 @@ const CarouselItem = ({ item }: PropsItem) => {
         className=" w-full rounded-lg bg-black"
         draggable="false"
       />
-      <div>{item.description}</div>
     </>
   );
 };
