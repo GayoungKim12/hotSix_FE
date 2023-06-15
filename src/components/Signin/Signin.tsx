@@ -1,36 +1,47 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import { useMutation } from 'react-query';
-import axios from "axios";
+import { useEffect, useState } from "react"
+import { Link  } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { Login } from "../API/Login";
+import { createKakaoLoginConfig } from "../API/AxiosModule";
+
+
 
 const Signin = () => {
   const [email , setEmail] = useState<string>("")
   const [password , setPassword] = useState<string>("")
+  const navigate = useNavigate();
+  const Rest_api_key='ba688a75557d3918702599015fe8d999';
+  const redirect_uri = 'http://localhost:5173/signin';
 
+  useEffect(() => {
+    handleAuthorizationCode();
+  }, []);
 
-  const loginMutation = useMutation<void, Error, { email: string; password: string }>(async (data) => {
- 
-    const response = await axios({
-      method: 'POST',
-      url:"엔드포인트",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify(data),
-    });
-    return response.data;
-  });
+  const handleAuthorizationCode = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      console.log('Authorization code:', code);
+      createKakaoLoginConfig("POST","authorization_code",Rest_api_key,redirect_uri,code);
+    }
+  };
 
   const handleSubmit = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    const data = {
+    const IDPW = {
       email: email,
       password: password,
     };
-    console.log(data);
-    loginMutation.mutate(data);
+    Login(IDPW,navigate);
   };
+
+const kakaotalkSignIn =() =>{
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`
+    window.location.href = kakaoURL;
+}
+
+
+
 
   return (
     <div>
@@ -50,7 +61,7 @@ const Signin = () => {
           <div className="flex justify-end">
             <Link to={'/Signup'}>회원가입</Link>
           </div>
-          <button type="button" className=" flex items-center justify-center mx-auto rounded-none mt-4 w-9/12 h-12 bg-yellow-300">카카오로 로그인</button>
+          <img src="../../public/kakao_login_large_wide.png" className=" w-full" onClick={kakaotalkSignIn} />
         </form>
     </div>
   )
