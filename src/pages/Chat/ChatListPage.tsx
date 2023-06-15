@@ -1,8 +1,8 @@
 
 
-import { ChatListHeader } from '../../components/ChatList/ChatListHeader'
-import HeaderDeleteMode from '../../components/ChatList/HeaderDeleteMode';
-import ChatList from '../../components/ChatList/ChatList'
+import { ChatListHeader } from '../../components/Chat/ChatList/ChatListHeader'
+import HeaderDeleteMode from '../../components/Chat/ChatList/HeaderDeleteMode';
+import ChatList from '../../components/Chat/ChatList/ChatList'
 import { useState } from "react";
 
 export default function ChatPage() {

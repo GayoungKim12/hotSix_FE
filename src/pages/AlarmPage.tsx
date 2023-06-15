@@ -1,7 +1,7 @@
 import { useState } from "react";
-import HeaderDeleteMode from '../../components/ChatList/HeaderDeleteMode';
-import AlarmContainer from "../../components/Alarm/AlarmContainer";
-import AlarmHeader from "../../components/Alarm/AlarmHeader";
+import HeaderDeleteMode from "../components/Chat/ChatList/HeaderDeleteMode";
+import AlarmContainer from "../components/Alarm/AlarmContainer";
+import AlarmHeader from "../components/Alarm/AlarmHeader";
 
 const AlarmPage = () =>{
 

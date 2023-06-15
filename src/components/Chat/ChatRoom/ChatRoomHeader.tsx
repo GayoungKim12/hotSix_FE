@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const ChatLoomHeader = () => {
+const ChatRoomHeader = () => {
   const navigate = useNavigate();
   const onClickBackBtn =() =>{
     navigate(-1);
@@ -21,4 +21,4 @@ const ChatLoomHeader = () => {
 
 
 
-export {ChatLoomHeader}
+export {ChatRoomHeader}

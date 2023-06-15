@@ -8,7 +8,7 @@
 //   });
 // };
 
-const ChatLoomBody = () => {
+const ChatRoomBody = () => {
   
  
 
@@ -21,4 +21,4 @@ const ChatLoomBody = () => {
   )
 }
 
-export {ChatLoomBody}
+export {ChatRoomBody}

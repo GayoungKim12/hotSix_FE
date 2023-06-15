@@ -7,7 +7,7 @@ interface isDeleteMode{
   isDeleteMode:boolean;
 }
 
-const ChatLoom = (props:isDeleteMode) => {
+const ChatRoom = (props:isDeleteMode) => {
   const [isDeleteBtnPushed, setIsDeleteBtnPushed] = useState(false);
   const navigate = useNavigate();
 
@@ -35,4 +35,4 @@ const ChatLoom = (props:isDeleteMode) => {
   );
 };
 
-export default ChatLoom;
+export default ChatRoom;
