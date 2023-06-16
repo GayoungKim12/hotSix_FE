@@ -13,7 +13,13 @@ const accessToken = getAccessToken();
 //요청 전 액션
 axiosInstance.interceptors.request.use(
   (config) => {
-    isTokenValid();
+    if (!config.headers.Authorization) {//헤더에 액세스토큰 안넣는건 로그인이랑 회원가입?밖에 없으니 
+      console.log("토큰만료검증 스킵");//토큰만료 검증 스킵
+    }
+    else{
+      isTokenValid();
+    }
+   
     console.log("1")
     return config;
   },
@@ -67,6 +73,22 @@ const createKakaoLoginConfig = (method:string,grant_type:string,client_id:string
   return axiosInstance(config);
 };
 
+//카카오 액세스토큰 갱신
+const createKakaoRenewAccessTokenConfig = (method:string,grant_type:string,client_id:string,refresh_token	:string) => {
+  const config = {
+    baseURL: 'https://kauth.kakao.com/oauth/token',
+    method: method,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    },
+    data:{grant_type,client_id,refresh_token},
+  };
+
+  return axiosInstance(config);
+};
+
+
+
 
 //requestBody 모듈화: unknwon으로 하던가 인터페이스 전부 적어놓고 if else같은걸로 그때그때 맞추던가 해야함
 //그외의 요청?
@@ -115,4 +137,4 @@ const MultiConfig = (method:string, url:string,requestBody: unknown = null,param
 
 
 
-export{createLoginConfig ,JsonConfig ,createKakaoLoginConfig,MultiConfig}
+export{createLoginConfig ,JsonConfig ,createKakaoLoginConfig,MultiConfig,createKakaoRenewAccessTokenConfig}
