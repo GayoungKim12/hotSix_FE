@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react"
 import { Link  } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
-import { Login } from "../API/Login";
-import { createKakaoLoginConfig } from "../API/AxiosModule";
-
-
+import { createKakaoLoginConfig, createLoginConfig } from "../API/AxiosModule";
+import { getAccessToken, getRefreshToken, getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 
 const Signin = () => {
   const [email , setEmail] = useState<string>("")
@@ -14,6 +12,9 @@ const Signin = () => {
   const redirect_uri = 'http://localhost:5173/signin';
 
   useEffect(() => {
+    removeAccessToken();
+    removeRefreshToken();
+
     handleAuthorizationCode();
   }, []);
 
@@ -21,18 +22,56 @@ const Signin = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code) {
-      console.log('Authorization code:', code);
-      createKakaoLoginConfig("POST","authorization_code",Rest_api_key,redirect_uri,code);
+      createKakaoLoginConfig("POST","authorization_code",Rest_api_key,redirect_uri,code).then((response)=>{
+        console.log(response.data)
+        const accessToken = response.data["access_token"];
+        const refreshToken = response.data["refresh_token"];
+        if (accessToken && refreshToken) {
+          setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
+          setRefreshToken(refreshToken); // httponly 쿠키에 refresh 토큰 저장
+          getTokenExpiration('accessToken',response.data["expires_in"]);
+          getTokenExpiration('refreshToken',response.data["refresh_token_expires_in"]);
+          isTokenValid();
+          navigate('/');//메인페이지로 이동
+        }
+
+        }).catch((error)=>{
+          console.log("에러")
+          console.error(error);
+        });
     }
   };
 
-  const handleSubmit = (e:React.MouseEvent<HTMLButtonElement>) => {
+
+
+  const defaultSignin = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
     const IDPW = {
       email: email,
       password: password,
     };
-    Login(IDPW,navigate);
+    createLoginConfig("POST", "login",IDPW)
+    .then((response) => {
+      console.log("response.data:", response.data);
+      const accessToken = response.data["Authorization"];
+      const refreshToken = response.data["Authorization-refresh"];
+      if (accessToken && refreshToken) {
+        setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
+        setRefreshToken(refreshToken); // httponly 쿠키에 refresh 토큰 저장
+        getTokenExpiration('accessToken');
+        getTokenExpiration('refreshToken');
+        isTokenValid();
+        navigate('/');//메인페이지로 이동
+      }
+      return response.data;
+    }) .catch((error) => {
+      console.log("에러")
+      console.error(error);
+    });
+     
+
+   
   };
 
 const kakaotalkSignIn =() =>{
@@ -57,7 +96,7 @@ const kakaotalkSignIn =() =>{
             <label htmlFor="input-password" className="w-9/12" >비밀번호</label>
             <input type="password" id="input-password" className="w-9/12 h-10" value={password} onChange={(e)=>setPassword(e.target.value)} name="password"/>
           </div>
-          <button onClick={handleSubmit} type="submit" className=" flex items-center justify-center mx-auto rounded-none mt-4 w-9/12 h-12 bg-main-400 text-white">로그인</button>
+          <button onClick={defaultSignin} type="submit" className=" flex items-center justify-center mx-auto rounded-none mt-4 w-9/12 h-12 bg-main-400 text-white">로그인</button>
           <div className="flex justify-end">
             <Link to={'/Signup'}>회원가입</Link>
           </div>
