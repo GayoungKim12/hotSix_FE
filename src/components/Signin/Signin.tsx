@@ -2,39 +2,48 @@ import { useEffect, useState } from "react"
 import { Link  } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
 import { createKakaoLoginConfig, createLoginConfig } from "../API/AxiosModule";
-import { getAccessToken, getRefreshToken, getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
+import {  getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
+
+
+// interface TokenResponse1 {
+//     "Authorization":string,
+//     "Authorization-refresh":string
+// }
+
+// interface TokenResponse2 {
+//   "access_token":string
+//   "expires_in":number
+//   "id_token":string
+//   "refresh_token":string
+//   "refresh_token_expires_in":number
+//   "scope":string
+//   "token_type":string
+
+// }
+
+// type TokenResponse = TokenResponse1 | TokenResponse2;
 
 const Signin = () => {
   const [email , setEmail] = useState<string>("")
   const [password , setPassword] = useState<string>("")
   const navigate = useNavigate();
-  const Rest_api_key='ba688a75557d3918702599015fe8d999';
   const redirect_uri = 'http://localhost:5173/signin';
 
   useEffect(() => {
-    removeAccessToken();
-    removeRefreshToken();
-
     handleAuthorizationCode();
   }, []);
 
   const handleAuthorizationCode = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    if (code) {
-      createKakaoLoginConfig("POST","authorization_code",Rest_api_key,redirect_uri,code).then((response)=>{
-        console.log(response.data)
-        const accessToken = response.data["access_token"];
-        const refreshToken = response.data["refresh_token"];
-        if (accessToken && refreshToken) {
-          setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
-          setRefreshToken(refreshToken); // httponly 쿠키에 refresh 토큰 저장
-          getTokenExpiration('accessToken',response.data["expires_in"]);
-          getTokenExpiration('refreshToken',response.data["refresh_token_expires_in"]);
-          isTokenValid();
-          navigate('/');//메인페이지로 이동
-        }
+    const Rest_api_key =localStorage.getItem("Rest_api_key")
 
+    if (code && Rest_api_key) {
+      createKakaoLoginConfig("POST","authorization_code",Rest_api_key,redirect_uri,code).then((response)=>{
+        console.log(typeof(response));
+
+        handleTokenResponse(response.data,"access_token","refresh_token",
+        'kakao',"expires_in","refresh_token_expires_in");
         }).catch((error)=>{
           console.log("에러")
           console.error(error);
@@ -46,40 +55,44 @@ const Signin = () => {
 
   const defaultSignin = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
     const IDPW = {
       email: email,
       password: password,
     };
     createLoginConfig("POST", "login",IDPW)
     .then((response) => {
-      console.log("response.data:", response.data);
-      const accessToken = response.data["Authorization"];
-      const refreshToken = response.data["Authorization-refresh"];
-      if (accessToken && refreshToken) {
-        setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
-        setRefreshToken(refreshToken); // httponly 쿠키에 refresh 토큰 저장
-        getTokenExpiration('accessToken');
-        getTokenExpiration('refreshToken');
-        isTokenValid();
-        navigate('/');//메인페이지로 이동
-      }
-      return response.data;
+      handleTokenResponse(response.data,"Authorization","Authorization-refresh",
+      'default');
     }) .catch((error) => {
       console.log("에러")
       console.error(error);
     });
-     
-
-   
   };
 
 const kakaotalkSignIn =() =>{
+    removeAccessToken();
+    removeRefreshToken();
+    localStorage.setItem("Rest_api_key",'ba688a75557d3918702599015fe8d999');
+    const Rest_api_key =localStorage.getItem("Rest_api_key")
     const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`
     window.location.href = kakaoURL;
 }
 
+const handleTokenResponse = (response:any,access:string,refresh:string,category:string,accessExpire:string="",refreshExpire:string="") =>{
+  console.log(response);
 
+  const accessToken = response[access];
+  const refreshToken = response[refresh];
+  if (accessToken && refreshToken) {
+    setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
+    setRefreshToken(refreshToken); // httponly 쿠키에 refresh 토큰 저장
+    localStorage.setItem('tokenCategory',category);
+    getTokenExpiration('accessToken',response[accessExpire]);
+    getTokenExpiration('refreshToken',response[refreshExpire]);
+    isTokenValid();
+    navigate('/');//메인페이지로 이동
+  }
+}
 
 
   return (
