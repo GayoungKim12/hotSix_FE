@@ -8,10 +8,12 @@ import jwt_decode from 'jwt-decode';
 
 //-------------------------------------------------------------------------토큰 저장,삭제,가져오기 액션
 const setAccessToken = (token:string) => {
+  removeAccessToken();
   localStorage.setItem("accessToken", token); 
 };
 
 const setRefreshToken  = (token:string) => {
+  removeRefreshToken();
   setCookie('refreshToken', token, { path: '/' });
 };
 
@@ -28,11 +30,14 @@ const getRefreshToken = () => {
 
 
 const removeAccessToken = () => {
+  
   localStorage.removeItem('accessToken');
+
 };
 
 const removeRefreshToken = () => {
   removeCookie('refreshToken');
+
 };
 
 //-------------------------------------------------------------------------토큰 유효성 검사 액션
@@ -54,6 +59,7 @@ const isTokenValid = async () => {
       removeAccessToken();
       removeRefreshToken();
       console.log("둘다 만료")
+      break;
       // 로그아웃
 
     }
@@ -64,27 +70,29 @@ const isTokenValid = async () => {
 
 
 //토큰의 유효기간을 추출(테스트 완료)
-const getTokenExpiration = (tokenName:string) => {
+const getTokenExpiration = (tokenName:string,kakaoExpire:number=-1) => {
 
   const token = 
   tokenName === 'refreshToken' ? getRefreshToken() :
   tokenName === 'accessToken' ? getAccessToken() :
   null;
-  
-  if (token) {
+  let expirationTime=new Date();
+  if (token && kakaoExpire===-1) {
     try {
+      const a = jwt_decode(token);
+      console.log(a);
       const decoded = jwt_decode(token) as { exp: number } | null;
       
       if (decoded && decoded.exp) {
 
-        const expirationTime = new Date(decoded.exp * 1000);
+        expirationTime = new Date(decoded.exp * 1000);
         console.log(`${tokenName} 만료시간:`, expirationTime);
         
-        (tokenName === 'refreshToken')
-        ? setCookie("refreshTokenExpire", expirationTime.toISOString(), { path: '/' }):
-         (tokenName === 'accessToken')
-        ? localStorage.setItem("accessTokenExpire", expirationTime.toISOString()):
-         null;
+        // (tokenName === 'refreshToken')
+        // ? setCookie("refreshTokenExpire", expirationTime.toISOString(), { path: '/' }):
+        //  (tokenName === 'accessToken')
+        // ? localStorage.setItem("accessTokenExpire", expirationTime.toISOString()):
+        //  null;
 
         
       } else {
@@ -97,14 +105,28 @@ const getTokenExpiration = (tokenName:string) => {
         console.log('알수없는 에러');
       }
     }
-  } else {
+  } 
+  else if(token && kakaoExpire!= -1){
+    const currentTime = new Date().getTime();
+    const remainingTimeInSeconds = kakaoExpire;
+    expirationTime = new Date(currentTime + remainingTimeInSeconds * 1000);
+    console.log(`${tokenName} 만료시간:`, expirationTime);
+
+
+  }
+
+  else {
     console.log(`${tokenName} 없음.`);
   }
+  (tokenName === 'refreshToken')
+  ? setCookie("refreshTokenExpire", expirationTime.toISOString(), { path: '/' }):
+   (tokenName === 'accessToken')
+  ? localStorage.setItem("accessTokenExpire", expirationTime.toISOString()):
+   null;
 }
 
 
 //토큰이 만료되기 30분전인지 확인 (테스트 완료)
-let a =1;
 
 const checkTokenExpiration = (tokenName:string) => {
 
@@ -120,12 +142,7 @@ const checkTokenExpiration = (tokenName:string) => {
 
     let timeDiffMinutes = Math.round((new Date(expirationTime).getTime() - currentTime.getTime()) / (1000 * 60));
     
-    if(a<=2)
-    {
-      console.log("시간조작")
-      timeDiffMinutes=timeDiffMinutes-1000000000000000;
-      a++;
-    }
+
      
     console.log(`${tokenName}이 만료되기까지`+timeDiffMinutes+`분 남았습니다`);
     if (timeDiffMinutes <= 5) {
@@ -158,9 +175,8 @@ const refreshAccessToken = async () => {
     const response = await axios.post("http://43.200.78.88:8080/refresh",null, {
         headers:headers
     });
-    console.log(response.data);
-
-    const newAceessToken = response.data.Authorizaion;
+    
+    const newAceessToken = response.data["Authorization"];
 
     removeAccessToken();
     setAccessToken(newAceessToken);
