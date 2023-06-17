@@ -7,14 +7,24 @@ interface PostToolButtonsProps {
 }
 
 const PostToolButtons = (props: PostToolButtonsProps) => {
+  const URL = "http://43.200.78.88:8080";
+  const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
+
   const { postId, handleShow } = props;
 
-  const deletePost = () => {
+  const deletePost = async () => {
     try {
-      axios.delete(`http://localhost:3001/posts/${postId}`);
+      await axios({
+        method: "delete",
+        url: `${URL}/post/${postId}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("성공");
     } catch (err) {
-      console.log(err);
+      console.log("실패");
     }
   };
 

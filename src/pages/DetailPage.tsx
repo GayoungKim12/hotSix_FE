@@ -15,7 +15,7 @@ const DetailPage = () => {
   if (!postId) return null;
 
   return (
-    <div className="pt-14 bg-main-100">
+    <div className="pt-14 min-h-screen bg-main-100">
       <Header />
       <Detail handleShow={() => setShowPostButtons(true)} postId={postId} />
       <CommentList handleShow={() => setShowCommentButtons(true)} />
