@@ -1,7 +1,7 @@
-import CarouselItem from "./CarouselItem";
 import { BsDot } from "react-icons/bs";
 import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import { useState, useEffect } from "react";
+import CarouselItem from "./CarouselItem";
 
 interface CarouselProps {
   items: string[];
@@ -67,8 +67,12 @@ const Carousel = (props: CarouselProps) => {
     }
   };
 
+  if (items.length === 1 && items[0] === "") {
+    return <div></div>;
+  }
+
   return (
-    <div className="relative flex flex-col justify-center overflow-hidden">
+    <div className="relative flex flex-col max-w-2xl h-80 justify-center bg-gray-200 overflow-hidden">
       <div
         className="whitespace-nowrap transition-transform duration-300"
         //
@@ -80,9 +84,10 @@ const Carousel = (props: CarouselProps) => {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        {items.map((item, idx) => {
+        {items.map((item) => {
+          if (items.length === 0) return null;
           return (
-            <div className="inline-flex flex-col items-center justfiy-center w-full" key={idx}>
+            <div className="inline-flex flex-col items-center justfiy-center w-full h-full" key={item}>
               <CarouselItem item={item} />
             </div>
           );
@@ -90,28 +95,22 @@ const Carousel = (props: CarouselProps) => {
       </div>
       <div className="flex justify-evenly ">
         <div className="flex absolute bottom-2">
-          <button onClick={() => updateIndex(activeIndex - 1)} className="text-white cursor-default focus:outline-none">
+          {/* <button onClick={() => updateIndex(activeIndex - 1)} className="text-white cursor-default focus:outline-none">
             <IoIosArrowBack />
-          </button>
+          </button> */}
           <div className="flex flex-row justify-center -space-x-3">
             {items.map((_, idx) => {
               return (
-                <div
-                  key={idx}
-                  onClick={() => {
-                    updateIndex(idx);
-                  }}
-                >
+                <div key={idx} onClick={() => updateIndex(idx)}>
                   <BsDot className={`text-3xl ${activeIndex === idx ? "text-indigo-400" : "text-indigo-200"}`} />
                 </div>
               );
-            })}{" "}
+            })}
           </div>
-
-          <button onClick={() => updateIndex(activeIndex + 1)} className="text-white cursor-default focus:outline-none">
+          {/* <button onClick={() => updateIndex(activeIndex + 1)} className="text-white cursor-default focus:outline-none">
             <IoIosArrowForward />
-          </button>
-        </div>{" "}
+          </button> */}
+        </div>
       </div>
     </div>
   );
