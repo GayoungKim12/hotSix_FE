@@ -7,10 +7,10 @@ const PostPage = () => {
   const { postId } = useParams();
 
   return (
-    <>
+    <div className="bg-main-100">
       <Header />
-      <div className="bg-main-100">{postId ? <EditPost postId={postId} /> : <Post />}</div>
-    </>
+      {postId ? <EditPost postId={postId} /> : <Post />}
+    </div>
   );
 };
 

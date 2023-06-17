@@ -1,232 +1,140 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { HiOutlinePlus } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
+import SelectRegion from "./SelectRegion";
+import Content from "./Content";
+import AddImages from "./AddImages";
+import SelectCategory from "./SelectCategory";
+import jwtDecode from "jwt-decode";
 
 interface EditPostProps {
   postId: string;
 }
 
-interface PostEditType {
-  board_id: number;
-  address_id: number;
-  address: string;
-  content: string;
-  img_path: string[];
-}
-
-interface RegionType {
-  id: number;
-  sido: string;
-  sigg: string;
+interface DecodedToken {
+  id: string;
 }
 
 const EditPost = (props: EditPostProps) => {
-  const URL = "http://localhost:3001";
-  const [postForm, setPostForm] = useState<PostEditType>({
-    board_id: 0,
-    address_id: 0,
-    address: "",
-    content: "",
-    img_path: [],
-  });
-  const [regions, setResions] = useState<RegionType[] | null>(null);
-  const [sidos, setSidos] = useState<string[]>([]);
-  const [siggs, setSiggs] = useState<RegionType[] | null>(null);
+  const URL = "http://43.200.78.88:8080";
+  const accessToken = localStorage.getItem("accessToken");
+  const [userId, setUserId] = useState(0);
+
+  const navigate = useNavigate();
+  const { postId } = props;
+
+  const [boardId, setBoardId] = useState(0);
+  const [regionId, setRegionId] = useState(0);
+  const [address, setAddress] = useState("");
+  const [content, setContent] = useState("");
+  const [imgPath, setImgPath] = useState<string[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
-    (async () => {
-      const response = await axios.get(`${URL}/regions`);
-      const data = response.data;
-      setResions(data);
-    })();
-  }, []);
+    if (!accessToken) return;
+    const decodeToken = jwtDecode<DecodedToken>(accessToken);
+
+    if (decodeToken.id) {
+      console.log(Number(decodeToken.id));
+      setUserId(Number(decodeToken.id));
+    }
+  }, [accessToken]);
 
   useEffect(() => {
-    if (!regions) return;
-
-    const allSidos: string[] = [];
-    regions.forEach((region) => {
-      if (!allSidos.includes(region.sido)) {
-        allSidos.push(region.sido);
-      }
-    });
-
-    setSidos(allSidos);
-  }, [regions]);
-
-  useEffect(() => {
+    if (!userId) return;
     (async () => {
       try {
-        const response = await axios.get(`${URL}/posts/${props.postId}`);
+        const response = await axios({
+          method: "get",
+          url: `${URL}/post/${postId}`,
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        });
         const data = response.data;
-        console.log(data);
-        setPostForm({
-          board_id: data.board_id,
-          address_id: data.address_id,
-          address: data.address,
-          content: data.content,
-          img_path: data.img_path,
+        if (data.membership.membershipId !== userId) {
+          alert("게시물을 수정하실 수 없습니다.");
+          navigate("/");
+          return;
+        }
+        setBoardId(data.boardId);
+        setRegionId(data.regionId);
+        setAddress(data.address);
+        setContent(data.content);
+        setImgPath(() => {
+          const datas = data.imgPath.filter((path: string) => {
+            return path.length !== 0;
+          });
+          return datas;
         });
       } catch (err) {
         console.log(err);
       }
     })();
-  }, [props.postId]);
+  }, [postId, accessToken, navigate, userId]);
 
-  useEffect(() => {
-    if (!regions || !postForm) return;
-
-    const siggsBySido = regions.filter((region) => region.sido === postForm.address.split(" ")[0]);
-    setSiggs(siggsBySido);
-  }, [postForm, regions]);
-
-  const changePostForm = (type: "board_id" | "content", value: number | string) => {
-    setPostForm((prev) => {
-      return {
-        ...prev,
-        [type]: value,
-      };
-    });
+  // 폼 db에 보내기
+  const patchData = async () => {
+    try {
+      const data = { boardId, regionId, address, content, imgPath };
+      const formData = new FormData();
+      formData.append("form", new Blob([JSON.stringify(data)], { type: "application/json" }));
+      console.log(files.length);
+      if (files.length) {
+        files.forEach((file) => {
+          formData.append("files", file, file.name);
+        });
+      } else {
+        formData.append("files", new File([], ""));
+      }
+      console.log(formData);
+      const response = await axios({
+        method: "put",
+        url: `${URL}/post/${postId}`,
+        headers: {
+          Authorization: `${accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+        data: formData,
+      });
+      return response.data;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
+  // 등록하기 버튼을 눌렀을 때 실행되는 함수
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!postForm.board_id) {
+    if (!boardId) {
       alert("카테고리를 선택해주세요.");
       return;
     }
 
-    if (!postForm.address_id) {
+    if (!regionId) {
       alert("지역을 선택해주세요.");
       return;
     }
 
-    if (!postForm.content) {
+    if (!content) {
       alert("내용을 입력해주세요.");
       return;
     }
 
-    console.log(postForm);
-
     (async () => {
-      try {
-        await axios({
-          method: "patch",
-          url: `${URL}/posts/${props.postId}`,
-          data: postForm,
-        });
-      } catch (err) {
-        console.log(err);
-      }
+      const postId = await patchData();
+      navigate(`/detail/${postId}`);
     })();
-  };
-
-  const changeSido = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (!regions) return;
-
-    const siggsBySido = regions.filter((region) => region.sido === e.target.value);
-    setSiggs(siggsBySido);
-    setPostForm((prev) => {
-      return {
-        ...prev,
-        ["address_id"]: 0,
-        ["address"]: e.target.value,
-      };
-    });
-  };
-
-  const changeSigg = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value.split(" ");
-
-    setPostForm((prev) => {
-      return {
-        ...prev,
-        ["address_id"]: Number(value[0]),
-        ["address"]: `${prev.address?.split(" ")[0]} ${value[1]}`,
-      };
-    });
   };
 
   return (
     <form className="pt-14 pb-12 min-w-0 min-h-screen overflow-auto" onSubmit={handleSubmit}>
-      <article className="p-4">
-        <div className="mb-2 text-base">카테고리</div>
-        <div className="flex gap-2">
-          <button
-            className={
-              postForm.board_id === 1
-                ? "px-4 py-0.5 rounded-xl border-2 border-main-400 bg-main-400 text-sm text-white hover:border-main-400 focus:outline-none"
-                : "px-4 py-0.5 rounded-xl border-2 border-inherit bg-white text-sm text-black hover:border-inherit focus:outline-none"
-            }
-            onClick={(e) => {
-              e.preventDefault();
-              changePostForm("board_id", 1);
-            }}
-          >
-            방 구해요
-          </button>
-          <button
-            className={
-              postForm.board_id === 2
-                ? "px-4 py-0.5 rounded-xl border-2 border-main-400 bg-main-400 text-sm text-white hover:border-main-400 focus:outline-none"
-                : "px-4 py-0.5 border-2 border-inherit rounded-xl bg-white text-sm hover:border-inherit focus:outline-none"
-            }
-            onClick={(e) => {
-              e.preventDefault();
-              changePostForm("board_id", 2);
-            }}
-          >
-            방 있어요
-          </button>
-        </div>
-        <div className="mt-4 mb-2 text-base">지역</div>
-        <div className="flex gap-2">
-          <select
-            onChange={changeSido}
-            value={postForm.address.split(" ")[0]}
-            className="px-0.5 py-0.5 border-2 border-inherit rounded-xl text-sm focus:outline-main-400"
-          >
-            <option className="px-0.5 py-0.5 text-sm">선택</option>
-            {sidos.map((sido) => {
-              return (
-                <option className="px-0.5 py-0.5 text-sm" key={sido}>
-                  {sido}
-                </option>
-              );
-            })}
-          </select>
-          <select
-            onChange={changeSigg}
-            value={`${postForm.address_id} ${postForm.address.split(" ")[1]}`}
-            className="px-0.5 py-0.5 border-2 border-inherit rounded-xl text-sm focus:outline-main-400"
-          >
-            <option className="px-0.5 py-0.5 text-sm" value={"0 선택"}>
-              선택
-            </option>
-            {siggs &&
-              siggs.map((sigg) => {
-                return (
-                  <option className="px-0.5 py-0.5 text-sm" key={sigg.id} value={`${sigg.id} ${sigg.sigg}`}>
-                    {sigg.sigg}
-                  </option>
-                );
-              })}
-          </select>
-        </div>
-        <div className="mt-4 mb-2 text-base">{`내용`}</div>
-        <textarea
-          className="block w-full h-60 px-4 py-4 rounded-xl border-2 border-inherit text-sm resize-none focus:outline-main-400"
-          placeholder="내용을 입력해주세요."
-          value={postForm.content}
-          onChange={(e) => changePostForm("content", e.target.value)}
-        ></textarea>
-        <div className="mt-4 mb-2 text-base">사진첨부</div>
-        <div>
-          <button className="px-5 py-5 rounded-xl border-gray-300 border-2 border-inherit bg-gray-300 text-2xl text-white">
-            <HiOutlinePlus />
-          </button>
-        </div>
+      <article className="px-4 pb-4">
+        <SelectCategory buttons={["방 구해요", "방 있어요"]} value={boardId} setValue={setBoardId} />
+        <SelectRegion regionId={regionId} address={address} setRegionId={setRegionId} setAddress={setAddress} />
+        <Content content={content} setContent={setContent} />
+        <AddImages files={files} setFiles={setFiles} imgPath={imgPath} setImgPath={setImgPath} />
       </article>
       <button className="fixed bottom-0 block w-full h-12 rounded-none bg-main-400 text-white focus:outline-none">
         등록하기
