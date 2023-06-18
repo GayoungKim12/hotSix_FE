@@ -23,10 +23,17 @@ const Footer = ({ selected }: Props) => {
     navigate("/ChatListPage");
   };
 
+  const moveToProfile = () => {
+    navigate("/profile");
+  };
+
   return (
     <div className="fixed w-full bottom-0 shadow">
       <article className="flex justify-around items-center py-3 bg-white text-indigo-300">
-        <HiOutlineUserCircle className="text-3xl cursor-pointer" />
+        <HiOutlineUserCircle
+          className="text-3xl cursor-pointer"
+          onClick={moveToProfile}
+        />
         {selected ? (
           <AiFillHeart
             className="text-3xl cursor-pointer"

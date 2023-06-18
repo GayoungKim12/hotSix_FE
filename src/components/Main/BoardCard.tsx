@@ -1,6 +1,5 @@
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { BiComment } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { GoKebabHorizontal } from "react-icons/go";
 import { useEffect, useState } from "react";
@@ -17,12 +16,15 @@ interface Props {
 }
 
 const BoardCard: React.FC<Props> = ({ setShowPostButtons, board }: Props) => {
+  const URL = "http://localhost:3001";
   const [like, setLike] = useState(false);
-  const navigate = useNavigate();
-  const moveToDetailPage = () => {
-    navigate("/detail");
-  };
-  const PostButtonOpen = () => {
+
+  const postButtonOpen = (
+    event:
+      | React.TouchEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.stopPropagation();
     setShowPostButtons(true);
   };
 
@@ -31,12 +33,17 @@ const BoardCard: React.FC<Props> = ({ setShowPostButtons, board }: Props) => {
     setLike(board.likes);
   }, [board.likes]);
 
-  const onClickHeart = () => {
+  const onClickHeart = (
+    event:
+      | React.TouchEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.stopPropagation();
     const id = board.id;
     if (!like) {
       axios({
         method: "PATCH",
-        url: `http://localhost:3001/postProjectionMainDtoList/${id}`,
+        url: `${URL}/postProjectionMainDtoList/${id}`,
         data: {
           likes: true,
         },
@@ -46,7 +53,7 @@ const BoardCard: React.FC<Props> = ({ setShowPostButtons, board }: Props) => {
     } else if (like) {
       axios({
         method: "PATCH",
-        url: `http://localhost:3001/postProjectionMainDtoList/${id}`,
+        url: `${URL}/postProjectionMainDtoList/${id}`,
         data: {
           likes: false,
         },
@@ -72,14 +79,14 @@ const BoardCard: React.FC<Props> = ({ setShowPostButtons, board }: Props) => {
                 </div>
                 <button
                   className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200"
-                  onClick={PostButtonOpen}
+                  onClick={postButtonOpen}
                 >
                   <GoKebabHorizontal />
                 </button>
               </div>
             </article>
 
-            <article className="m-4" onClick={moveToDetailPage}>
+            <article className="m-4">
               <div>성별 :</div>
               <div>지역 : {board.address}</div>
               <div>내용</div>
