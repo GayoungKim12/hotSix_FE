@@ -1,27 +1,17 @@
 import { useEffect, useState } from "react"
 import { Link  } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
-import { createKakaoLoginConfig, createLoginConfig } from "../API/AxiosModule";
+import { JsonConfig, createKakaoLoginConfig, createLoginConfig } from "../API/AxiosModule";
 import {  getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 
 
-// interface TokenResponse1 {
-//     "Authorization":string,
-//     "Authorization-refresh":string
-// }
 
-// interface TokenResponse2 {
-//   "access_token":string
-//   "expires_in":number
-//   "id_token":string
-//   "refresh_token":string
-//   "refresh_token_expires_in":number
-//   "scope":string
-//   "token_type":string
 
-// }
-
-// type TokenResponse = TokenResponse1 | TokenResponse2;
+interface TokenResponse {
+  accessToken:string
+  refreshToken:string
+  tokenCategory:string
+}
 
 const Signin = () => {
   const [email , setEmail] = useState<string>("")
@@ -40,10 +30,19 @@ const Signin = () => {
 
     if (code && Rest_api_key) {
       createKakaoLoginConfig("POST","authorization_code",Rest_api_key,redirect_uri,code).then((response)=>{
-        console.log(typeof(response));
 
-        handleTokenResponse(response.data,"access_token","refresh_token",
-        'kakao',"expires_in","refresh_token_expires_in");
+        const accessToken = response.data["access_token"];
+        const refreshToken = response.data["refresh_token"];
+
+        const tokenResponse :TokenResponse ={
+          accessToken:accessToken,
+          refreshToken:refreshToken,
+          tokenCategory:"kakao",
+        }
+        const accessTokenExpire = response.data["expires_in"];
+        const refreshTokenExpire = response.data["refresh_token_expires_in"];
+
+        handleTokenResponse(tokenResponse,accessTokenExpire,refreshTokenExpire);
         }).catch((error)=>{
           console.log("에러")
           console.error(error);
@@ -52,17 +51,30 @@ const Signin = () => {
   };
 
 
-
   const defaultSignin = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    removeAccessToken();
+    removeRefreshToken();
     const IDPW = {
       email: email,
       password: password,
     };
+    // const params  = {id:1};
+    // JsonConfig("delete" , "commentList" , null , params)
+    // .then((res) => console.log(res));
     createLoginConfig("POST", "login",IDPW)
     .then((response) => {
-      handleTokenResponse(response.data,"Authorization","Authorization-refresh",
-      'default');
+      console.log(response)
+      const accessToken = response.data["Authorization"];
+      const refreshToken = response.data["Authorization-refresh"];
+
+      const tokenResponse :TokenResponse ={
+        accessToken:accessToken,
+        refreshToken:refreshToken,
+        tokenCategory:"default",
+      }
+
+      handleTokenResponse(tokenResponse);
     }) .catch((error) => {
       console.log("에러")
       console.error(error);
@@ -78,17 +90,14 @@ const kakaotalkSignIn =() =>{
     window.location.href = kakaoURL;
 }
 
-const handleTokenResponse = (response:any,access:string,refresh:string,category:string,accessExpire:string="",refreshExpire:string="") =>{
-  console.log(response);
+const handleTokenResponse = (tokenResponse:TokenResponse,accessTokenExpire:number=-1,refreshTokenExpire:number=-1) =>{
 
-  const accessToken = response[access];
-  const refreshToken = response[refresh];
-  if (accessToken && refreshToken) {
-    setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
-    setRefreshToken(refreshToken); // httponly 쿠키에 refresh 토큰 저장
-    localStorage.setItem('tokenCategory',category);
-    getTokenExpiration('accessToken',response[accessExpire]);
-    getTokenExpiration('refreshToken',response[refreshExpire]);
+  if (tokenResponse.accessToken && tokenResponse.refreshToken) {
+    setAccessToken(tokenResponse.accessToken); // 로컬스토리지에 액세스토큰 저장
+    setRefreshToken(tokenResponse.refreshToken); // httponly 쿠키에 refresh 토큰 저장
+    localStorage.setItem('tokenCategory',tokenResponse.tokenCategory);
+    getTokenExpiration('accessToken',accessTokenExpire);
+    getTokenExpiration('refreshToken',refreshTokenExpire);
     isTokenValid();
     navigate('/');//메인페이지로 이동
   }

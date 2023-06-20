@@ -5,15 +5,19 @@ import { useNavigate } from "react-router-dom";
 
 
 const ChatRoomHeader = () => {
+
   const navigate = useNavigate();
   const onClickBackBtn =() =>{
     navigate(-1);
   }
+  
   return (
-    <div className='relative z-10 w-full h-20 border-solid border-black border-b-2'>
-      <div className='absolute top-8 left-4 hover:cursor-pointer' onClick={onClickBackBtn}><IoArrowBackOutline></IoArrowBackOutline></div>
-        <div className='absolute top-7 left-10'>상대프로필</div>
-        <div className='absolute top-7 right-10'>상대닉네임</div>
+    <div className='flex justify-between items-center h-20 border-solid border-black border-b-2'>
+        <div className='flex items-center p-4'>
+          <div className='hover:cursor-pointer' onClick={onClickBackBtn}><IoArrowBackOutline></IoArrowBackOutline></div>
+          <h2 className="ml-4">채팅</h2>
+        </div>
+        <div className='mr-4'>상대닉네임</div>
     </div>
   )
 }

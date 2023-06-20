@@ -14,10 +14,14 @@ const HeaderDeleteMode = (props:DeleteMode) => {
       props.DeleteMode();
     }
     return (
-      <div className='relative w-full h-24 border-solid border-black border-b-2'>
-          <div className='absolute top-4 left-4 hover:cursor-pointer' onClick={onClickBackBtn}><IoArrowBackOutline></IoArrowBackOutline></div>
-          <div className='absolute top-3 left-10'>삭제</div>
-          <button className='absolute top-3 right-4 bg-main-300'>전체삭제</button>
+      <div className='flex justify-between items-center h-24 border-solid border-black border-b-2'>
+        <div className='flex justify-between p-4' >
+          <div className='flex items-center'>
+          <div className='flex justify-center hover:cursor-pointer' onClick={onClickBackBtn}><IoArrowBackOutline></IoArrowBackOutline></div>
+          <h2 className="ml-4">채팅</h2>
+          </div>
+        </div>
+        <button className='items-center h-1/2 mr-4 bg-main-300'>전체삭제</button>
       </div>
     )
   };

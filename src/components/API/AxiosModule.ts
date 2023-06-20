@@ -4,7 +4,9 @@ import qs from "qs";
 
 
 axios.defaults.paramsSerializer = params => { //params string으로바꾸기
+
   return qs.stringify(params);
+
 }
 
 const axiosInstance = axios.create();
@@ -17,9 +19,10 @@ axiosInstance.interceptors.request.use(
       console.log("토큰만료검증 스킵");//토큰만료 검증 스킵
     }
     else{
+
       isTokenValid();
     }
-   
+    withCredentials: true;
     console.log("1")
     return config;
   },
@@ -89,7 +92,6 @@ const createKakaoRenewAccessTokenConfig = (method:string,grant_type:string,clien
 
 
 
-
 //requestBody 모듈화: unknwon으로 하던가 인터페이스 전부 적어놓고 if else같은걸로 그때그때 맞추던가 해야함
 //그외의 요청?
 
@@ -106,7 +108,7 @@ const JsonConfig = (method:string, url:string,requestBody: unknown = null,params
     data:requestBody,//요청 본문엔 requestbody가 들어감 
     params:params,//params는 url끝에 딸려들어감
   };
-
+  console.log(params)
   return axiosInstance(config);
 };
 
