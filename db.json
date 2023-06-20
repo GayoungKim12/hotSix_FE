@@ -1,0 +1,1017 @@
+{
+  "main": {
+    "regionMainDtoList": [
+      {
+        "region_id": 1,
+        "sido": "서울특별시",
+        "sigg": "강북구"
+      },
+      {
+        "region_id": 2,
+        "sido": "서울특별시",
+        "sigg": "강서구"
+      },
+      {
+        "region_id": 3,
+        "sido": "서울특별시",
+        "sigg": "도봉구"
+      },
+      {
+        "region_id": 4,
+        "sido": "서울특별시",
+        "sigg": "노원구"
+      },
+      {
+        "region_id": 5,
+        "sido": "서울특별시",
+        "sigg": "중랑구"
+      },
+      {
+        "region_id": 6,
+        "sido": "서울특별시",
+        "sigg": "동대문구"
+      },
+      {
+        "region_id": 7,
+        "sido": "서울특별시",
+        "sigg": "성북구"
+      },
+      {
+        "region_id": 8,
+        "sido": "서울특별시",
+        "sigg": "종로구"
+      },
+      {
+        "region_id": 9,
+        "sido": "서울특별시",
+        "sigg": "은평구"
+      },
+      {
+        "region_id": 10,
+        "sido": "서울특별시",
+        "sigg": "서대문구"
+      },
+      {
+        "region_id": 11,
+        "sido": "서울특별시",
+        "sigg": "마포구"
+      },
+      {
+        "region_id": 12,
+        "sido": "서울특별시",
+        "sigg": "용산구"
+      },
+      {
+        "region_id": 13,
+        "sido": "서울특별시",
+        "sigg": "중구"
+      },
+      {
+        "region_id": 14,
+        "sido": "서울특별시",
+        "sigg": "성동구"
+      },
+      {
+        "region_id": 15,
+        "sido": "서울특별시",
+        "sigg": "광진구"
+      },
+      {
+        "region_id": 16,
+        "sido": "서울특별시",
+        "sigg": "강동구"
+      }
+    ],
+    "region_id": 1
+  },
+  "postProjectionMainDtoList": [
+    {
+      "id": 1,
+      "board_id": 1,
+      "post_id": 11,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방구합니다~~!!",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nickaaa",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room11"
+      ]
+    },
+    {
+      "id": 2,
+      "board_id": 1,
+      "post_id": 10,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "편안해지는 방 구합니다~~~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nickaaa",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room6"
+      ]
+    },
+    {
+      "id": 3,
+      "board_id": 1,
+      "post_id": 9,
+      "region_id": 3,
+      "address": "서울특별시 도봉구",
+      "content": "좋은 방 구합니다~!",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nickaaa",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room45"
+      ]
+    },
+    {
+      "id": 4,
+      "board_id": 1,
+      "post_id": 8,
+      "region_id": 4,
+      "address": "서울특별시 노원구",
+      "content": "방 구합니다~ 조용한 성격입니다.",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nickaaa",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": false,
+      "room_files": [
+        "이미지 패스ㅁㅁㅁ",
+        " 이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 5,
+      "board_id": 1,
+      "post_id": 7,
+      "region_id": 5,
+      "address": "서울특별시 중랑구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nickaaa",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 6,
+      "board_id": 1,
+      "post_id": 6,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "2222",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 7,
+      "board_id": 1,
+      "post_id": 5,
+      "region_id": 5,
+      "address": "서울특별시 중랑구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "adsf",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 8,
+      "board_id": 1,
+      "post_id": 4,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "abcd",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 9,
+      "board_id": 1,
+      "post_id": 3,
+      "region_id": 5,
+      "address": "서울특별시 중랑구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nickbbb",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 10,
+      "board_id": 1,
+      "post_id": 2,
+      "region_id": 3,
+      "address": "서울특별시 도봉구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nickaaa",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 11,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 5,
+      "address": "서울특별시 중랑구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "n2기발자",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 12,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "개발자",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 13,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "내가짱",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 14,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "이연복",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 15,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "누구냐",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 16,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "나다십색갸",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 17,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "졸려요",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 18,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "프엔개발자",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 19,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "취업할래",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 20,
+      "board_id": 2,
+      "post_id": 11,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방구합니다~~!!",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nqwe",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room11"
+      ]
+    },
+    {
+      "id": 21,
+      "board_id": 2,
+      "post_id": 10,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "편안해지는 방 구합니다~~~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nasdfd",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room6"
+      ]
+    },
+    {
+      "id": 22,
+      "board_id": 2,
+      "post_id": 9,
+      "region_id": 3,
+      "address": "서울특별시 도봉구",
+      "content": "좋은 방 구합니다~!",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nzzz",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room45"
+      ]
+    },
+    {
+      "id": 23,
+      "board_id": 2,
+      "post_id": 8,
+      "region_id": 4,
+      "address": "서울특별시 노원구",
+      "content": "방 구합니다~ 조용한 성격입니다.",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "niqqeaa",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": false,
+      "room_files": [
+        "이미지 패스ㅁㅁㅁ",
+        " 이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 24,
+      "board_id": 2,
+      "post_id": 7,
+      "region_id": 5,
+      "address": "서울특별시 중랑구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "nicasd",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 25,
+      "board_id": 2,
+      "post_id": 6,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "222zzz2",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 26,
+      "board_id": 2,
+      "post_id": 5,
+      "region_id": 5,
+      "address": "서울특별시 중랑구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "ad124f",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 27,
+      "board_id": 2,
+      "post_id": 4,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "qweq3ecd",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 28,
+      "board_id": 2,
+      "post_id": 3,
+      "region_id": 5,
+      "address": "서울특별시 중랑구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "asdfa",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 29,
+      "board_id": 2,
+      "post_id": 2,
+      "region_id": 3,
+      "address": "서울특별시 도봉구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "124121a",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 30,
+      "board_id": 2,
+      "post_id": 1,
+      "region_id": 5,
+      "address": "서울특별시 중랑구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "논리왕전기",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 31,
+      "board_id": 2,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "구독ㄱ과좋아요",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 32,
+      "board_id": 2,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "학교짱",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 33,
+      "board_id": 2,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "설레발",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 34,
+      "board_id": 1,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "나당",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 35,
+      "board_id": 2,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "35",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 36,
+      "board_id": 2,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "지금몇시냐",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 37,
+      "board_id": 2,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "우리의결의",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": false,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 38,
+      "board_id": 2,
+      "post_id": 1,
+      "region_id": 1,
+      "address": "서울특별시 강북구",
+      "content": "방 구합니다! 얘기 많이 나눠요~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "며쌀이고",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 2,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room2"
+      ]
+    },
+    {
+      "id": 39,
+      "board_id": 1,
+      "post_id": 10,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "편안해지는 방 구합니다~~~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "39",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room6"
+      ]
+    },
+    {
+      "id": 40,
+      "board_id": 1,
+      "post_id": 10,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "편안해지는 방 구합니다~~~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "40",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room6"
+      ]
+    },
+    {
+      "id": 41,
+      "board_id": 1,
+      "post_id": 10,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "편안해지는 방 구합니다~~~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "41",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room6"
+      ]
+    },
+    {
+      "id": 42,
+      "board_id": 1,
+      "post_id": 10,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "편안해지는 방 구합니다~~~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "42",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room6"
+      ]
+    },
+    {
+      "id": 43,
+      "board_id": 1,
+      "post_id": 10,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "편안해지는 방 구합니다~~~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "43",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room6"
+      ]
+    },
+    {
+      "id": 44,
+      "board_id": 1,
+      "post_id": 10,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "편안해지는 방 구합니다~~~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "n44",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room6"
+      ]
+    },
+    {
+      "id": 45,
+      "board_id": 1,
+      "post_id": 10,
+      "region_id": 2,
+      "address": "서울특별시 강서구",
+      "content": "편안해지는 방 구합니다~~~",
+      "created_at": "2023-06-08",
+      "user_id": 1,
+      "nick_name": "45",
+      "gender": 1,
+      "user_file": "img/path/",
+      "comment_count": 0,
+      "likes": true,
+      "room_files": [
+        "이미지 패스",
+        " img/room1",
+        " img/room6"
+      ]
+    }
+  ],
+  "commentList": [
+    {
+      "id": 1,
+      "post_id": 11,
+      "nick_name": "1닉네임s",
+      "user_file": "img/path/",
+      "comment": "좋아요 구독좀요",
+      "created_at": "2023-06-18"
+    },
+    {
+      "id": 3,
+      "post_id": 11,
+      "nick_name": "3닉네임s",
+      "user_file": "img/path/",
+      "comment": "좋아요 구독좀요",
+      "created_at": "2023-06-18"
+    },
+    {
+      "id": 4,
+      "post_id": 11,
+      "nick_name": "4닉네임s",
+      "user_file": "img/path/",
+      "comment": "좋아요 구독좀요",
+      "created_at": "2023-06-18"
+    }
+  ]
+}
