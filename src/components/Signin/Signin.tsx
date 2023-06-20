@@ -59,26 +59,26 @@ const Signin = () => {
       email: email,
       password: password,
     };
-    const params  = {id:1};
-    JsonConfig("delete" , "commentList" , null , params)
-    .then((res) => console.log(res));
-    // createLoginConfig("POST", "login",IDPW)
-    // .then((response) => {
-    //   console.log(response)
-    //   const accessToken = response.data["Authorization"];
-    //   const refreshToken = response.data["Authorization-refresh"];
+    // const params  = {id:1};
+    // JsonConfig("delete" , "commentList" , null , params)
+    // .then((res) => console.log(res));
+    createLoginConfig("POST", "login",IDPW)
+    .then((response) => {
+      console.log(response)
+      const accessToken = response.data["Authorization"];
+      const refreshToken = response.data["Authorization-refresh"];
 
-    //   const tokenResponse :TokenResponse ={
-    //     accessToken:accessToken,
-    //     refreshToken:refreshToken,
-    //     tokenCategory:"default",
-    //   }
+      const tokenResponse :TokenResponse ={
+        accessToken:accessToken,
+        refreshToken:refreshToken,
+        tokenCategory:"default",
+      }
 
-    //   handleTokenResponse(tokenResponse);
-    // }) .catch((error) => {
-    //   console.log("에러")
-    //   console.error(error);
-    // });
+      handleTokenResponse(tokenResponse);
+    }) .catch((error) => {
+      console.log("에러")
+      console.error(error);
+    });
   };
 
 const kakaotalkSignIn =() =>{
