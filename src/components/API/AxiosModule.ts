@@ -62,6 +62,20 @@ const createLoginConfig = (method:string, url:string,requestBody:unknown) => {
   return axiosInstance(config);
 };
 
+const SignupConfig = (method:string, url:string,requestBody:unknown) => {
+  const config = {
+    baseURL: `http://43.200.78.88:8080/${url}`,
+    method: method,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:requestBody,
+
+  };
+
+  return axiosInstance(config);
+};
+
 //로그인할때만 필요
 const createKakaoLoginConfig = (method:string,grant_type:string,client_id:string,redirect_uri:string,code:string) => {
   const config = {
@@ -139,4 +153,4 @@ const MultiConfig = (method:string, url:string,requestBody: unknown = null,param
 
 
 
-export{createLoginConfig ,JsonConfig ,createKakaoLoginConfig,MultiConfig,createKakaoRenewAccessTokenConfig}
+export{createLoginConfig ,JsonConfig ,createKakaoLoginConfig,MultiConfig,createKakaoRenewAccessTokenConfig,SignupConfig}

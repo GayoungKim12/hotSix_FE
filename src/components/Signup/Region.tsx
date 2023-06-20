@@ -1,5 +1,6 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { createLoginConfig } from '../API/AxiosModule';
+
 interface RegionOption {
   id: number;
   sido: string;
@@ -7,70 +8,101 @@ interface RegionOption {
 }
 
 interface RegionProps {
-  handleRegionIdChange: (regionId: number | null) => void; 
+  handleRegionIdChange: (regionId: number | null) => void;
+  defaultRegionId: number | null;
 }
-const Region =({ handleRegionIdChange }: RegionProps) => {
+
+const Region = ({ handleRegionIdChange, defaultRegionId }: RegionProps) => {
   const [regionOptions, setRegionOptions] = useState<RegionOption[]>([]);
   const [sido, setSido] = useState<string>("");
   const [sigg, setSigg] = useState<string>("");
-  const [regionId, setRegionId] = useState<number | null>(null);
-
+  const [regionId, setRegionId] = useState<number | null>(defaultRegionId);
 
   useEffect(() => {
     const fetchData = async () => {
-      const serverUrl = 'http://43.200.78.88:8080/regions';
-      const response = await axios.get(serverUrl);
-      setRegionOptions(response.data);
+      createLoginConfig('get', 'regions', '').then((response) => {
+        setRegionOptions(response.data);
+      });
     };
-
     fetchData();
   }, []);
 
+  useEffect(() => {
+    handleRegionIdChange(regionId);
+  }, [regionId, handleRegionIdChange]);
 
-  const sidoOption = [...new Set(regionOptions.map(option => option.sido))]
-  const siggOption = sido ? regionOptions.filter(option => option.sido === sido).map(option => option.sigg) : [];
-  const selectedRegion =(regionOptions.find(option => option.sido === sido && option.sigg === sigg))
+  useEffect(() => {
+    const selectedRegion = regionOptions.find(
+      (option) => option.id === defaultRegionId
+    );
+    if (selectedRegion) {
+      setSido(selectedRegion.sido);
+      setSigg(selectedRegion.sigg);
+      setRegionId(selectedRegion.id);
+    }
+  }, [regionOptions, defaultRegionId]);
 
-  if (selectedRegion && selectedRegion.id !== regionId) {
-    setRegionId(selectedRegion.id);
-    handleRegionIdChange(selectedRegion.id);
-  }
-  
-  const handleSiggChange =(e: React.ChangeEvent<HTMLSelectElement>)=>{
+  const handleSiggChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSigg = e.target.value;
     setSigg(selectedSigg);
-    const selectedRegion = regionOptions.find(option => option.sido === sido && option.sigg === selectedSigg);
+    const selectedRegion = regionOptions.find(
+      (option) => option.sido === sido && option.sigg === selectedSigg
+    );
     if (selectedRegion && selectedRegion.id !== regionId) {
       setRegionId(selectedRegion.id);
-      handleRegionIdChange(selectedRegion.id);
     }
-  }
-  const handleSidoChange =(e: React.ChangeEvent<HTMLSelectElement>)=>{
+  };
+
+  const handleSidoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSido = e.target.value;
     setSido(selectedSido);
     setSigg("");
-  }
+  };
 
+  const uniqueSidoOptions = Array.from(new Set(regionOptions.map((option) => option.sido)));
 
   return (
     <div className="flex flex-col mt-5 items-center">
-      <label htmlFor="input-region" className="w-9/12">원하는지역</label>
+      <label htmlFor="input-region" className="w-9/12">
+        원하는 지역
+      </label>
       <div className="flex justify-between mt-2 w-9/12">
-        <select onChange={handleSidoChange} className="py-1 w-5/12 text-sm" id='input-region'>
+        <select
+          onChange={handleSidoChange}
+          className="py-1 w-5/12 text-sm"
+          id="input-region"
+          value={sido}
+        >
           <option>시도</option>
-          {sidoOption.map((option)=>(
-            <option key={option} value={option}>{option}</option>
+          {uniqueSidoOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
           ))}
         </select>
-        <select onChange={handleSiggChange} className="w-5/12 text-sm">
-          <option disabled>시군구</option>
-          {siggOption.map((option)=>(
-            <option key={option} value={option}>{option}</option>
-          ))}
-        </select>
+          <select
+            onChange={handleSiggChange}
+            className="w-5/12 text-sm"
+            value={sigg}
+          >
+            <option disabled>시군구</option>
+            {regionOptions
+              .filter((option) => option.sido === sido)
+              .map((option) => (
+                <option key={option.id} value={option.sigg}>
+                  {option.sigg}
+                </option>
+              ))}
+          </select>
       </div>
-      <input type="text" name="regionId" className="hidden" defaultValue={regionId !==null ? String(regionId) : ''}/>
+      <input
+        type="text"
+        name="regionId"
+        className="hidden"
+        defaultValue={regionId !== null ? String(regionId) : ""}
+      />
     </div>
   );
 };
-export default Region
+
+export default Region;
