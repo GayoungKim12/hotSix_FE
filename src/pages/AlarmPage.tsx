@@ -11,17 +11,17 @@ const AlarmPage = () =>{
         setIsDeleteMode(!isDeleteMode);
     };
     return (
-        <div className=' flex flex-col  w-full  h-screen  bg-main-100 '>
+        <div className='flex flex-col  w-full  h-full  bg-main-100 '>
 
             {isDeleteMode ? (
                 <>
                 <HeaderDeleteMode DeleteMode={DeleteMode}/>
-                <button  className='fixed w-full bottom-0 bg-main-300' >삭제</button>
+                <button  className='fixed z-10 w-full bottom-0 bg-main-300' >삭제</button>
                 </>
             ) : (
                 <>
                 <AlarmHeader DeleteMode={DeleteMode}/>
-                <button  className='fixed w-full bottom-0 bg-main-300' >원래 footer자리</button>
+                <button  className='fixed z-10 w-full bottom-0 bg-main-300' >원래 footer자리</button>
                 </>
         
             )}

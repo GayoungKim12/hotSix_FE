@@ -31,15 +31,13 @@ const getRefreshToken = () => {
 
 
 const removeAccessToken = () => {
-  
-  localStorage.removeItem("accessToken");
   localStorage.removeItem("accessTokenExpire");
+  localStorage.removeItem("accessToken");
 };
 
 const removeRefreshToken = () => {
   removeCookie('refreshTokenExpire');
   removeCookie('refreshToken');
-
 };
 
 //-------------------------------------------------------------------------토큰 유효성 검사 액션
@@ -99,6 +97,7 @@ const getTokenExpiration = (tokenName:string,kakaoExpire:number=-1) => {
   tokenName === 'accessToken' ? getAccessToken() :
   null;
   let expirationTime=new Date();
+  
   if (token && kakaoExpire===-1) {
     try {
       const a = jwt_decode(token); 
@@ -166,8 +165,6 @@ const checkTokenExpiration = (tokenName:string) => {
     console.log('유효하지 않은 토큰.');
     }
 }
-
-
 
 
 //토큰 재발급

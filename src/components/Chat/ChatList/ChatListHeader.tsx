@@ -19,16 +19,18 @@ const ChatListHeader = (props:DeleteMode) => {
   };
 
   return (
-    <div className='relative w-full h-24 border-solid border-black border-b-2'>
-        <div className='absolute top-4 left-4 hover:cursor-pointer' onClick={onClickBackBtn}><IoArrowBackOutline></IoArrowBackOutline></div>
-        <div className='absolute top-3 left-10'>채팅</div>
-        <BsFillTrash3Fill className='absolute top-3 right-4 ' onClick={onClickTrashBtn}></BsFillTrash3Fill>
-        <input className='absolute top-12 left-4 shadow-sm' placeholder='닉네임을 입력하세요'></input>
-    </div>
+    <header className='flex flex-col justify-between  h-24 border-solid border-black border-b-2'>
+        <div className='flex justify-between p-4' >
+          <div className='flex'>
+            <div className='flex justify-center items-center hover:cursor-pointer' onClick={onClickBackBtn}><IoArrowBackOutline></IoArrowBackOutline></div>
+            <h2 className="ml-4">채팅</h2>
+          </div>
+          <BsFillTrash3Fill  onClick={onClickTrashBtn}></BsFillTrash3Fill>
+        </div>
+        <input className='shadow-sm' placeholder='닉네임을 입력하세요'></input>
+    </header>
   )
 };
-
-
 
 
 
