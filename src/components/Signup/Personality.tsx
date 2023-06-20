@@ -1,25 +1,27 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { BsPlusSquareFill } from "react-icons/bs";
 
 interface PersonalityProps {
   personality: string[];
   handlePersonalityChange: (option: string) => void;
+
 }
 
 const Personality = ({personality,handlePersonalityChange }: PersonalityProps) => {
-  const [mbtiOptions,setMbtiOptions]=useState<string[]>([]);
+  const [mbtiOptions, setMbtiOptions] = useState<string[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
+
   useEffect(() => {
-    const fetchData = async () => {
-      const serverUrl = 'http://localhost:3001/mbtiOptions';
-      const response = await axios.get(serverUrl);
-      setMbtiOptions(response.data);
-    };
-    fetchData();
+    setMbtiOptions([
+      "ISTJ", "ISFJ", "INFJ", "INTJ",
+      "ISTP", "ISFP", "INFP", "INTP",
+      "ESTP", "ESFP", "ENFP", "ENTP",
+      "ESTJ", "ESFJ", "ENFJ", "ENTJ",
+      "야식좋아함", "야식싫어함", "야행성", "주행성",
+      "흡연", "비흡연", "더위탐", "취위탐"
+    ]);
   }, []);
-
-
+  
   const handleModalToggle = () => {
     setShowModal(!showModal);
   };
@@ -45,15 +47,15 @@ const Personality = ({personality,handlePersonalityChange }: PersonalityProps) =
             <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-50">
               <div className="flex flex-col items-center rounded-lg bg-main-200">
                 <h2 className="mt-4 text-center text-lg font-medium">성향</h2>
-                <div className="grid grid-cols-3 gap-2 p-4">
+                <div className="grid grid-cols-3 gap-2 p-2">
                   {mbtiOptions.map((option) => (
                     <div key={option} className="mt-1 border">
                       <input type="checkbox" id={`input-personality-${option}`} name="personalities"  value={option}  onChange={() => handlePersonalityChange(option)} className="sr-only"/>
-                      <label htmlFor={`input-personality-${option}`} className={`block h-full px-1 ${personality.includes(option) ? 'bg-main-400 text-white' : 'bg-white'} text-sm`}>#{option}</label>
+                      <label htmlFor={`input-personality-${option}`} className={`block h-full py-1 ${personality.includes(option) ? 'bg-main-400 text-white' : 'bg-white'} text-sm`}>#{option}</label>
                     </div>
                   ))}
                 </div>
-                <button type="button" className="px-3 py-1 mb-4 bg-main-300" onClick={handleModalToggle}>수정 완료</button>
+                <button type="button" className="px-3 py-1 my-4 bg-main-300 text-white" onClick={handleModalToggle}>수정 완료</button>
               </div>
             </div>
             )}

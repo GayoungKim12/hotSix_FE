@@ -4,14 +4,16 @@ import { useNavigate } from "react-router-dom";
 import Region from "../components/Signup/Region";
 import Personality from "../components/Signup/Personality";
 import GoBackButton from "../components/common/GoBackButton";
-import axios from "axios";
+import { SignupConfig, createLoginConfig } from "../components/API/AxiosModule";
+import { FaUser } from "react-icons/fa";
+import utility from '../utills/utills';
 
 const SignUp = () => {
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [year, setYear] = useState<number | 'year'>("year");
   const [month,setMonth] = useState<number | 'month'>('month')
   const [day, setDay] = useState<number | 'day'>("day");
-  const [birthday, setBirthday] = useState<string>('');
+  const [birth, setBirthday] = useState<string>('');
   const imgRef = useRef<HTMLInputElement>(null);
   const [gender, setGender] = useState<number>();
   const [introduction, setIntroduction] = useState<string>("");
@@ -20,21 +22,34 @@ const SignUp = () => {
   const [password , setPassword] = useState<string>("")
   const [passwordCheck, setPasswordCheck] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
-  const [personalities, setPersonality] = useState<string[]>([]);
+  const [personality, setPersonality] = useState<string[]>([]);
   const [regionId, setRegionId] = useState<number | null>(null);
-  const [verify, setVerify] = useState<string>('true');
-  console.log(birthday)
+  const [verify, setVerify] = useState<string>('false');
+  const [emailerror,setEmailerror] =useState<string | null>('')
+  const [emailCheckError,seteEailCheckError] =useState<string | null>('')
+  const [nicknameCheckError,setenicknameCheckError] =useState<string | null>('')
+  const [countdown, setCountdown] = useState<number | null>(null);
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (countdown !== null && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+
+    return () => clearTimeout(timer); 
+  }, [countdown]);
 
   const handleRegionIdChange = (id: number | null) => {
     setRegionId(id);
   };
 
+
   const handlePersonalityChange = (option: string) => {
-    if (personalities.includes(option)) {
-      setPersonality(personalities.filter((item: string) => item !== option));
+    if (personality.includes(option)) {
+      setPersonality(personality.filter((item: string) => item !== option));
     } else {
-      if (personalities.length < 5) {
-        setPersonality([...personalities, option]);
+      if (personality.length < 5) {
+        setPersonality([...personality, option]);
       }
     }
   };
@@ -45,29 +60,10 @@ const SignUp = () => {
     setImgFile(file || null);
   };
   
-  
-  const currentYear = new Date().getFullYear();
-  const years = [];
-  for (let i = 1970; i <= currentYear; i++) {
-    years.push(i);
-  }
+  const years = utility.getYears();
+  const months = utility.getMonths();
+  const days = utility.getDays(year === 'year' ? NaN : year, month === 'month' ? NaN : month);
 
-  const months = [];
-  for (let i = 1; i <= 12; i++) {
-    months.push(i);
-  }
-
-  const daysInMonth = (year: number, month: number) => {
-    return new Date(year, month, 0).getDate();
-  };
-
-  const days = [];
-  if (year !== "year" && month !== "month") {
-    const numDays = daysInMonth(year, month);
-    for (let i = 1; i <= numDays; i++) {
-      days.push(i);
-    }
-  }
 
   useEffect(() => {
     if (year !== 'year' && month !== 'month' && day !== 'day') {
@@ -89,168 +85,149 @@ const SignUp = () => {
   const validatePassword = ()=> {
     return password === passwordCheck;
   };
-  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const isValid = utility.validateForm(email, password, passwordCheck, nickname, personality, regionId, birth, introduction);
     e.preventDefault();
-  
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    if (!emailRegex.test(email)) {
-      alert("유효한 이메일 주소를 입력해주세요.");
-      return;
-    }
-  
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!passwordRegex.test(password)) {
-      alert("비밀번호는 최소 8자리 이상이어야 하며, 영문자와 숫자를 포함해야 합니다.");
-      return;
-    }
-  
-    if (!validatePassword()) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-  
-    if (personalities.length === 0) {
-      alert("성향을 1개 이상 골라주세요.");
-      return;
-    }
-  
-    if (regionId === null) {
-      alert("지역을 선택해주세요.");
-      return;
-    }
-  
-    if (!birthday) {
-      alert("생년월일을 선택해주세요.");
-      return;
-    }
-  
-    if (!introduction) {
-      alert("자기소개를 입력해주세요.");
-      return;
-    }
-    try {
+    if (isValid) {
       const data ={
         email,
         password,
         nickname,
-        birthday,
+        birth,
         gender,
-        personalities,
+        personalities:[...personality],
         regionId,
         introduction,
         verify
       }
-      const formData = new FormData();
+      const formData = new FormData();  
       formData.append("form", new Blob([JSON.stringify(data)], { type: "application/json" }));
+      
       if (imgFile) {
         formData.append('files', imgFile, imgFile.name);
       } else {
         formData.append('files', new File([], ''), 'image.jpg');
       }console.log(formData);
-      await axios.post('http://43.200.78.88:8080/signup', formData,{
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      console.log('데이터 및 이미지 전송 성공');
-    } catch (error) {
-      console.error('전송 실패', error);
-    }
+      SignupConfig('post','signup',formData).then(()=>{navigate('/signin')}).catch((error)=>{console.log(error)})}
   };
   
   const emailSubmit = async () => {
-    try {
       const requestData = {
         email: email,
       };
-      await axios.post(
-        'http://43.200.78.88:8080/email/auth',requestData,{
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      console.log('이메일 전송 성공');
-    } catch (error) {
-      console.error('이메일 전송 실패', error);
-    }
+      createLoginConfig('post','email/auth',requestData).then(()=>{
+        alert('이메일 전송 성공');
+        setEmailerror('true');
+        setCountdown(300);
+      }).catch((error)=>{
+        alert('이메일 전송 실패');
+        setEmailerror(error.response?.data?.message)
+      })
   };
+
+  const emailVerifySubmit = async () => {
+      const requestData = {
+        email: email,
+        code : emailCheck}
+      createLoginConfig('post','email/verify',requestData).then(()=>{setVerify('true');setCountdown(0);seteEailCheckError('true')}).catch((error)=>{
+        setVerify('false')
+        seteEailCheckError(error.response?.data?.message)
+      })
+  };
+
+  const nicknameSubmit = async () => {
+      const requestData = {
+        nickname : nickname
+      };
+      createLoginConfig('post','nickname',requestData).then(()=>{alert('닉네임 사용가능 합니다.')}).catch((error)=>{
+        setVerify('false');
+        setenicknameCheckError(error.response?.data?.message);
+    })
+  };
+
+  const formattedCountdown = countdown !== null ? `${Math.floor(countdown / 60)
+    .toString()
+    .padStart(2, '0')}:${(countdown % 60).toString().padStart(2, '0')}` : '';
+    
   return (
     <div className="relative bg-main-100">
-      <div onClick={()=>navigate(-1)} className="absolute top-4 left-4">
+      <div onClick={()=>navigate(-1)} className="absolute top-5 left-4">
         <GoBackButton />
       </div>
       <h2 className="pt-4 text-center text-3xl">회원가입</h2>
       <form action="http://43.200.78.88:8080/signup" onSubmit={handleSubmit} method="post">
         <div className="flex flex-col items-center mx-auto w-9/12 mt-5 ">
           {imgFile?(<img className="block rounded-full w-24 h-24 " src={URL.createObjectURL(imgFile)} alt="" />):(<div className="flex items-center justify-center bg-main-200 rounded-full w-24 h-24">
-            프로필
+            <FaUser className="fill-main-100 w-12 h-12"/>
           </div>)}
-          <label htmlFor="input-file" className="mt-2.5">프로필 사진 추가</label>
+          <label htmlFor="input-file" className="mt-2.5 cursor-pointer">프로필 사진 추가</label>
           <input className="hidden" type="file" ref={imgRef}  accept='image/jpg, image/jpeg, image/png' onChange={saveImgFile} id="input-file" />
         </div>
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-email" className="w-9/12 after:content-['*'] after:text-red-500">이메일</label>
           <div className="flex mt-2 ">
-            <input type="email" id="input-email" className="w-4/5 h-10 placeholder:p-2 text-sm" value={email} onChange={(e)=>setEmail(e.target.value)} name="email" placeholder="이메일을 입력해주세요"/>
+            <input type="email" id="input-email" className="w-4/5 h-10 p-2  placeholder:text-sm" value={email} onChange={(e)=>setEmail(e.target.value)} name="email" placeholder="이메일을 입력해주세요"/>
             <button type="button" className="rounded-none bg-main-400 w-1/5 h-10 text-white" onClick={emailSubmit} ><AiOutlineCheck className='mx-auto my-0'/></button>
           </div>
+          {emailerror === 'true' ? <span className="mt-2 text-green-500 text-sm">이메일을 확인해주세요</span> : <span className="mt-2 text-red-500 text-sm">{emailerror}</span>}
         </div>
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-emailCheck" className="w-9/12 after:content-['*'] after:text-red-500">이메일 인증</label>
           <div className="flex mt-2 ">
-            <input type="number" id="input-emailCheck" className="w-4/5 h-10 placeholder:p-2 text-sm" value={emailCheck} onChange={(e)=>setEmailCheck(e.target.value)} name="emailCheck" placeholder="인증번호를 입력해주세요"/>
-            <button type="button" className="rounded-none bg-main-400 w-1/5 h-10 text-white"><AiOutlineCheck className='mx-auto my-0'/></button>
+            <input type="text" id="input-emailCheck" className="w-4/5 h-10 p-2 placeholder:text-sm" value={emailCheck} onChange={(e)=>setEmailCheck(e.target.value)} name="emailCheck" placeholder="인증번호를 입력해주세요"/>
+            <button type="button" className="rounded-none bg-main-400 w-1/5 h-10 text-white" onClick={emailVerifySubmit} ><AiOutlineCheck className='mx-auto my-0'/></button>
           </div>
+          {emailCheckError  === 'true' ? <span className="mt-2 text-green-500 text-sm">인증이 완료되었습니다.</span> :<span className="mt-2 text-red-500 text-sm">{emailCheckError}</span> }
+          {emailerror === 'true' ? <div className="mt-2 text-sm text-red-500">{formattedCountdown}</div> : <div className="mt-2 text-sm text-red-500"></div>}
         </div>
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-password" className="w-9/12 after:content-['*'] after:text-red-500" >비밀번호</label>
-          <input type="password" id="input-password" className="mt-2 h-10 placeholder:p-2 text-sm" value={password} onChange={(e)=>setPassword(e.target.value)} name="password" placeholder="비밀번호를 입력해주세요"/>
+          <input type="password" id="input-password" className="mt-2 h-10 p-2 placeholder:text-sm" value={password} onChange={(e)=>setPassword(e.target.value)} name="password" placeholder="비밀번호를 입력해주세요"/>
           <span className="text-red-500 text-sm w-9/12">영문자, 숫자 8자 이상</span>
         </div>
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-passwordcheck" className="w-9/12 after:content-['*'] after:text-red-500" >비밀번호확인</label>
-          <input type="password" id="input-passwordCheck" className="mt-2 h-10 placeholder:p-2 text-sm" value={passwordCheck} onChange={(e)=>setPasswordCheck(e.target.value)} placeholder="비밀번호를 다시 한 번 입력해주세요"/>
+          <input type="password" id="input-passwordCheck" className="mt-2 h-10 p-2 placeholder:text-sm" value={passwordCheck} onChange={(e)=>setPasswordCheck(e.target.value)} placeholder="비밀번호를 다시 한 번 입력해주세요"/>
           {!validatePassword() ?(
-            <span className="text-red-500 text-sm w-9/12">비밀번호가 일치하지않습니다.</span>
+            <span className="text-red-500 text-sm">비밀번호가 일치하지않습니다.</span>
           ):(
-            <span className="text-green-500 text-sm w-9/12">비밀번호가 일치합니다</span>
+            <span className="text-green-500 text-sm">비밀번호가 일치합니다</span>
           )}
         </div>
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-nickname" className="w-9/12 after:content-['*'] after:text-red-500">닉네임</label>
           <div className="flex mt-2 ">
-            <input type="text" id="input-nickname" className="w-4/5 h-10 placeholder:p-2 text-sm" value={nickname} onChange={(e)=>setNickname(e.target.value)} name="nickname" placeholder="닉네임을 입력해주세요"/>
-            <button className="rounded-none bg-main-400 w-1/5 h-10 text-white"><AiOutlineCheck className='mx-auto my-0'/></button>
+            <input type="text" id="input-nickname" className="w-4/5 h-10 p-2 placeholder:text-sm" value={nickname} onChange={(e)=>setNickname(e.target.value)} name="nickname" placeholder="닉네임을 입력해주세요"/>
+            <button className="rounded-none bg-main-400 w-1/5 h-10 text-white" type="button" onClick={nicknameSubmit}><AiOutlineCheck className='mx-auto my-0'/></button>
           </div>
+          <span className="text-red-500 text-sm w-9/12">{nicknameCheckError}</span>
         </div>
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-birth" className="w-9/12 after:content-['*'] after:text-red-500" >생년월일</label>
           <div className="flex justify-between mt-2">
             <select value={year}  id="input-birth" onChange={(e) => setYear(e.target.value as number | 'year')} className="py-1 w-1/4 text-sm">
-              <option disabled  value={'year'}>출생연도</option>
+              <option disabled  value={'year'}>연도</option>
               {years.map((year) => (
                 <option key={year} value={year}>{year}</option>
               ))}
             </select>
             <select value={month} onChange={(e) => setMonth(e.target.value as number | 'month')} className="w-1/4 text-sm">
-              <option disabled  value={'month'}>출생월</option>
+              <option disabled  value={'month'}>월</option>
               {months.map((month) => (
                 <option key={month} value={month}>{month}</option>
               ))}
             </select>
             <select value={day} onChange={(e) => setDay(e.target.value as number | 'day')} className="w-1/4 text-sm">
-              <option disabled  value={'day'}>출생월</option>
+              <option disabled  value={'day'}>일</option>
               {days.map((day) => (
                 <option key={day} value={day}>{day}</option>
               ))}
             </select>
-            <input type="text" name="birth" className="hidden" defaultValue={birthday}/>
+            <input type="text" name="birth" className="hidden" defaultValue={birth}/>
           </div>
         </div>
-        <Region handleRegionIdChange={handleRegionIdChange}/>
-        <Personality personality={personalities} handlePersonalityChange={handlePersonalityChange} />
+        <Region handleRegionIdChange={handleRegionIdChange} defaultRegionId={null}/>
+        <Personality personality={personality} handlePersonalityChange={handlePersonalityChange} />
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-gender" className="w-9/12">성별</label>
           <div className="flex w-9/12 mt-2.5 " id="input-gender">
