@@ -7,8 +7,13 @@ import ProfilePage from "./pages/ProfilePage";
 import ChatRoomPage from "./pages/Chat/ChatRoomPage";
 import ChatPage from "./pages/Chat/ChatListPage";
 import AlarmPage from "./pages/AlarmPage";
+
 import SignUp from "./pages/SignupPage";
-import Signin from "./components/Signin/Signin";
+
+
+
+import SigninPage from "./pages/SigninPage";
+
 import { QueryClient , QueryClientProvider } from "react-query";
 import { CookiesProvider } from 'react-cookie';
 import CartPage from "./pages/CartPage";
@@ -21,6 +26,7 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
+  <CookiesProvider>
     <QueryClientProvider client={queryClient}>
       <Routes>
         <Route path="/" element={<MainPage />}></Route>
@@ -33,13 +39,13 @@ function App() {
         <Route path="/ChatRoom" element={<ChatRoomPage></ChatRoomPage>}></Route>
         <Route path="/AlarmPage" element={<AlarmPage></AlarmPage>}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
-        <Route path="/signin" element={<Signin />}></Route>
+        <Route path="/signin" element={<SigninPage />}></Route>
         <Route path="/editprofile" element={<Editprofile/>}></Route>
         <Route path="/findPassword" element={<Findpassword/>}></Route>
         <Route path="/Editpassword" element={<Editpassword/>}></Route>
-
       </Routes>
     </QueryClientProvider>
+  </CookiesProvider>
 
   );
 }
