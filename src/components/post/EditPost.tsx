@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SelectRegion from "./SelectRegion";
@@ -6,6 +5,7 @@ import Content from "./Content";
 import AddImages from "./AddImages";
 import SelectCategory from "./SelectCategory";
 import jwtDecode from "jwt-decode";
+import { JsonConfig, MultiConfig } from "../API/AxiosModule";
 
 interface EditPostProps {
   postId: string;
@@ -16,7 +16,6 @@ interface DecodedToken {
 }
 
 const EditPost = (props: EditPostProps) => {
-  const URL = "http://43.200.78.88:8080";
   const accessToken = localStorage.getItem("accessToken");
   const [userId, setUserId] = useState(0);
 
@@ -44,13 +43,7 @@ const EditPost = (props: EditPostProps) => {
     if (!userId) return;
     (async () => {
       try {
-        const response = await axios({
-          method: "get",
-          url: `${URL}/post/${postId}`,
-          headers: {
-            Authorization: `${accessToken}`,
-          },
-        });
+        const response = await JsonConfig("get", `post/${postId}`);
         const data = response.data;
         if (data.membership.membershipId !== userId) {
           alert("게시물을 수정하실 수 없습니다.");
@@ -88,15 +81,7 @@ const EditPost = (props: EditPostProps) => {
         formData.append("files", new File([], ""));
       }
       console.log(formData);
-      const response = await axios({
-        method: "put",
-        url: `${URL}/post/${postId}`,
-        headers: {
-          Authorization: `${accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-        data: formData,
-      });
+      const response = await MultiConfig("put", `post/${postId}`, formData);
       return response.data;
     } catch (err) {
       console.log(err);
