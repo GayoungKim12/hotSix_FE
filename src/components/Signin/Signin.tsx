@@ -109,9 +109,7 @@ const goMain =()=>{
 
   return (
     <div className="w-full h-screen bg-main-100">
-      
         <img onClick={goMain} className="mx-auto my-auto w-1/2 h-1/2" src="../../../public/logo.png" alt="" />
-        
         <form  className="bg-main-100" action="">
           <div className="flex flex-col mt-5 items-center">
             <label htmlFor="input-email" className="w-9/12">이메일</label>
