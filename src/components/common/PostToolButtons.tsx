@@ -1,30 +1,27 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { JsonConfig } from "../API/AxiosModule";
 
 interface PostToolButtonsProps {
+  page?: string;
   postId: string;
   handleShow: () => void;
 }
 
 const PostToolButtons = (props: PostToolButtonsProps) => {
-  const URL = "http://43.200.78.88:8080";
-  const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
 
-  const { postId, handleShow } = props;
+  const { page, postId, handleShow } = props;
 
   const deletePost = async () => {
     try {
-      await axios({
-        method: "delete",
-        url: `${URL}/post/${postId}`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      await JsonConfig("delete", `post/${postId}`);
       console.log("성공");
     } catch (err) {
       console.log("실패");
+    }
+
+    if (page === "detail") {
+      navigate("/");
     }
   };
 

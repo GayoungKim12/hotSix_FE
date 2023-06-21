@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
 
       isTokenValid();
     }
-    withCredentials: true;
+
     console.log("1")
     return config;
   },

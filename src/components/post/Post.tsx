@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SelectCategory from "./SelectCategory";
@@ -6,13 +5,13 @@ import SelectRegion from "./SelectRegion";
 import Content from "./Content";
 import AddImages from "./AddImages";
 import jwtDecode from "jwt-decode";
+import { MultiConfig } from "../API/AxiosModule";
 
 interface DecodedToken {
   id: string;
 }
 
 const EditPost = () => {
-  const URL = "http://43.200.78.88:8080";
   const navigate = useNavigate();
 
   const accessToken = localStorage.getItem("accessToken");
@@ -47,17 +46,8 @@ const EditPost = () => {
       } else {
         formData.append("files", new File([], ""));
       }
-      console.log(formData);
 
-      const response = await axios({
-        method: "post",
-        url: `http://43.200.78.88:8080/post/${userId}`,
-        headers: {
-          Authorization: `${accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-        data: formData,
-      });
+      const response = await MultiConfig("post", `post/${userId}`, formData);
       return response.data;
     } catch (err) {
       console.log(err);
