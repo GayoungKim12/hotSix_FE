@@ -33,7 +33,6 @@ const Editprofile = () => {
   const [userId, setUserId] = useState(0);
   const imgRef = useRef<HTMLInputElement>(null);
   const [userData, setUserData] = useState<UserData |null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
 
   const defaultRegionId = userData?.region?.id || null;
 
@@ -92,12 +91,6 @@ const saveImgFile = () => {
     MultiConfig('put',`api/membership/update/${userId}`,formData).then(()=>{alert('수정이 완료되었습니다.'); navigate('/profile')}).catch((error)=>{console.log(error)}) 
   }
 
-  const deleteUser = ()=> {
-    JsonConfig('delete',`api/membership/delete/${userId}`).then(()=>{
-    removeRefreshToken;
-    removeAccessToken;
-    navigate('/signin');
-  })}
 
   useEffect(() => {
     JsonConfig('get', `api/membership/detail/${userId}`)
@@ -133,14 +126,11 @@ const saveImgFile = () => {
   return (
     <div className="relative bg-main-100">
       <form action="" onSubmit={fileSubmit}>
-      <div className="flex flex-row justify-around align-center pt-4">
+      <div className="flex flex-row justify-center items-center pt-4">
         <div onClick={()=>navigate(-1)} className="">
           <GoBackButton />
         </div>
-        <h2 className="text-center text-3xl">프로필 편집</h2>
-        <button type="submit" onClick={()=>{fileSubmit}} className="">
-            <AiOutlineCheck className="h-6 w-6"/>
-        </button>
+        <h2 className="mx-10 text-center text-3xl">프로필 편집</h2>
       </div>
       {imgFile?(<img className="block rounded-full mt-4 w-24 h-24 mx-auto " src={URL.createObjectURL(imgFile)} alt="" />)
       :userData && userData.img_path ? (<img className="block rounded-full mx-auto mt-4 w-24 h-24 " src={userData.img_path} alt="" />)
@@ -163,18 +153,9 @@ const saveImgFile = () => {
           <label htmlFor="input-about">자기소개</label>
           <textarea name="inttroduction" id="input-about" value={introduction} placeholder="자신에 대해 소개해주세요" onChange={(e)=>setIntroduction(e.target.value)} className="h-40 p-4 mt-2.5"></textarea>
         </div>
-        <button type="button" className="rounded-none mt-16 w-full h-12 bg-main-400 text-white" onClick={()=>{setShowModal(true)}} >회원탈퇴</button>
-        {showModal && (
-            <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-50">
-              <div className="flex flex-col items-center p-4 rounded-lg bg-main-200">
-                <h2 className="mt-4 text-center text-lg font-medium">회원 탈퇴를 하시겠습니까?</h2>
-                <div className="">
-                  <button type="button" className="px-3 py-1 my-4 mr-4 bg-main-300 text-white" onClick={deleteUser}>네</button>
-                  <button type="button" className="px-3 py-1 my-4 bg-main-300 text-white" onClick={()=>{setShowModal(false)}}>아니요</button>
-                </div>
-              </div>
-            </div>
-)}
+        <button type="submit" onClick={()=>{fileSubmit}} className="rounded-none mt-16 w-full h-12 bg-main-400 text-white">
+           수정 완료
+        </button>
       </form>
     </div>
   )
