@@ -95,7 +95,7 @@ const SignUp = () => {
         nickname,
         birth,
         gender,
-        personalities:[...personality],
+        personality:[...personality],
         regionId,
         introduction,
         verify
