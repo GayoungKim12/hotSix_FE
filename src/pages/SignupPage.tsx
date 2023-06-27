@@ -151,10 +151,12 @@ const SignUp = () => {
     
   return (
     <div className="relative bg-main-100">
-      <div onClick={()=>navigate(-1)} className="absolute top-5 left-4">
-        <GoBackButton />
+      <div className="flex flex-row justify-center items-center pt-4">
+        <div onClick={()=>navigate(-1)} className="">
+          <GoBackButton />
+        </div>
+        <h2 className="mx-10 text-center text-3xl">회원가입</h2>
       </div>
-      <h2 className="pt-4 text-center text-3xl">회원가입</h2>
       <form action="http://43.200.78.88:8080/signup" onSubmit={handleSubmit} method="post">
         <div className="flex flex-col items-center mx-auto w-9/12 mt-5 ">
           {imgFile?(<img className="block rounded-full w-24 h-24 " src={URL.createObjectURL(imgFile)} alt="" />):(<div className="flex items-center justify-center bg-main-200 rounded-full w-24 h-24">
@@ -229,7 +231,7 @@ const SignUp = () => {
         <Region handleRegionIdChange={handleRegionIdChange} defaultRegionId={null}/>
         <Personality personality={personality} handlePersonalityChange={handlePersonalityChange} />
         <div className="flex flex-col mt-5 mx-auto w-9/12">
-          <label htmlFor="input-gender" className="w-9/12">성별</label>
+          <label htmlFor="input-gender" className="w-9/12 after:content-['*'] after:text-red-500">성별</label>
           <div className="flex w-9/12 mt-2.5 " id="input-gender">
             <div className="mt-1 mr-4 border">
               <input type="checkbox" id="input-gender-man" name="gender" value='1' onChange={()=> handleGenderChange('남성')} checked={gender === 1}  className="sr-only"/>
@@ -242,7 +244,7 @@ const SignUp = () => {
           </div>
         </div>
         <div className="flex flex-col mt-5 mx-auto w-9/12">
-          <label htmlFor="input-about">자기소개</label>
+          <label htmlFor="input-about" className="after:content-['*'] after:text-red-500">자기소개</label>
           <textarea name="inttroduction" id="input-about" value={introduction} placeholder="자신에 대해 소개해주세요" onChange={(e)=>setIntroduction(e.target.value)} className="h-40 p-4 mt-2.5"></textarea>
         </div>
         <button type="submit" className="rounded-none mt-16 w-full h-12 bg-main-400 text-white" >가입하기</button>

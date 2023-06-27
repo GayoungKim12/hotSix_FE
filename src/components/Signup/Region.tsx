@@ -63,7 +63,7 @@ const Region = ({ handleRegionIdChange, defaultRegionId }: RegionProps) => {
 
   return (
     <div className="flex flex-col mt-5 items-center">
-      <label htmlFor="input-region" className="w-9/12">
+      <label htmlFor="input-region" className="w-9/12 after:content-['*'] after:text-red-500">
         원하는 지역
       </label>
       <div className="flex justify-between mt-2 w-9/12">
