@@ -1,12 +1,13 @@
 import { BiComment } from "react-icons/bi";
-import { AiFillHeart, AiOutlineHeart, AiOutlineUser } from "react-icons/ai";
 import { GoKebabHorizontal } from "react-icons/go";
 import BreadCrump from "./BreadCrump";
 import Carousel from "./Carousel";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { FaUser } from "react-icons/fa";
+import { JsonConfig } from "../API/AxiosModule";
+import LikeButton from "../common/LikeButton";
+import { useNavigate } from "react-router-dom";
 
 interface DetailProps {
   postId: string;
@@ -19,9 +20,7 @@ interface DetailType {
   address: string | null;
   content: string;
   createdAt: string;
-  likes: number;
-  files: string[];
-  like: boolean;
+  imgPath: string[];
   membership: {
     membershipId: number;
     imgPath: string;
@@ -34,13 +33,15 @@ interface DecodedToken {
 }
 
 const Detail = (props: DetailProps) => {
-  const URL = "http://43.200.78.88:8080";
   const accessToken = localStorage.getItem("accessToken");
   const [userId, setUserId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const [details, setDetails] = useState<DetailType | null>(null);
   const { postId, handleShow } = props;
   const [myPost, setMyPost] = useState(false);
+  const [likes, setLikes] = useState(0);
+  const [like, setLike] = useState(false);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -56,13 +57,7 @@ const Detail = (props: DetailProps) => {
     if (!userId) return;
     (async () => {
       try {
-        const response = await axios({
-          method: "get",
-          url: `http://43.200.78.88:8080/post/${postId}`,
-          headers: {
-            Authorization: `${accessToken}`,
-          },
-        });
+        const response = await JsonConfig("get", `api/post/${postId}/${userId}`);
         const data = response.data;
         console.log(data);
         setDetails({
@@ -71,50 +66,22 @@ const Detail = (props: DetailProps) => {
           address: data.address,
           content: data.content,
           createdAt: data.createdAt,
-          likes: data.likes,
-          files: data.imgPath,
-          like: data.like,
+          imgPath: data.imgPath,
           membership: data.membership,
         });
+        setLikes(data.likes);
+        setLike(data.like);
         setMyPost(data.membership.membershipId === userId);
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
     })();
   }, [postId, setDetails, accessToken, userId]);
 
-  const handleLike = () => {
+  const goProfile = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     if (!details) return null;
-
-    (async () => {
-      try {
-        let data: { like: boolean; likes: number };
-        if (details.like) {
-          data = { like: !details.like, likes: details.likes - 1 };
-        } else {
-          data = { like: !details.like, likes: details.likes + 1 };
-        }
-
-        // responsse: 성공인지 아닌지만 체크
-        const response = await axios({
-          method: "patch",
-          url: `${URL}/post/${postId}`,
-          headers: {
-            Authorization: `${accessToken}`,
-          },
-          data,
-        });
-
-        if (response) {
-          setDetails((prev: DetailType | null) => {
-            if (!prev) return null;
-            return { ...prev, ...data };
-          });
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    })();
+    navigate(`/profile/${details.membership.membershipId}`);
   };
 
   if (!details) return <></>;
@@ -125,7 +92,10 @@ const Detail = (props: DetailProps) => {
         <BreadCrump category={details.boardId} />
         <div className="flex items-start justify-between w-full">
           <div className="flex items-center gap-2">
-            <div className="relative flex justify-center items-center w-12 h-12 border-2 rounded-full bg-white text-black overflow-hidden">
+            <div
+              className="relative flex justify-center items-center w-12 h-12 border-2 rounded-full bg-white text-black overflow-hidden"
+              onClick={goProfile}
+            >
               {details.membership.imgPath.length ? (
                 <img
                   className="w-full h-full object-cover"
@@ -139,7 +109,9 @@ const Detail = (props: DetailProps) => {
               )}
             </div>
             <div>
-              <div className="text-base font-semibold text-black">{details.membership.nickname}</div>
+              <div className="text-base font-semibold text-black" onClick={goProfile}>
+                {details.membership.nickname}
+              </div>
               <div className="text-xs text-gray-400">{details.createdAt}</div>
             </div>
           </div>
@@ -159,8 +131,8 @@ const Detail = (props: DetailProps) => {
           <p>{details.content}</p>
         </div>
       </div>
-      <div className="flex justify-center align-items w-full">
-        <Carousel items={details.files} />
+      <div className="flex justify-center align-items w-full bg-gray-200">
+        <Carousel items={details.imgPath} />
       </div>
       <div className="flex items-center justify-between p-4 w-full">
         <div className="flex items-center justify-between px-2 w-full">
@@ -168,13 +140,11 @@ const Detail = (props: DetailProps) => {
             <div className="text-2xl">
               <BiComment />
             </div>
-            <span className="text-base leading-4">{details.likes}</span>
+            <span className="text-base leading-4">{likes}</span>
           </div>
           <div className="flex items-center gap-1">
-            <button className="text-2xl border-0 focus:outline-0 hover:border-0" onClick={handleLike}>
-              {details.like ? <AiFillHeart /> : <AiOutlineHeart />}
-            </button>
-            <span className="text-base leading-4">{details.likes}</span>
+            <LikeButton postId={Number(postId)} like={like} setLike={setLike} likes={likes} setLikes={setLikes} />
+            <span className="text-base leading-4">{likes}</span>
           </div>
         </div>
       </div>
