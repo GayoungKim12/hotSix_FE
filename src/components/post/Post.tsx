@@ -47,7 +47,7 @@ const EditPost = () => {
         formData.append("files", new File([], ""));
       }
 
-      const response = await MultiConfig("post", `post/${userId}`, formData);
+      const response = await MultiConfig("post", `api/post/${userId}`, formData);
       return response.data;
     } catch (err) {
       console.log(err);

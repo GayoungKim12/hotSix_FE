@@ -43,7 +43,7 @@ const EditPost = (props: EditPostProps) => {
     if (!userId) return;
     (async () => {
       try {
-        const response = await JsonConfig("get", `post/${postId}`);
+        const response = await JsonConfig("get", `api/post/${postId}/${userId}`);
         const data = response.data;
         if (data.membership.membershipId !== userId) {
           alert("게시물을 수정하실 수 없습니다.");
@@ -81,7 +81,7 @@ const EditPost = (props: EditPostProps) => {
         formData.append("files", new File([], ""));
       }
       console.log(formData);
-      const response = await MultiConfig("put", `post/${postId}`, formData);
+      const response = await MultiConfig("put", `api/post/${postId}`, formData);
       return response.data;
     } catch (err) {
       console.log(err);

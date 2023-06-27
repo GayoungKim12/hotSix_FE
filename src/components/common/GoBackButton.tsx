@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 const GoBackButton = () => {
   const navigate = useNavigate();
 
-  const handleButton = () => {
+  const handleButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     navigate(-1);
   };
 
