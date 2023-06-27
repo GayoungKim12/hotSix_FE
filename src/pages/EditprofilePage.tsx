@@ -125,13 +125,13 @@ const saveImgFile = () => {
   }
   return (
     <div className="relative bg-main-100">
-      <form action="" onSubmit={fileSubmit}>
       <div className="flex flex-row justify-center items-center pt-4">
         <div onClick={()=>navigate(-1)} className="">
           <GoBackButton />
         </div>
         <h2 className="mx-10 text-center text-3xl">프로필 편집</h2>
       </div>
+      <form action="" onSubmit={fileSubmit}>
       {imgFile?(<img className="block rounded-full mt-4 w-24 h-24 mx-auto " src={URL.createObjectURL(imgFile)} alt="" />)
       :userData && userData.img_path ? (<img className="block rounded-full mx-auto mt-4 w-24 h-24 " src={userData.img_path} alt="" />)
       :(<div className="flex items-center justify-center mx-auto mt-4 bg-main-200 rounded-full  w-24 h-24"><FaUser className="fill-main-100 w-12 h-12"/></div>)}
