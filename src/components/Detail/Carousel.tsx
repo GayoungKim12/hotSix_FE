@@ -1,5 +1,4 @@
 import { BsDot } from "react-icons/bs";
-import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import { useState, useEffect } from "react";
 import CarouselItem from "./CarouselItem";
 
@@ -72,10 +71,9 @@ const Carousel = (props: CarouselProps) => {
   }
 
   return (
-    <div className="relative flex flex-col max-w-2xl h-80 justify-center bg-gray-200 overflow-hidden">
+    <div className="relative flex flex-col max-w-2xl h-80 justify-center overflow-hidden">
       <div
         className="whitespace-nowrap transition-transform duration-300"
-        //
         style={{
           transform: `translate(-${activeIndex * 100}%) `,
         }}
@@ -95,9 +93,6 @@ const Carousel = (props: CarouselProps) => {
       </div>
       <div className="flex justify-evenly ">
         <div className="flex absolute bottom-2">
-          {/* <button onClick={() => updateIndex(activeIndex - 1)} className="text-white cursor-default focus:outline-none">
-            <IoIosArrowBack />
-          </button> */}
           <div className="flex flex-row justify-center -space-x-3">
             {items.map((_, idx) => {
               return (
@@ -107,9 +102,6 @@ const Carousel = (props: CarouselProps) => {
               );
             })}
           </div>
-          {/* <button onClick={() => updateIndex(activeIndex + 1)} className="text-white cursor-default focus:outline-none">
-            <IoIosArrowForward />
-          </button> */}
         </div>
       </div>
     </div>
