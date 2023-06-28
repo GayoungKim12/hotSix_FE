@@ -1,38 +1,46 @@
 import { IoArrowBackOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { BsFillTrash3Fill } from "react-icons/bs";
+import { ChangeEvent } from "react";
 
-interface DeleteMode{
+interface ChatListHeaderProps {
   DeleteMode: () => void;
+  filter: string;
+  setFilter: (value: React.SetStateAction<string>) => void;
 }
 
-
-const ChatListHeader = (props:DeleteMode) => {
-  
+const ChatListHeader = (props: ChatListHeaderProps) => {
   const navigate = useNavigate();
-  const onClickBackBtn =() =>{
+  const { DeleteMode, filter, setFilter } = props;
+
+  const onClickBackBtn = () => {
     navigate(-1);
-  }
+  };
 
   const onClickTrashBtn = () => {
-      props.DeleteMode();
+    DeleteMode();
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFilter(e.target.value);
   };
 
   return (
-    <header className='flex flex-col justify-between  h-24 border-solid border-black border-b-2'>
-        <div className='flex justify-between p-4' >
-          <div className='flex'>
-            <div className='flex justify-center items-center hover:cursor-pointer' onClick={onClickBackBtn}><IoArrowBackOutline></IoArrowBackOutline></div>
-            <h2 className="ml-4">채팅</h2>
+    <header className="flex flex-col justify-between">
+      <div className="flex justify-between p-4">
+        <div className="flex">
+          <div className="flex justify-center items-center hover:cursor-pointer" onClick={onClickBackBtn}>
+            <IoArrowBackOutline />
           </div>
-          <BsFillTrash3Fill  onClick={onClickTrashBtn}></BsFillTrash3Fill>
+          <h2 className="ml-4">채팅</h2>
         </div>
-        <input className='shadow-sm' placeholder='닉네임을 입력하세요'></input>
+        <div onClick={onClickTrashBtn}>
+          <BsFillTrash3Fill />
+        </div>
+      </div>
+      <input className="p-2 shadow-sm" value={filter} placeholder="닉네임을 입력하세요" onChange={handleChange}></input>
     </header>
-  )
+  );
 };
 
-
-
-
-export {ChatListHeader}
+export default ChatListHeader;

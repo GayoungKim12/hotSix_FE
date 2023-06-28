@@ -29,7 +29,7 @@ const Personality = ({personality,handlePersonalityChange }: PersonalityProps) =
 
   return (
     <div className="flex flex-col mt-5 mx-auto w-9/12">
-      <label htmlFor="input-personality">성향</label>
+      <label htmlFor="input-personality " className="after:content-['*'] after:text-red-500">성향</label>
       <div className="flex flex-wrap gap-2 mb-4" id="input-personality">
             {personality.map((selectedOption: string) => (
               <span key={selectedOption} className="mt-1 px-2 py-1 bg-main-300 text-white text-sm ">

@@ -16,7 +16,7 @@ const PostToolButtons = (props: PostToolButtonsProps) => {
 
   const deletePost = async () => {
     try {
-      await JsonConfig("delete", `post/${postId}`);
+      await JsonConfig("delete", `api/post/${postId}`);
       console.log("성공");
     } catch (err) {
       console.log("실패");
@@ -35,8 +35,8 @@ const PostToolButtons = (props: PostToolButtonsProps) => {
   };
   return (
     <div onClick={handleShow}>
-      <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-black opacity-10" />
-      <div className="fixed bottom-4 flex flex-col items-center z-50 w-full text-md">
+      <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-black opacity-30" />
+      <div className="fixed left-0 bottom-4 flex flex-col items-center z-50 w-full text-md">
         <div className="mb-2 w-11/12 rounded-xl bg-white shadow opacity-80">
           <button className="block px-4 py-3 w-full border-0 border-b-2 border-gray-200 rounded-t-xl rounded-b-none hover:border-gray-200 focus:outline-none">
             끌어올리기
