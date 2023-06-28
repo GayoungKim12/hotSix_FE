@@ -72,7 +72,7 @@ const saveImgFile = () => {
       alert("닉네임을 2글자이상으로 해주세요 .");
       return;
     }
-    if (personality.length == 0) {
+    if (personality.length === 0) {
       alert("성향을 1개 이상 골라주세요.");
       return false;
     }
