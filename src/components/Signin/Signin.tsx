@@ -103,13 +103,9 @@ const handleTokenResponse = (tokenResponse:TokenResponse,accessTokenExpire:numbe
   }
 }
 
-const goMain =()=>{
-  navigate('/');
-}
-
   return (
     <div className="w-full h-screen pt-11 bg-main-100">
-        <img onClick={goMain} className="mx-auto w-44" src="../../../public/logo.png" alt="" />
+        <img className="mx-auto w-44" src="../../../public/logo.png" alt="" />
         <form  className="mt-11" action="">
           <div className="flex flex-col mt-5 items-center">
             <label htmlFor="input-email" className="w-9/12">이메일</label>
