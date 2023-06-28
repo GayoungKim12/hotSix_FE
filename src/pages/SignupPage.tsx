@@ -159,7 +159,7 @@ const SignUp = () => {
       </div>
       <form action="http://43.200.78.88:8080/signup" onSubmit={handleSubmit} method="post">
         <div className="flex flex-col items-center mx-auto w-9/12 mt-5 ">
-          {imgFile?(<img className="block rounded-full w-24 h-24 " src={URL.createObjectURL(imgFile)} alt="" />):(<div className="flex items-center justify-center bg-main-200 rounded-full w-24 h-24">
+          {imgFile?(<img className="block rounded-full w-24 h-24 " src={URL.createObjectURL(imgFile)} alt="프로필 사진" />):(<div className="flex items-center justify-center bg-main-200 rounded-full w-24 h-24">
             <FaUser className="fill-main-100 w-12 h-12"/>
           </div>)}
           <label htmlFor="input-file" className="mt-2.5 cursor-pointer">프로필 사진 추가</label>
