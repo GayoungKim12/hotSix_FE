@@ -1,6 +1,15 @@
-import { useState } from "react";
+interface Region {
+  sido: string;
+  sigg: string;
+  regionId: number;
+}
 
-const AreaModal = ({ regionList, handleRegionArea, handleRegionAll }) => {
+interface AreaModalProps {
+  regionList: Region[];
+  handleRegionArea: (region: Region) => void;
+}
+
+const AreaModal = ({ regionList, handleRegionArea }: AreaModalProps) => {
   const regionListSidoes = regionList.map((r) => {
     return r.sido;
   });
@@ -13,14 +22,14 @@ const AreaModal = ({ regionList, handleRegionArea, handleRegionAll }) => {
     <>
       <section className="flex absolute  w-full  border-t border-gray bg-white z-10 shadow">
         <div className="px-3 py-2 bg-indigo-300">
-          <ul onClick={handleRegionAll}>{regionListSido}</ul>
+          <ul>{regionListSido}</ul>
         </div>
         <div>
           <ul className="grid gap-1 grid-cols-4">
             {regionList.map((region) => {
               return (
                 <li
-                  key={region.region_id}
+                  key={region.regionId}
                   className=" mb-1 text-sm text-center"
                   onClick={() => handleRegionArea(region)}
                 >
