@@ -1,9 +1,11 @@
+import MainPage from "./pages/MainPage";
+import PostPage from "./pages/PostPage";
 import DetailPage from "./pages/DetailPage";
 import ProfilePage from "./pages/ProfilePage";
 import ChatRoomPage from "./pages/Chat/ChatRoomPage";
 import ChatPage from "./pages/Chat/ChatListPage";
 import AlarmPage from "./pages/AlarmPage";
-
+import { Provider } from "jotai";
 import SignUp from "./pages/SignupPage";
 import Signin from "./components/Signin/Signin";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -17,6 +19,7 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
+  <Provider>
     <CookiesProvider>
       <QueryClientProvider client={queryClient}>
         <Routes>
@@ -37,6 +40,7 @@ function App() {
         </Routes>
       </QueryClientProvider>
     </CookiesProvider>
+  </Provider>
   );
 }
 export default App;
