@@ -12,6 +12,8 @@ import Signin from "./components/Signin/Signin";
 import { QueryClient, QueryClientProvider } from "react-query";
 import CartPage from "./pages/CartPage";
 import Editprofile from "./pages/EditprofilePage";
+import Findpassword from "./pages/FindpasswordPage";
+import Editpassword from "./pages/EditpasswordPage";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,8 @@ function App() {
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/signin" element={<Signin />}></Route>
         <Route path="/editprofile" element={<Editprofile />}></Route>
+        <Route path="/findpassword" element={<Findpassword />}></Route>
+        <Route path="/editpassword" element={<Editpassword />}></Route>
       </Routes>
     </QueryClientProvider>
   );

@@ -6,15 +6,14 @@ import Personality from "../components/Signup/Personality";
 import { useEffect, useRef, useState } from "react";
 
 import jwtDecode from "jwt-decode";
-import { JsonConfig, MultiConfig, } from "../components/API/AxiosModule";
-import { removeAccessToken, removeRefreshToken } from "../components/API/TokenAction";
+import { JsonConfig, MultiConfig, createLoginConfig, } from "../components/API/AxiosModule";
 import { FaUser } from "react-icons/fa";
 interface DecodedToken {
   id: string;
 }
 interface UserData {
   nickname: string;
-  img_path?: string;
+  imgPath?: string;
   introduction: string;
   personality: string | null;
   region: {
@@ -33,7 +32,7 @@ const Editprofile = () => {
   const [userId, setUserId] = useState(0);
   const imgRef = useRef<HTMLInputElement>(null);
   const [userData, setUserData] = useState<UserData |null>(null);
-
+  const [nicknameCheckError,setenicknameCheckError] =useState<string | null>('')
   const defaultRegionId = userData?.region?.id || null;
 
   
@@ -79,7 +78,7 @@ const saveImgFile = () => {
       personality:[...personality],
       regionId,
       introduction,
-      imgPath:userData && userData.img_path
+      imgPath:userData && userData.imgPath
     }
     const formData = new FormData();  
     formData.append("form", new Blob([JSON.stringify(data)], { type: "application/json" }));
@@ -93,6 +92,7 @@ const saveImgFile = () => {
 
 
   useEffect(() => {
+    if(!userId)return
     JsonConfig('get', `api/membership/detail/${userId}`)
       .then((response) => {
         setUserData(response.data);
@@ -123,17 +123,26 @@ const saveImgFile = () => {
       setUserData(updatedUserData);
     }
   }
+  const nicknameSubmit = async () => {
+    const requestData = {
+      nickname : nickname
+    };
+    createLoginConfig('post','nickname',requestData).then(()=>{alert('닉네임 사용가능 합니다.');setenicknameCheckError('')}).catch((error)=>{
+      setenicknameCheckError(error.response?.data?.message);
+  })
+};
+
   return (
     <div className="relative bg-main-100">
       <div className="flex flex-row justify-center items-center pt-4">
-        <div onClick={()=>navigate(-1)} className="">
+        <div onClick={()=>navigate(-1)} className="absolute left-5">
           <GoBackButton />
         </div>
         <h2 className="mx-10 text-center text-3xl">프로필 편집</h2>
       </div>
       <form action="" onSubmit={fileSubmit}>
       {imgFile?(<img className="block rounded-full mt-4 w-24 h-24 mx-auto " src={URL.createObjectURL(imgFile)} alt="" />)
-      :userData && userData.img_path ? (<img className="block rounded-full mx-auto mt-4 w-24 h-24 " src={userData.img_path} alt="" />)
+      :userData && userData.imgPath ? (<img className="block rounded-full mx-auto mt-4 w-24 h-24 " src={userData.imgPath} alt="" />)
       :(<div className="flex items-center justify-center mx-auto mt-4 bg-main-200 rounded-full  w-24 h-24"><FaUser className="fill-main-100 w-12 h-12"/></div>)}
         <div className="flex flex-row justify-around items-center mx-auto w-9/12 mt-5 ">
           <label htmlFor="input-file" className="mt-2.5 cursor-pointer">프로필 수정</label>
@@ -141,11 +150,12 @@ const saveImgFile = () => {
           <input className="hidden" type="file" ref={imgRef}  accept='image/jpg, image/jpeg, image/png' onChange={saveImgFile} id="input-file" />
         </div>
         <div className="flex flex-col mt-5 mx-auto w-9/12">
-          <label htmlFor="input-nickname" className="w-9/12">닉네임</label>
+          <label htmlFor="input-nickname" className="w-9/12 after:content-['*'] after:text-red-500">닉네임</label>
           <div className="flex mt-2 ">
-            <input type="text" id="input-nickname" className="w-4/5 h-10 p-2 placeholder:p-2 text-sm" value={nickname || (userData && userData.nickname) || ""} onChange={(e)=>setNickname(e.target.value)} name="nickname" placeholder="닉네임을 입력해주세요"/>
-            <button className="rounded-none bg-main-400 w-1/5 h-10 text-white"><AiOutlineCheck className='mx-auto my-0'/></button>
+            <input type="text" id="input-nickname" className="w-4/5 h-10 p-2 placeholder:text-sm" value={nickname} onChange={(e)=>setNickname(e.target.value)} name="nickname" placeholder="닉네임을 입력해주세요"/>
+            <button className="rounded-none bg-main-400 w-1/5 h-10 text-white" type="button" onClick={nicknameSubmit}><AiOutlineCheck className='mx-auto my-0'/></button>
           </div>
+          <span className="text-red-500 text-sm w-9/12">{nicknameCheckError}</span>
         </div>
         <Region handleRegionIdChange={handleRegionIdChange} defaultRegionId={defaultRegionId}/>
         <Personality personality={personality} handlePersonalityChange={handlePersonalityChange} />
