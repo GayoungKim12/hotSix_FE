@@ -50,10 +50,12 @@ useEffect(() => {
 
   return (
     <div className="relative bg-main-100">
-      <div onClick={()=> navigate(-1)} className="absolute top-5 left-4">
-        <GoBackButton />
+      <div className="flex flex-row justify-center items-center pt-4">
+        <div onClick={()=>navigate(-1)} className="absolute left-5">
+          <GoBackButton />
+        </div>
+        <h2 className="mx-10 text-center text-3xl">비밀번호 수정</h2>
       </div>
-      <h2 className="pt-4 text-center text-3xl">비밀번호 수정</h2>
       <form action="" onSubmit={handleSubmit} method="post">
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-password" className="w-9/12 after:content-['*'] after:text-red-500" >임시 비밀번호</label>
