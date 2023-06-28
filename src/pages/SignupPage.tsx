@@ -6,7 +6,7 @@ import Personality from "../components/Signup/Personality";
 import GoBackButton from "../components/common/GoBackButton";
 import { SignupConfig, createLoginConfig } from "../components/API/AxiosModule";
 import { FaUser } from "react-icons/fa";
-import utility from '../utills/utills';
+import utility from '../utils/utils';
 
 const SignUp = () => {
   const [imgFile, setImgFile] = useState<File | null>(null);
@@ -152,14 +152,14 @@ const SignUp = () => {
   return (
     <div className="relative bg-main-100">
       <div className="flex flex-row justify-center items-center pt-4">
-        <div onClick={()=>navigate(-1)} className="">
+        <div onClick={()=>navigate(-1)} className="absolute left-5">
           <GoBackButton />
         </div>
         <h2 className="mx-10 text-center text-3xl">회원가입</h2>
       </div>
       <form action="http://43.200.78.88:8080/signup" onSubmit={handleSubmit} method="post">
         <div className="flex flex-col items-center mx-auto w-9/12 mt-5 ">
-          {imgFile?(<img className="block rounded-full w-24 h-24 " src={URL.createObjectURL(imgFile)} alt="" />):(<div className="flex items-center justify-center bg-main-200 rounded-full w-24 h-24">
+          {imgFile?(<img className="block rounded-full w-24 h-24 " src={URL.createObjectURL(imgFile)} alt="프로필 사진" />):(<div className="flex items-center justify-center bg-main-200 rounded-full w-24 h-24">
             <FaUser className="fill-main-100 w-12 h-12"/>
           </div>)}
           <label htmlFor="input-file" className="mt-2.5 cursor-pointer">프로필 사진 추가</label>

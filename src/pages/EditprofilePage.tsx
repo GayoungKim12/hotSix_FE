@@ -4,16 +4,16 @@ import { AiOutlineCheck } from "react-icons/ai";
 import Region from "../components/Signup/Region";
 import Personality from "../components/Signup/Personality";
 import { useEffect, useRef, useState } from "react";
-
 import jwtDecode from "jwt-decode";
 import { JsonConfig, MultiConfig, createLoginConfig, } from "../components/API/AxiosModule";
 import { FaUser } from "react-icons/fa";
+
 interface DecodedToken {
   id: string;
 }
 interface UserData {
   nickname: string;
-  imgPath?: string;
+  imgPath: string;
   introduction: string;
   personality: string | null;
   region: {
@@ -99,7 +99,7 @@ const saveImgFile = () => {
     } else {
       formData.append('files', new File([], ''), 'image.jpg');
     }console.log(formData);
-    MultiConfig('put',`api/membership/update/${userId}`,formData).then(()=>{alert('수정이 완료되었습니다.'); navigate('/profile')}).catch((error)=>{console.log(error)}) 
+    MultiConfig('put',`api/membership/update/${userId}`,formData).then(()=>{alert('수정이 완료되었습니다.'); navigate(-1)}).catch((error)=>{console.log(error)}) 
   }
 
 
@@ -131,7 +131,7 @@ const saveImgFile = () => {
   const removeImg =()=>{
     setImgFile(null)
     if (userData) {
-      const updatedUserData = { ...userData,img_path:''};
+      const updatedUserData = { ...userData,imgPath:''};
       setUserData(updatedUserData);
     }
   }
