@@ -44,7 +44,7 @@ const Profile = (props: ProfileProps) => {
           introduction: data.introduction,
           gender: data.gender,
           region: data.region,
-          personality: data.personality.filter((p: string) => p.length !== 0),
+          personality: data.personality,
         });
         setPartner({
           membershipId: Number(profileId),
@@ -67,7 +67,7 @@ const Profile = (props: ProfileProps) => {
             <img
               className="w-full h-full object-cover"
               src={profile.imgPath}
-              alt={`${profile.imgPath}의 프로필 이미지`}
+              alt={`${profile.nickname}의 프로필 이미지`}
             />
           ) : (
             <div className={"absolute top-3 flex justify-center items-center text-4xl text-main-200"}>
@@ -81,13 +81,11 @@ const Profile = (props: ProfileProps) => {
         <div>{profile.gender === 1 ? "남성" : "여성"}</div>
         <div>{profile.birth}</div>
         <div>{`${profile.region.sido} ${profile.region.sigg}`}</div>
-        {profile.personality.length && (
-          <div className="flex items-center flex-wrap gap-1">
-            {profile.personality.map((item: string) => {
-              return <div key={item}>{`#${item}`}</div>;
-            })}
-          </div>
-        )}
+        <div className="flex items-center flex-wrap gap-1">
+          {profile.personality.map((item: string) => {
+            return <div key={item}>{`#${item}`}</div>;
+          })}
+        </div>
         <div>{profile.introduction}</div>
       </div>
     </div>
