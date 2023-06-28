@@ -21,13 +21,12 @@ interface ChatRoomType {
     imgPath: string;
     nickname: string;
   };
-  roomId: number;
+  chatRoomId: number;
   lastTime: string;
 }
 
 const ChatList = (props: ChatListProps) => {
-  /* const URL = "http://43.200.78.88:8080"; */
-  const URL = "http://localhost:3001";
+  const URL = "http://43.200.78.88:8080";
   const accessToken = localStorage.getItem("accessToken");
   const [userId, setUserId] = useState<number | null>(null);
 
@@ -59,6 +58,7 @@ const ChatList = (props: ChatListProps) => {
   }, [chatRooms, filter]);
 
   const getChatRooms = useCallback(async () => {
+    if (!userId) return;
     try {
       const response = await axios({
         url: `${URL}/api/chat/room`,
@@ -89,7 +89,7 @@ const ChatList = (props: ChatListProps) => {
 
   useEffect(() => {
     if (chatRooms && allSelect) {
-      const newDeleteList = chatRooms.map((chatRoom) => chatRoom.roomId);
+      const newDeleteList = chatRooms.map((chatRoom) => chatRoom.chatRoomId);
       setDeleteList(newDeleteList);
     }
   }, [allSelect, chatRooms]);
@@ -117,7 +117,7 @@ const ChatList = (props: ChatListProps) => {
       setChatRooms((prev: ChatRoomType[] | null) => {
         if (!prev) return null;
         return prev.filter((room) => {
-          return !deleteList.includes(room.roomId);
+          return !deleteList.includes(room.chatRoomId);
         });
       });
       setDeleteList([]);
@@ -135,7 +135,7 @@ const ChatList = (props: ChatListProps) => {
           chatRoomList.map((chat) => {
             return (
               <ChatRoom
-                key={chat.roomId}
+                key={chat.chatRoomId}
                 chat={chat}
                 allSelect={allSelect}
                 setAllSelect={setAllSelect}

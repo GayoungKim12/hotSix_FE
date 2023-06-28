@@ -11,7 +11,7 @@ interface ChatRoomType {
     imgPath: string;
     nickname: string;
   };
-  roomId: number;
+  chatRoomId: number;
   lastTime: string;
 }
 
@@ -36,7 +36,7 @@ const ChatRoom = (props: isDeleteMode) => {
 
   const clickChatRoom = () => {
     if (isDeleteMode) return null;
-    navigate(`/chat/${chat.roomId}`, { state: chat.partner });
+    navigate(`/chat/${chat.chatRoomId}`, { state: chat.partner });
   };
 
   const checkDeleteBtn = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,14 +44,14 @@ const ChatRoom = (props: isDeleteMode) => {
 
     if (isDeleteBtnChecked) {
       setDeleteList((prev) => {
-        return prev.filter((roomId) => roomId !== chat.roomId);
+        return prev.filter((roomId) => roomId !== chat.chatRoomId);
       });
       setIsDeleteBtnChecked(false);
       if (allSelect) {
         setAllSelect(false);
       }
     } else {
-      setDeleteList((prev) => [...prev, chat.roomId]);
+      setDeleteList((prev) => [...prev, chat.chatRoomId]);
       setIsDeleteBtnChecked(true);
     }
   };
