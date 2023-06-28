@@ -4,7 +4,7 @@ import PostPage from "./pages/PostPage";
 import DetailPage from "./pages/DetailPage";
 import ProfilePage from "./pages/ProfilePage";
 import ChatRoomPage from "./pages/Chat/ChatRoomPage";
-import ChatPage from "./pages/Chat/ChatListPage";
+import ChatListPage from "./pages/Chat/ChatListPage";
 import AlarmPage from "./pages/AlarmPage";
 import { Provider } from "jotai";
 import SignUp from "./pages/SignupPage";
@@ -30,7 +30,7 @@ function App() {
           <Route path="/detail/:postId" element={<DetailPage />}></Route>
           <Route path="/cart" element={<CartPage />}></Route>
           <Route path="/profile/:profileId" element={<ProfilePage />}></Route>
-          <Route path="/ChatListPage" element={<ChatPage></ChatPage>}></Route>
+          <Route path="/ChatListPage" element={<ChatListPage></ChatListPage>}></Route>
           <Route path="/ChatRoom" element={<ChatRoomPage></ChatRoomPage>}></Route>
           <Route path="/AlarmPage" element={<AlarmPage></AlarmPage>}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
