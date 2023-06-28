@@ -30,7 +30,7 @@ function validateForm(
     return false;
   }
 
-  if (personality.length == 0) {
+  if (personality.length === 0) {
     alert("성향을 1개 이상 골라주세요.");
     return false;
   }
