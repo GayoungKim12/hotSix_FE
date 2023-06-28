@@ -1,4 +1,5 @@
 import MainPage from "./pages/MainPage";
+import { Routes, Route } from "react-router-dom";
 import PostPage from "./pages/PostPage";
 import DetailPage from "./pages/DetailPage";
 import ProfilePage from "./pages/ProfilePage";
