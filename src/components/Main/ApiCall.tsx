@@ -54,6 +54,7 @@ export async function regionAll({
   setUserRegion,
   setRegionId,
   accessToken,
+  regionId,
 }: RegionAllProps) {
   await axios
     .get(`${REGION_URL}`, {
@@ -62,10 +63,12 @@ export async function regionAll({
       },
     })
     .then((response) => {
-      // console.log(response.data);
+      console.log(response.data);
       setRegionList(response.data.regionMainDtoList);
       setUserRegion(response.data.regionId);
-      setRegionId(response.data.regionId);
+      if (regionId === undefined) {
+        setRegionId(response.data.regionId);
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -94,12 +97,14 @@ export async function getFindRoomPostData({
         },
       })
       .then((response) => {
-        // console.log(response.data);
-        setBoardOneList(response.data.postProjectionMainDtoList);
+        console.log(response.data);
+        console.log("된거지?");
+        setBoardOneList(response.data.postMainDtoList);
         setLastPostId(response.data.lastPostId);
       })
       .catch((error) => {
         console.log(error);
+        console.log("된거냐옹");
       });
   } else if (regionId && lastPostId !== null) {
     await axios
@@ -115,10 +120,7 @@ export async function getFindRoomPostData({
       .then((response) => {
         // console.log(response.data);
         // console.log(lastPostId);
-        setBoardOneList((prev) => [
-          ...prev,
-          ...response.data.postProjectionMainDtoList,
-        ]);
+        setBoardOneList((prev) => [...prev, ...response.data.postMainDtoList]);
         setLastPostId(response.data.lastPostId);
       })
 
@@ -150,8 +152,8 @@ export async function getHasRoomPostData({
         },
       })
       .then((response) => {
-        // console.log(response.data);
-        setBoardTwoList(response.data.postProjectionMainDtoList);
+        console.log(response.data);
+        setBoardTwoList(response.data.postMainDtoList);
         setLastPostId(response.data.lastPostId);
       })
       .catch((error) => {
@@ -170,10 +172,7 @@ export async function getHasRoomPostData({
       })
       .then((response) => {
         // console.log(response.data);
-        setBoardTwoList((prev) => [
-          ...prev,
-          ...response.data.postProjectionMainDtoList,
-        ]);
+        setBoardTwoList((prev) => [...prev, ...response.data.postMainDtoList]);
         setLastPostId(response.data.lastPostId);
       })
       .catch((error) => {

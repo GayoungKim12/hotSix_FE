@@ -1,14 +1,18 @@
+import { useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { BiComment } from "react-icons/bi";
 import { GoKebabHorizontal } from "react-icons/go";
 import PostToolButtons from "../common/PostToolButtons";
 import { FaUser } from "react-icons/fa";
+import axios from "axios";
 
 interface Props {
   showPostButtons: boolean;
   setShowPostButtons: React.Dispatch<React.SetStateAction<boolean>>;
+  accessToken: string;
+  userId: number;
   board: {
-    postId: number;
+    postId: number | string;
     nickName: string;
     address: string;
     likesFlag: boolean;
@@ -24,8 +28,11 @@ interface Props {
 const BoardCard: React.FC<Props> = ({
   showPostButtons,
   setShowPostButtons,
+  userId,
+  accessToken,
   board,
 }: Props) => {
+  const [like, setLike] = useState(board.likesFlag);
   const postButtonOpen = (
     e: React.TouchEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -37,6 +44,43 @@ const BoardCard: React.FC<Props> = ({
     e: React.TouchEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     e.stopPropagation();
+    if (!like) {
+      //밑에처럼하면 안됨
+      // axios
+      //   .post(`http://43.200.78.88:8080/api/likes/${board.postId}/${userId}`, {
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`,
+      //     },
+      //   })
+      //   .then((res) => {
+      //     console.log(res);
+      //     setLike(true);
+      //   });
+      axios({
+        method: "post",
+        url: `http://43.200.78.88:8080/api/likes/${board.postId}/${userId}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((res) => {
+        console.log(res);
+        setLike(true);
+      });
+    } else if (like) {
+      axios
+        .delete(
+          `http://43.200.78.88:8080/api/likes/${board.postId}/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          setLike(false);
+        });
+    }
   };
 
   return (
@@ -48,7 +92,7 @@ const BoardCard: React.FC<Props> = ({
               <div className="flex items-start justify-between w-full">
                 <div className="flex items-center gap-2">
                   <div className="relative flex justify-center items-center w-12 h-12 border-2 rounded-full bg-white text-black overflow-hidden">
-                    {board.userFile?.length ? (
+                    {board.userFile === null ? (
                       <img
                         className="w-full h-full object-cover"
                         src={board.userFile}
@@ -73,12 +117,14 @@ const BoardCard: React.FC<Props> = ({
                     </div>
                   </div>
                 </div>
-                <button
-                  className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200"
-                  onClick={postButtonOpen}
-                >
-                  <GoKebabHorizontal />
-                </button>
+                {userId === board.memberId && (
+                  <button
+                    className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200"
+                    onClick={postButtonOpen}
+                  >
+                    <GoKebabHorizontal />
+                  </button>
+                )}
               </div>
             </article>
 
@@ -94,10 +140,10 @@ const BoardCard: React.FC<Props> = ({
             </article>
           </section>
 
-          {board.roomFiles[0].length > 0 && (
+          {board.roomFiles[0]?.length > 0 && (
             <div className="inline-flex flex-col items-center justfiy-center">
               <img
-                src={board.roomFiles[0]}
+                src={board.roomFiles}
                 className=" w-full rounded-lg bg-black"
                 draggable="false"
               />
@@ -113,23 +159,26 @@ const BoardCard: React.FC<Props> = ({
             </article>
 
             <article className="flex">
-              <AiFillHeart
-                className="cursor-pointer text-red-500 text-2xl"
-                onClick={onClickHeart}
-              />
-
-              <span className="text-indigo-300">
-                <AiOutlineHeart
-                  className="cursor-pointer text-2xl"
+              {like ? (
+                <AiFillHeart
+                  className="cursor-pointer text-red-500 text-2xl"
                   onClick={onClickHeart}
                 />
-              </span>
+              ) : (
+                <span className="text-indigo-300">
+                  <AiOutlineHeart
+                    className="cursor-pointer text-2xl"
+                    onClick={onClickHeart}
+                  />
+                </span>
+              )}
             </article>
           </section>
         </div>
       </div>
       {showPostButtons && (
         <PostToolButtons
+          setShowPostButtons={setShowPostButtons}
           handleShow={() => setShowPostButtons(false)}
           postId={board.postId}
         />

@@ -17,7 +17,7 @@ const AreaModal = ({ regionList, handleRegionArea }: AreaModalProps) => {
   const regionListSido = regionListSidoes.filter((el, i) => {
     return regionListSidoes.indexOf(el) === i;
   });
-  console.log(regionList);
+
   return (
     <>
       <section className="flex absolute  w-full  border-t border-gray bg-white z-10 shadow">
