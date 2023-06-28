@@ -1,23 +1,29 @@
 import { GoKebabHorizontal } from "react-icons/go";
+import { FaUser } from "react-icons/fa";
 import { useState } from "react";
-import { atom, useAtom } from "jotai";
-import { showCommentButtonsAtom } from "../../pages/DetailPage";
+
 import CommentToolButtons from "./CommentToolButtons";
+import { IoIosSend } from "react-icons/io";
+import { RiDeleteBinLine } from "react-icons/ri";
+import axios from "axios";
 interface CommentProps {
   handleShow: () => void;
 }
 
 const Comment = (props: CommentProps) => {
-  const { commentData, commentId, setCommentId, comments, setComments } = props;
-  const [text, setText] = useState(commentData.comment);
+  const { commentData, comments, setComments, accessToken, userId } = props;
+  const [text, setText] = useState(commentData.content);
   const [editText, setEditText] = useState(false);
+  const [showCommentButtons, setShowCommentButtons] = useState(false);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   const onChange = (e) => {
     setText(e.target.value);
+    e.target.style.height = "auto";
+    e.target.style.height = e.target.scrollHeight + "px";
   };
-  const [showCommentButtons, setShowCommentButtons] = useAtom(
-    showCommentButtonsAtom
-  );
 
   const editComment = () => {
     setEditText(true);
@@ -26,33 +32,86 @@ const Comment = (props: CommentProps) => {
   const onClickClose = () => {
     setShowCommentButtons(false);
   };
-  console.log(editText);
-  console.log(comments);
+
+  //댓글 수정해서 서버 / 배열 에 보냄
+  const editCommentData = () => {
+    const data = { content: text };
+    axios
+      .put(
+        `http://43.200.78.88:8080/api/comment/${commentData.commentId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        setComments(
+          comments.map((c) => {
+            console.log(c);
+            return c.commentId === response.data ? { ...c, content: text } : c;
+          })
+        );
+      });
+    setEditText(false);
+  };
+
+  //댓글 수정중인거 취소
+  const cancelCommentData = () => {
+    setEditText(false);
+    setText(commentData.content);
+  };
+
   return (
     <>
       <div className="flex flex-col gap-2 p-4 border-b-2">
         <div className="flex items-start justify-between w-full">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 border-2 rounded-full text-black"></div>
-            <div className="text-base font-semibold text-black">
-              {commentData.nick_name}
+            <div className="flex items-center justify-center w-8 h-8 border-2 rounded-full text-black">
+              {commentData.imgPath !== "" ? (
+                <img src={commentData.imgPath} />
+              ) : (
+                <div className="text-main-300 text-lg">
+                  <FaUser />
+                </div>
+              )}
+            </div>
+            <div className="text-sm font-semibold text-black">
+              {commentData.nickName}
             </div>
           </div>
-          <button
-            className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200"
-            onClick={() => {
-              setShowCommentButtons(true);
-              // setEditText(true);
-              setCommentId(commentData.id);
-            }}
-          >
-            <GoKebabHorizontal />
-          </button>
+          {userId === commentData.memberId && (
+            <button
+              className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200"
+              onClick={() => {
+                setShowCommentButtons(true);
+              }}
+            >
+              <GoKebabHorizontal />
+            </button>
+          )}
         </div>
         {!editText ? (
-          <p>{commentData.comment}</p>
+          <p className="ml-1 text-lg">{commentData.content}</p>
         ) : (
-          <input value={text} onChange={onChange} />
+          <form
+            className="flex items-center p-2 gap-2 rounded-3xl bg-white"
+            onSubmit={handleSubmit}
+          >
+            <textarea
+              value={text}
+              onChange={onChange}
+              className="w-full px-3 py-1 rounded-lg resize-none focus:outline-none"
+            />
+            <button onClick={editCommentData}>
+              <IoIosSend className="text-2xl" />
+            </button>
+            <button onClick={cancelCommentData}>
+              <RiDeleteBinLine className="text-2xl" />
+            </button>
+          </form>
         )}
 
         <div className="flex items-start justify-between w-full">
@@ -62,12 +121,12 @@ const Comment = (props: CommentProps) => {
 
       {showCommentButtons && (
         <CommentToolButtons
+          commentData={commentData}
           comments={comments}
           setComments={setComments}
-          commentId={commentId}
-          setCommentId={setCommentId}
           editComment={editComment}
           onClickClose={onClickClose}
+          setShowCommentButtons={setShowCommentButtons}
         />
       )}
     </>
