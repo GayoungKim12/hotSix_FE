@@ -1,40 +1,62 @@
 import axios from "axios";
-import { JsonConfig } from "../API/AxiosModule";
-import { useState } from "react";
-import { useAtom } from "jotai";
-import { editModeAtom } from "./Comment";
-import { showCommentButtonsAtom } from "../../pages/DetailPage";
+import jwtDecode from "jwt-decode";
+
+import { useState, useEffect } from "react";
+
 interface CommentToolButtonsProps {
   handleShow: () => void;
 }
 
 const CommentToolButtons = (props: CommentToolButtonsProps) => {
-  const { comments, commentId, setComments, editComment, onClickClose } = props;
-  const [showCommentButtons, setShowCommentButtons] = useAtom(
-    showCommentButtonsAtom
-  );
+  const {
+    comments,
+    commentId,
+    setComments,
+    editComment,
+    onClickClose,
+    commentData,
+    setShowCommentButtons,
+  } = props;
+  const [userId, setUserId] = useState();
+
+  //토큰에서 유저아이디 파싱
+  const accessToken = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (!accessToken) return;
+    const decodeToken = jwtDecode<DecodedToken>(accessToken);
+
+    if (decodeToken.id) {
+      console.log(Number(decodeToken.id));
+      setUserId(Number(decodeToken.id));
+    }
+  }, [accessToken]);
+
   // console.log(commentId);
 
   // console.log(comments);
 
   //댓글 삭제
   const deleteComment = () => {
-    // const params = { id: commentId };
-    // JsonConfig("delete", `commentList`, null, params).then((res) =>
-    //   console.log(res)
-    // );
     axios
-      .delete(`http://localhost:3001/commentList/${commentId}`)
-      .then((res) => console.log(res));
-    alert("삭제되었습니다");
-    setComments(
-      comments.filter((c) => {
-        return c.id !== commentId;
+      .delete(`http://43.200.78.88:8080/api/comment/${commentData.commentId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
-    );
+      .then((res) => {
+        console.log(res);
+        setComments(
+          comments.filter((c) => {
+            return c.commentId !== res.data;
+          })
+        );
+      });
+    alert("삭제되었습니다");
+
     setShowCommentButtons(false);
   };
-  console.log(comments);
+
   //댓글 수정
 
   return (
@@ -46,11 +68,12 @@ const CommentToolButtons = (props: CommentToolButtonsProps) => {
             className="block px-4 py-3 w-full border-0 border-b-2 border-gray-200 rounded-none hover:border-gray-200 focus:outline-none"
             onClick={editComment}
           >
-            댓글 수정{commentId}
+            댓글 수정
           </button>
           <button
             className="block px-4 py-3 w-full border-0 rounded-t-none rounded-b-xl hover:border-0 focus:outline-none"
             onClick={deleteComment}
+            // onClick={setDeletes(true)}
           >
             댓글 삭제
           </button>

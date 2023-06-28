@@ -1,8 +1,22 @@
-import { useState } from "react";
+import axios from "axios";
+import jwtDecode from "jwt-decode";
+import { useEffect, useState } from "react";
 import { IoIosSend } from "react-icons/io";
 
-const CommentForm = () => {
+const CommentForm = ({ postId, comments, setComments }) => {
+  const [userId, setUserId] = useState();
   const [content, setContent] = useState("");
+  const accessToken = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (!accessToken) return;
+    const decodeToken = jwtDecode<DecodedToken>(accessToken);
+
+    if (decodeToken.id) {
+      console.log(Number(decodeToken.id));
+      setUserId(Number(decodeToken.id));
+    }
+  }, [accessToken]);
 
   const handleResizeHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
@@ -10,13 +24,28 @@ const CommentForm = () => {
     e.target.style.height = e.target.scrollHeight + "px";
   };
 
+  //댓글등록 서버로 보냄
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (!userId) return;
     e.preventDefault();
 
     if (!content) {
-      alert("댓글 내용을 선택해주세요.");
+      alert("댓글 입력해주세요 😀");
       return;
     }
+    const data = { content: content };
+    axios
+      .post(`http://43.200.78.88:8080/api/comment/${postId}/${userId}`, data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setComments([res.data, ...comments]);
+      });
+    setContent("");
   };
 
   return (
