@@ -15,9 +15,10 @@ import {
 } from "../components/Main/ApiCall";
 import jwtDecode from "jwt-decode";
 
-//관심목록 페이지 예정
+//뒤로가기 눌렀을때 regionId, 방구해요/방있어요 버튼 유지를 위해서 전역변수로 설정
 export const isSelectedFindRoomAtom = atom<boolean>(true);
 export const isSelectedHasRoomAtom = atom<boolean>(false);
+export const regionIdAtom = atom<number | undefined>();
 
 interface RegionProps {
   regionId: number;
@@ -57,10 +58,10 @@ const MainPage = () => {
   const [regionList, setRegionList] = useState<RegionProps[]>([]);
   const [regionName, setRegionName] = useState<undefined | string>();
   const [userRegion, setUserRegion] = useState<number | undefined>();
-  const [regionId, setRegionId] = useState<number | undefined>();
+  const [regionId, setRegionId] = useAtom(regionIdAtom);
   const [boardOneOffset, setBoardOneOffset] = useState(0);
   const [boardTwoOffset, setBoardTwoOffset] = useState(0);
-  const [userId, setUserId] = useState(0);
+  const [userId, setUserId] = useState();
   const [lastPostId, setLastPostId] = useState(null);
 
   //토큰에서 유저아이디 파싱
@@ -71,7 +72,7 @@ const MainPage = () => {
     const decodeToken = jwtDecode<DecodedToken>(accessToken);
 
     if (decodeToken.id) {
-      // console.log(Number(decodeToken.id));
+      console.log(Number(decodeToken.id));
       setUserId(Number(decodeToken.id));
     }
   }, [accessToken]);
@@ -88,6 +89,7 @@ const MainPage = () => {
 
   //방구해요 버튼 클릭 시
   const handleFindRoom = () => {
+    window.scrollTo({ top: 0, behavior: "auto" });
     setBoardTwoList([]);
     setBoardOneOffset(0);
     setIsSelectedHasRoom(false);
@@ -107,6 +109,7 @@ const MainPage = () => {
 
   //방 있어요 버튼 클릭 시
   const handleHasRoom = () => {
+    window.scrollTo({ top: 0, behavior: "auto" });
     setBoardOneList([]);
     setBoardTwoOffset(0);
     setIsSelectedFindRoom(false);
@@ -131,6 +134,7 @@ const MainPage = () => {
 
   //첫화면 지역데이터 가져오기
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
     if (!userId) return;
     regionAll({
       REGION_URL,
@@ -138,21 +142,24 @@ const MainPage = () => {
       setUserRegion,
       setRegionId,
       accessToken,
+      regionId,
     });
   }, [setRegionList, userId]);
 
   //화면에 표시되는 유저가 선택한 첫 지역담기
   const userRegionSigg = regionList.filter((re) => {
-    return re.regionId === userRegion;
+    return re.regionId === regionId;
   });
 
   //첫화면 모든지역 게시물 가져오기(방구해요)
   useEffect(() => {
-    if (userRegion) {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    if (!userRegion && !userId) return;
+    if (userRegion && userId) {
       setRegionName(userRegionSigg[0]?.sigg);
     }
     const fetchData = async () => {
-      if (userRegion && isSelectedFindRoom) {
+      if (userRegion && isSelectedFindRoom && userId) {
         await getFindRoomPostData({
           setBoardOneList,
           boardOneOffset,
@@ -162,10 +169,9 @@ const MainPage = () => {
           accessToken,
           SERVER_BORDONE,
         });
-      } else if (userRegion && isSelectedHasRoom) {
+      } else if (userRegion && isSelectedHasRoom && userId) {
         await getHasRoomPostData({
           setBoardTwoList,
-
           boardTwoOffset,
           regionId,
           lastPostId,
@@ -188,8 +194,12 @@ const MainPage = () => {
         setBoardOneOffset(boardOneOffset + 1);
       }
     };
+
     window.addEventListener("scroll", handScroll);
-    return () => window.removeEventListener("scroll", handScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handScroll);
+    };
   }, [boardOneOffset, isSelectedFindRoom]);
 
   useEffect(() => {
@@ -207,7 +217,7 @@ const MainPage = () => {
 
   //방구해요, 방있어요 무한스크롤
   useEffect(() => {
-    if (isSelectedFindRoom) {
+    if (isSelectedFindRoom && userId) {
       getFindRoomPostData({
         setBoardOneList,
         boardOneOffset,
@@ -217,7 +227,7 @@ const MainPage = () => {
         accessToken,
         SERVER_BORDONE,
       });
-    } else if (isSelectedHasRoom) {
+    } else if (isSelectedHasRoom && userId) {
       getHasRoomPostData({
         setBoardTwoList,
         boardTwoOffset,
@@ -230,35 +240,38 @@ const MainPage = () => {
     }
   }, [boardOneOffset, boardTwoOffset, regionId]);
   // console.log(regionList);
-  // console.log(boardOneList);
-  // console.log(boardTwoList);
-  // console.log(`boardOneOffset : ${boardOneOffset}`);
+  // console.log(`userId : ${userId}`);
+  console.log("boardOneList :", boardOneList);
+  console.log("boardTwoList :", boardTwoList);
+  console.log(`boardOneOffset : ${boardOneOffset}`);
   // console.log(`boardTwoOffset : ${boardTwoOffset}`);
-  // // console.log(`regionId : ${regionId}`);
+  // console.log(`regionId : ${regionId}`);
+  // console.log(`userRegion : ${userRegion}`);
   // console.log(`lastPostId : ${lastPostId}`);
 
   //지역 선택 시 해당 게시물 가져오기
   const handleRegionArea = (region: RegionProps) => {
-    if (isSelectedFindRoom) {
-      setBoardOneOffset(0);
+    window.scrollTo({ top: 0, behavior: "auto" });
+    if (userId) {
+      if (isSelectedFindRoom) {
+        setBoardOneOffset(0);
+      }
+      if (isSelectedHasRoom) {
+        setBoardTwoOffset(0);
+      }
+      setActiveAreaModal(false);
+      setRegionName(region.sigg);
+      setRegionId(region.regionId);
     }
-    if (isSelectedHasRoom) {
-      setBoardTwoOffset(0);
-    }
-    setActiveAreaModal(false);
-    setRegionName(region.sigg);
-    setRegionId(region.regionId);
   };
 
   return (
     <>
       <div className="bg-main-100 h-full">
-        <Header />
-        <section>
+        <section className="fixed w-full z-20 top-0 left-0 shadow bg-main-100">
+          <Header />
           <div className="relative">
-            <div className="px-4 py-2 mt-20 text-center bg-white">
-              {regionName}
-            </div>
+            <div className="px-4 py-2 text-center bg-white">{regionName}</div>
             <div
               className="absolute bottom-2 right-2"
               onClick={handleAreaModal}
@@ -279,26 +292,36 @@ const MainPage = () => {
           />
         </section>
 
-        <section>
-          {boardOneList.length > 0
+        <section className=" mt-20 pt-20">
+          {boardOneList?.length > 0
             ? boardOneList.map((b, i) => {
                 return (
-                  <div onClick={() => navigate(`/detail/${b.postId}`)} key={i}>
+                  <div
+                    onClick={() => {
+                      navigate(`/detail/${b.postId}`);
+                    }}
+                    key={i}
+                    className={i === 0 ? "mt-12" : ""}
+                  >
                     <BoardCard
                       showPostButtons={showPostButtons}
                       setShowPostButtons={setShowPostButtons}
                       board={b}
+                      accessToken={accessToken}
+                      userId={userId}
                     />
                   </div>
                 );
               })
-            : boardTwoList.map((b, i) => {
+            : boardTwoList?.map((b, i) => {
                 return (
                   <div onClick={() => navigate(`/detail/${b.postId}`)} key={i}>
                     <BoardCard
                       showPostButtons={showPostButtons}
                       setShowPostButtons={setShowPostButtons}
                       board={b}
+                      accessToken={accessToken}
+                      userId={userId}
                     />
                   </div>
                 );

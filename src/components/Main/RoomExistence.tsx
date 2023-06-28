@@ -20,7 +20,7 @@ const RoomExistence = ({ handleHasRoom, handleFindRoom }: RoomExistProps) => {
     isSelectedHasRoomAtom
   );
   return (
-    <div className="flex justify-evenly mt-4">
+    <div className="flex justify-evenly mt-2 mb-2 pt-2 pb-2">
       <button
         onClick={handleFindRoom}
         className={`px-9 py-2 rounded-full drop-shadow-xl  ${
