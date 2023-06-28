@@ -6,7 +6,7 @@ import Personality from "../components/Signup/Personality";
 import GoBackButton from "../components/common/GoBackButton";
 import { SignupConfig, createLoginConfig } from "../components/API/AxiosModule";
 import { FaUser } from "react-icons/fa";
-import utility from '../utills/utills';
+import utility from '../utils/utils';
 
 const SignUp = () => {
   const [imgFile, setImgFile] = useState<File | null>(null);
@@ -152,7 +152,7 @@ const SignUp = () => {
   return (
     <div className="relative bg-main-100">
       <div className="flex flex-row justify-center items-center pt-4">
-        <div onClick={()=>navigate(-1)} className="">
+        <div onClick={()=>navigate(-1)} className="absolute left-5">
           <GoBackButton />
         </div>
         <h2 className="mx-10 text-center text-3xl">회원가입</h2>
