@@ -103,7 +103,11 @@ const Detail = (props: DetailProps) => {
                   alt={`${details.membership.nickname}의 프로필 이미지`}
                 />
               ) : (
-                <div className={"absolute top-3 flex justify-center items-center text-4xl text-main-200"}>
+                <div
+                  className={
+                    "absolute top-3 flex justify-center items-center text-4xl text-main-200"
+                  }
+                >
                   <FaUser />
                 </div>
               )}
@@ -126,7 +130,8 @@ const Detail = (props: DetailProps) => {
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 font-semibold">
-            <span>{details.address}</span>/<span>{details.gender === 1 ? "남자" : "여자"}</span>
+            <span>{details.address}</span>/
+            <span>{details.gender === 1 ? "남자" : "여자"}</span>
           </div>
           <p>{details.content}</p>
         </div>
