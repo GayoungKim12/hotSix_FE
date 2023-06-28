@@ -1,5 +1,4 @@
 import { BiComment } from "react-icons/bi";
-import { AiFillHeart, AiOutlineHeart, AiOutlineUser } from "react-icons/ai";
 import { GoKebabHorizontal } from "react-icons/go";
 import BreadCrump from "./BreadCrump";
 import Carousel from "./Carousel";
@@ -56,13 +55,10 @@ const Detail = (props: DetailProps) => {
     if (!userId) return;
     (async () => {
       try {
-        const response = await axios({
-          method: "get",
-          url: `http://43.200.78.88:8080/post/${postId}`,
-          headers: {
-            Authorization: `${accessToken}`,
-          },
-        });
+        const response = await JsonConfig(
+          "get",
+          `api/post/${postId}/${userId}`
+        );
         const data = response.data;
         console.log(data);
         setDetails({
@@ -133,13 +129,19 @@ const Detail = (props: DetailProps) => {
                   alt={`${details.membership.nickname}의 프로필 이미지`}
                 />
               ) : (
-                <div className={"absolute top-3 flex justify-center items-center text-4xl text-main-200"}>
+                <div
+                  className={
+                    "absolute top-3 flex justify-center items-center text-4xl text-main-200"
+                  }
+                >
                   <FaUser />
                 </div>
               )}
             </div>
             <div>
-              <div className="text-base font-semibold text-black">{details.membership.nickname}</div>
+              <div className="text-base font-semibold text-black">
+                {details.membership.nickname}
+              </div>
               <div className="text-xs text-gray-400">{details.createdAt}</div>
             </div>
           </div>
@@ -154,7 +156,8 @@ const Detail = (props: DetailProps) => {
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 font-semibold">
-            <span>{details.address}</span>/<span>{details.gender === 1 ? "남자" : "여자"}</span>
+            <span>{details.address}</span>/
+            <span>{details.gender === 1 ? "남자" : "여자"}</span>
           </div>
           <p>{details.content}</p>
         </div>
@@ -171,10 +174,14 @@ const Detail = (props: DetailProps) => {
             <span className="text-base leading-4">{details.likes}</span>
           </div>
           <div className="flex items-center gap-1">
-            <button className="text-2xl border-0 focus:outline-0 hover:border-0" onClick={handleLike}>
-              {details.like ? <AiFillHeart /> : <AiOutlineHeart />}
-            </button>
-            <span className="text-base leading-4">{details.likes}</span>
+            <LikeButton
+              postId={Number(postId)}
+              like={like}
+              setLike={setLike}
+              likes={likes}
+              setLikes={setLikes}
+            />
+            <span className="text-base leading-4">{likes}</span>
           </div>
         </div>
       </div>
