@@ -49,7 +49,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="relative bg-main-100">
+    <div className="relative min-h-screen bg-main-100">
       <div className="flex flex-row justify-center items-center pt-4">
         <div onClick={()=>navigate(-1)} className="absolute left-5">
           <GoBackButton />
@@ -74,7 +74,7 @@ useEffect(() => {
             <span className="text-green-500 text-sm">비밀번호가 일치합니다</span>
           )}
         </div>
-        <button type="submit" className="rounded-none mt-16 w-full h-12 bg-main-400 text-white" >가입하기</button>
+        <button type="submit" className="fixed bottom-0 rounded-none  w-full h-12 bg-main-400 text-white" >가입하기</button>
       </form>
     </div>
   )
