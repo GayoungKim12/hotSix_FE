@@ -97,17 +97,9 @@ const Detail = (props: DetailProps) => {
               onClick={goProfile}
             >
               {details.membership.imgPath.length ? (
-                <img
-                  className="w-full h-full object-cover"
-                  src={details.membership.imgPath}
-                  alt={`${details.membership.nickname}의 프로필 이미지`}
-                />
+                <img className="w-full h-full object-cover" src={details.membership.imgPath} alt={`${details.membership.nickname}의 프로필 이미지`} />
               ) : (
-                <div
-                  className={
-                    "absolute top-3 flex justify-center items-center text-4xl text-main-200"
-                  }
-                >
+                <div className={"absolute top-3 flex justify-center items-center text-4xl text-main-200"}>
                   <FaUser />
                 </div>
               )}
@@ -120,18 +112,14 @@ const Detail = (props: DetailProps) => {
             </div>
           </div>
           {myPost && (
-            <button
-              className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-100"
-              onClick={handleShow}
-            >
+            <button className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-100" onClick={handleShow}>
               <GoKebabHorizontal />
             </button>
           )}
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 font-semibold">
-            <span>{details.address}</span>/
-            <span>{details.gender === 1 ? "남자" : "여자"}</span>
+            <span>{details.address}</span>/<span>{details.gender === 1 ? "남자" : "여자"}</span>
           </div>
           <p>{details.content}</p>
         </div>

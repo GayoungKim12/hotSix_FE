@@ -43,11 +43,7 @@ const Card = (props: CardProps) => {
           <div className="flex items-center gap-2">
             <div className="relative flex justify-center items-center w-12 h-12 border-2 rounded-full bg-white text-black overflow-hidden">
               {post.imgPath.length ? (
-                <img
-                  className="w-full h-full object-cover"
-                  src={post.imgPath}
-                  alt={`${post.imgPath}의 프로필 이미지`}
-                />
+                <img className="w-full h-full object-cover" src={post.imgPath} alt={`${post.imgPath}의 프로필 이미지`} />
               ) : (
                 <div className={"absolute top-3 flex justify-center items-center text-4xl text-main-200"}>
                   <FaUser />

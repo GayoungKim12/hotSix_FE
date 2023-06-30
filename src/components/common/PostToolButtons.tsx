@@ -27,9 +27,7 @@ const PostToolButtons = (props: PostToolButtonsProps) => {
     }
   };
 
-  const closePost = (
-    e: React.TouchEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const closePost = (e: React.TouchEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setShowPostButtons(false);
   };
@@ -47,17 +45,11 @@ const PostToolButtons = (props: PostToolButtonsProps) => {
           >
             게시물 수정
           </button>
-          <button
-            className="block px-4 py-3 w-full border-0 rounded-t-none rounded-b-xl hover:border-0 focus:outline-none"
-            onClick={deletePost}
-          >
+          <button className="block px-4 py-3 w-full border-0 rounded-t-none rounded-b-xl hover:border-0 focus:outline-none" onClick={deletePost}>
             게시물 삭제
           </button>
         </div>
-        <button
-          className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none"
-          onClick={closePost}
-        >
+        <button className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none" onClick={closePost}>
           닫기
         </button>
       </div>

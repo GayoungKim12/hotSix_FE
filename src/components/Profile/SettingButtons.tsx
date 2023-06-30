@@ -72,9 +72,7 @@ const SettingButtons = (props: SettingButtonsProps) => {
             </div>
           )}
         </div>
-        <button className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none">
-          닫기
-        </button>
+        <button className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none">닫기</button>
       </div>
     </div>
   );

@@ -1,34 +1,37 @@
 //토큰값 반환(isTokenValid 빼고테스트 완료)
 
-import axios from 'axios';
-import {setCookie,getCookie,removeCookie} from './Cookies';
-import jwt_decode from 'jwt-decode';
-import { createKakaoRenewAccessTokenConfig } from './AxiosModule';
-
-
+import axios from "axios";
+import { setCookie, getCookie, removeCookie } from "./Cookies";
+import jwt_decode from "jwt-decode";
+import { createKakaoRenewAccessTokenConfig } from "./AxiosModule";
+import jwtDecode from "jwt-decode";
 
 //-------------------------------------------------------------------------토큰 저장,삭제,가져오기 액션
-const setAccessToken = (token:string) => {
+const setAccessToken = (token: string) => {
   removeAccessToken();
-  localStorage.setItem("accessToken", token); 
+  localStorage.setItem("accessToken", token);
 };
 
-const setRefreshToken  = (token:string) => {
+const setRefreshToken = (token: string) => {
   removeRefreshToken();
-  setCookie('refreshToken', token, { path: '/' });
+  setCookie("refreshToken", token, { path: "/" });
 };
-
 
 const getAccessToken = () => {
-    const accessToken = localStorage.getItem('accessToken');
-    return accessToken;
+  const accessToken = localStorage.getItem("accessToken");
+  return accessToken;
 };
 
 const getRefreshToken = () => {
-  const refreshToken = getCookie('refreshToken');
+  const refreshToken = getCookie("refreshToken");
   return refreshToken;
 };
 
+const getUserId = () => {
+  const userId = Number(localStorage.getItem("userId"));
+
+  return userId;
+};
 
 const removeAccessToken = () => {
   localStorage.removeItem("accessTokenExpire");
@@ -36,8 +39,8 @@ const removeAccessToken = () => {
 };
 
 const removeRefreshToken = () => {
-  removeCookie('refreshTokenExpire');
-  removeCookie('refreshToken');
+  removeCookie("refreshTokenExpire");
+  removeCookie("refreshToken");
 };
 
 //-------------------------------------------------------------------------토큰 유효성 검사 액션
@@ -46,126 +49,127 @@ const removeRefreshToken = () => {
 // case 3): 두개의 토큰 모두 만료 ⇒ 로그아웃
 
 //토큰이 유효한지 검사(테스트 완료)
+//const navigate  = useNavigate();
 const isTokenValid = async () => {
-  const tokenCategory=localStorage.getItem('tokenCategory');
-  let isAccessTokenValid = checkTokenExpiration('accessToken');
-  const isRefreshTokenValid = checkTokenExpiration('refreshToken');
-  
+  const tokenCategory = localStorage.getItem("tokenCategory");
+  let isAccessTokenValid = checkTokenExpiration("accessToken");
+  const isRefreshTokenValid = checkTokenExpiration("refreshToken");
+
+  if (isAccessTokenValid) {
+    return true;
+  }
   while (!isAccessTokenValid) {
-    if(tokenCategory === 'default')
-    {
+    if (tokenCategory === "default") {
       if (!isAccessTokenValid && isRefreshTokenValid) {
         await refreshAccessToken();
-        isAccessTokenValid = checkTokenExpiration('accessToken');
-        return;
+        isAccessTokenValid = checkTokenExpiration("accessToken");
+        return true;
       } else if (!isAccessTokenValid && !isRefreshTokenValid) {
         removeAccessToken();
         removeRefreshToken();
-        console.log("둘다 만료")
-        break;
+
+        console.log("둘다 만료");
+        alert("토큰이 만료됐습니다!");
+        window.location.href = "/signin";
+        return false;
+
         // 로그아웃
-  
       }
-    }
-    else if(tokenCategory === 'kakao')
-    {
+    } else if (tokenCategory === "kakao") {
       if (!isAccessTokenValid && isRefreshTokenValid) {
         await refreshKakaoAccessToken();
-        console.log("$$$$$")
-        isAccessTokenValid = checkTokenExpiration('accessToken');
-        return;
+        console.log("$$$$$");
+        isAccessTokenValid = checkTokenExpiration("accessToken");
+        return true;
       } else if (!isAccessTokenValid && !isRefreshTokenValid) {
         removeAccessToken();
         removeRefreshToken();
-        console.log("둘다 만료")
-        break;
+        console.log("둘다 만료");
+        window.location.href = "/signin";
+        return false;
         // 로그아웃
       }
     }
-    }
-
+  }
 };
 
-
-
+interface DecodedToken {
+  email: string;
+  exp: number;
+  id: number;
+  sub: string;
+}
 
 //토큰의 유효기간을 추출(테스트 완료)
-const getTokenExpiration = (tokenName:string,kakaoExpire:number=-1) => {
+const getTokenExpiration = (tokenName: string, kakaoExpire: number = -1) => {
+  const token = tokenName === "refreshToken" ? getRefreshToken() : tokenName === "accessToken" ? getAccessToken() : null;
+  let expirationTime = new Date();
 
-  const token = 
-  tokenName === 'refreshToken' ? getRefreshToken() :
-  tokenName === 'accessToken' ? getAccessToken() :
-  null;
-  let expirationTime=new Date();
-  
-  if (token && kakaoExpire===-1) {
+  if (token && kakaoExpire === -1) {
     try {
-      const a = jwt_decode(token); 
-      console.log(a);
+      if (tokenName === "accessToken") {
+        const decodeToken = jwtDecode<DecodedToken>(token);
+        const userId = JSON.stringify(decodeToken.id);
+        localStorage.setItem("userId", userId);
+      }
       const decoded = jwt_decode(token) as { exp: number } | null;
-      
+      console.log(decoded);
+
       if (decoded && decoded.exp) {
         expirationTime = new Date(decoded.exp * 1000);
         console.log(`${tokenName} 만료시간:`, expirationTime);
       } else {
-        console.log('잘못된 토큰.');
+        console.log("잘못된 토큰.");
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.log('잘못된 토큰:', err.message);
+        console.log("잘못된 토큰:", err.message);
       } else {
-        console.log('알수없는 에러');
+        console.log("알수없는 에러");
       }
     }
-  } 
-  else if(token && kakaoExpire!= -1){
+  } else if (token && kakaoExpire != -1) {
     const currentTime = new Date().getTime();
     const remainingTimeInSeconds = kakaoExpire;
     expirationTime = new Date(currentTime + remainingTimeInSeconds * 1000);
     console.log(`${tokenName} 만료시간:`, expirationTime);
-  }
-
-  else {
+  } else {
     console.log(`${tokenName} 없음.`);
   }
-  (tokenName === 'refreshToken')
-  ? setCookie("refreshTokenExpire", expirationTime.toISOString(), { path: '/' }):
-   (tokenName === 'accessToken')
-  ? localStorage.setItem("accessTokenExpire", expirationTime.toISOString()):
-   null;
-}
-
+  tokenName === "refreshToken"
+    ? setCookie("refreshTokenExpire", expirationTime.toISOString(), { path: "/" })
+    : tokenName === "accessToken"
+    ? localStorage.setItem("accessTokenExpire", expirationTime.toISOString())
+    : null;
+};
 
 //토큰이 만료되기 30분전인지 확인 (테스트 완료)
+let a = 0;
+const checkTokenExpiration = (tokenName: string) => {
+  const expirationTime =
+    tokenName === "refreshToken" ? getCookie("refreshTokenExpire") : tokenName === "accessToken" ? localStorage.getItem("accessTokenExpire") : null;
 
-const checkTokenExpiration = (tokenName:string) => {
-
-  const expirationTime = 
-  tokenName === 'refreshToken' ?  getCookie('refreshTokenExpire')  :
-  tokenName === 'accessToken' ?  localStorage.getItem("accessTokenExpire") :
-  null;
-
- 
- if ( expirationTime) {
-
+  if (expirationTime) {
     const currentTime = new Date();
-
     let timeDiffMinutes = Math.round((new Date(expirationTime).getTime() - currentTime.getTime()) / (1000 * 60));
-     
-    console.log(`${tokenName}이 만료되기까지`+timeDiffMinutes+`분 남았습니다`);
+    // if(tokenName ==='accessToken' && a<1 )
+    // {
+    //   a++;
+    //   timeDiffMinutes=timeDiffMinutes-99999999999
+    // }
+
+    console.log(`${tokenName}이 만료되기까지` + timeDiffMinutes + `분 남았습니다`);
     if (timeDiffMinutes <= 5) {
       console.log(`${tokenName}이 만료되기 5분전입니다. 갱신합니다`);
       return false;
-
     } else {
       console.log(`${tokenName}이 유효합니다.`);
       return true;
     }
   } else {
-    console.log('유효하지 않은 토큰.');
-    }
-}
-
+    console.log("유효하지 않은 토큰.");
+  }
+};
 
 //토큰 재발급
 const refreshAccessToken = async () => {
@@ -173,23 +177,22 @@ const refreshAccessToken = async () => {
     const refreshToken = getRefreshToken();
     const accessToken = getAccessToken();
 
-    
     const headers = {
-      'Authorization': accessToken,
-      'Authorization-refresh': refreshToken
+      Authorization: accessToken,
+      "Authorization-refresh": refreshToken,
     };
 
-    const response = await axios.post("http://43.200.78.88:8080/refresh",null, {
-        headers:headers
+    const response = await axios.post("http://43.200.78.88:8080/refresh", null, {
+      headers: headers,
     });
-    
+
     const newAceessToken = response.data["Authorization"];
 
     removeAccessToken();
     setAccessToken(newAceessToken);
 
     getTokenExpiration("accessToken");
-    console.log('Access token 갱신.');
+    console.log("Access token 갱신.");
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || "에러");
@@ -199,30 +202,30 @@ const refreshAccessToken = async () => {
   }
 };
 
-
 const refreshKakaoAccessToken = async () => {
   try {
     const refreshToken = getRefreshToken();
     const Rest_api_key = localStorage.getItem("Rest_api_key");
     console.log(Rest_api_key);
     if (Rest_api_key) {
-      createKakaoRenewAccessTokenConfig("POST","refresh_token",Rest_api_key,refreshToken).then((response)=>{
-        const accessToken = response.data["access_token"];
+      createKakaoRenewAccessTokenConfig("POST", "refresh_token", Rest_api_key, refreshToken)
+        .then((response) => {
+          const accessToken = response.data["access_token"];
 
-        if (accessToken ) {
-          setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
-          getTokenExpiration('accessToken',response.data["expires_in"]);
-          isTokenValid();
-        }
-        }).catch((error)=>{
-          console.log("에러")
+          if (accessToken) {
+            setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
+            getTokenExpiration("accessToken", response.data["expires_in"]);
+            isTokenValid();
+          }
+        })
+        .catch((error) => {
+          console.log("에러");
           console.error(error);
         });
+    } else {
+      console.log("rest api key없음");
     }
-    else{
-      console.log("rest api key없음")
-    }
-    console.log('Access token 갱신.');
+    console.log("Access token 갱신.");
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || "에러");
@@ -249,7 +252,7 @@ const refreshKakaoAccessToken = async () => {
 //     const newRefreshToken = response.data["Authorization-refresh"];
 //     removeRefreshToken();
 //     setRefreshToken(newRefreshToken);
-    
+
 //     console.log('Access token 갱신.');
 //   } catch (error: unknown) {
 //     if (axios.isAxiosError(error)) {
@@ -260,6 +263,16 @@ const refreshKakaoAccessToken = async () => {
 //   }
 // };
 
-
-
-export{isTokenValid,setAccessToken,setRefreshToken,getRefreshToken,getAccessToken,removeAccessToken,removeRefreshToken,checkTokenExpiration,getTokenExpiration,refreshAccessToken};
+export {
+  getUserId,
+  isTokenValid,
+  setAccessToken,
+  setRefreshToken,
+  getRefreshToken,
+  getAccessToken,
+  removeAccessToken,
+  removeRefreshToken,
+  checkTokenExpiration,
+  getTokenExpiration,
+  refreshAccessToken,
+};

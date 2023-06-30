@@ -8,15 +8,7 @@ interface CommentToolButtonsProps {
 }
 
 const CommentToolButtons = (props: CommentToolButtonsProps) => {
-  const {
-    comments,
-    commentId,
-    setComments,
-    editComment,
-    onClickClose,
-    commentData,
-    setShowCommentButtons,
-  } = props;
+  const { comments, commentId, setComments, editComment, onClickClose, commentData, setShowCommentButtons } = props;
   const [userId, setUserId] = useState();
 
   //토큰에서 유저아이디 파싱
@@ -78,10 +70,7 @@ const CommentToolButtons = (props: CommentToolButtonsProps) => {
             댓글 삭제
           </button>
         </div>
-        <button
-          className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none"
-          onClick={onClickClose}
-        >
+        <button className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none" onClick={onClickClose}>
           닫기
         </button>
       </div>

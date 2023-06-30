@@ -28,11 +28,7 @@ const AreaModal = ({ regionList, handleRegionArea }: AreaModalProps) => {
           <ul className="grid gap-1 grid-cols-4">
             {regionList.map((region) => {
               return (
-                <li
-                  key={region.regionId}
-                  className=" mb-1 text-sm text-center"
-                  onClick={() => handleRegionArea(region)}
-                >
+                <li key={region.regionId} className=" mb-1 text-sm text-center" onClick={() => handleRegionArea(region)}>
                   {region.sigg}
                 </li>
               );

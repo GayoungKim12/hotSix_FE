@@ -60,18 +60,15 @@ const CartPage = () => {
   const loadMore = useCallback(async () => {
     if (lastPostId) {
       try {
-        const response = await axios.get(
-          `http://43.200.78.88:8080/api/membership/like/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            params: {
-              lastPostId: lastPostId,
-              size: 5,
-            },
-          }
-        );
+        const response = await axios.get(`http://43.200.78.88:8080/api/membership/like/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            lastPostId: lastPostId,
+            size: 5,
+          },
+        });
         console.log(response.data);
         setCartList((prev) => [...prev, ...response.data.likeListPost]);
         setLastPostId(response.data.lastPostId);
@@ -125,12 +122,7 @@ const CartPage = () => {
                 }}
                 key={cart.postId}
               >
-                <BoardCard
-                  board={cart}
-                  setShowPostButtons={setShowPostButtons}
-                  accessToken={accessToken}
-                  userId={userId}
-                />
+                <BoardCard board={cart} setShowPostButtons={setShowPostButtons} accessToken={accessToken} userId={userId} />
               </div>
             );
           })}
@@ -139,12 +131,7 @@ const CartPage = () => {
       </div>
 
       <Footer selected={true} />
-      {showPostButtons && (
-        <PostToolButtons
-          handleShow={() => setShowPostButtons(false)}
-          setShowPostButtons={setShowPostButtons}
-        />
-      )}
+      {showPostButtons && <PostToolButtons handleShow={() => setShowPostButtons(false)} setShowPostButtons={setShowPostButtons} />}
     </>
   );
 };

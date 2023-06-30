@@ -8,11 +8,7 @@ import AreaModal from "../components/Main/AreaModal";
 import { useNavigate } from "react-router-dom";
 import { atom, useAtom } from "jotai";
 import RoomExistence from "../components/Main/RoomExistence";
-import {
-  getFindRoomPostData,
-  getHasRoomPostData,
-  regionAll,
-} from "../components/Main/ApiCall";
+import { getFindRoomPostData, getHasRoomPostData, regionAll } from "../components/Main/ApiCall";
 import jwtDecode from "jwt-decode";
 
 //뒤로가기 눌렀을때 regionId, 방구해요/방있어요 버튼 유지를 위해서 전역변수로 설정
@@ -45,12 +41,8 @@ interface Board {
 
 const MainPage = () => {
   const navigate = useNavigate();
-  const [isSelectedFindRoom, setIsSelectedFindRoom] = useAtom(
-    isSelectedFindRoomAtom
-  );
-  const [isSelectedHasRoom, setIsSelectedHasRoom] = useAtom(
-    isSelectedHasRoomAtom
-  );
+  const [isSelectedFindRoom, setIsSelectedFindRoom] = useAtom(isSelectedFindRoomAtom);
+  const [isSelectedHasRoom, setIsSelectedHasRoom] = useAtom(isSelectedHasRoomAtom);
   const [activeAreaModal, setActiveAreaModal] = useState<boolean>(false);
   const [showPostButtons, setShowPostButtons] = useState<boolean>(false);
   const [boardOneList, setBoardOneList] = useState<Board[]>([]);
@@ -188,8 +180,7 @@ const MainPage = () => {
   useEffect(() => {
     const handScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight;
-      const currentHeight =
-        document.documentElement.scrollTop + window.innerHeight;
+      const currentHeight = document.documentElement.scrollTop + window.innerHeight;
       if (currentHeight + 1 >= scrollHeight && isSelectedFindRoom) {
         setBoardOneOffset(boardOneOffset + 1);
       }
@@ -205,8 +196,7 @@ const MainPage = () => {
   useEffect(() => {
     const handScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight;
-      const currentHeight =
-        document.documentElement.scrollTop + window.innerHeight;
+      const currentHeight = document.documentElement.scrollTop + window.innerHeight;
       if (currentHeight + 1 >= scrollHeight && isSelectedHasRoom) {
         setBoardTwoOffset(boardTwoOffset + 1);
       }
@@ -272,24 +262,13 @@ const MainPage = () => {
           <Header />
           <div className="relative">
             <div className="px-4 py-2 text-center bg-white">{regionName}</div>
-            <div
-              className="absolute bottom-2 right-2"
-              onClick={handleAreaModal}
-            >
+            <div className="absolute bottom-2 right-2" onClick={handleAreaModal}>
               <RxTriangleDown className="text-3xl text-main-300" />
             </div>{" "}
-            {activeAreaModal && (
-              <AreaModal
-                regionList={regionList}
-                handleRegionArea={handleRegionArea}
-              />
-            )}
+            {activeAreaModal && <AreaModal regionList={regionList} handleRegionArea={handleRegionArea} />}
           </div>
 
-          <RoomExistence
-            handleFindRoom={handleFindRoom}
-            handleHasRoom={handleHasRoom}
-          />
+          <RoomExistence handleFindRoom={handleFindRoom} handleHasRoom={handleHasRoom} />
         </section>
 
         <section className=" mt-20 pt-20">

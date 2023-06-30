@@ -93,10 +93,7 @@ const Carousel = () => {
         >
           {items.map((item) => {
             return (
-              <div
-                className="inline-flex flex-col items-center justfiy-center"
-                key={item.description}
-              >
+              <div className="inline-flex flex-col items-center justfiy-center" key={item.description}>
                 <CarouselItem item={item} />
               </div>
             );
@@ -104,10 +101,7 @@ const Carousel = () => {
         </div>
         <div className="flex justify-evenly ">
           <div className="flex absolute bottom-2">
-            <button
-              onClick={() => updateIndex(activeIndex - 1)}
-              className="text-white cursor-default"
-            >
+            <button onClick={() => updateIndex(activeIndex - 1)} className="text-white cursor-default">
               <IoIosArrowBack />
             </button>
             <div className="flex flex-row justify-center -space-x-3">
@@ -119,22 +113,13 @@ const Carousel = () => {
                       updateIndex(idx);
                     }}
                   >
-                    <BsDot
-                      className={`text-3xl ${
-                        activeIndex === idx
-                          ? "text-indigo-400"
-                          : "text-indigo-200"
-                      }`}
-                    />
+                    <BsDot className={`text-3xl ${activeIndex === idx ? "text-indigo-400" : "text-indigo-200"}`} />
                   </div>
                 );
               })}{" "}
             </div>
 
-            <button
-              onClick={() => updateIndex(activeIndex + 1)}
-              className="text-white cursor-default"
-            >
+            <button onClick={() => updateIndex(activeIndex + 1)} className="text-white cursor-default">
               <IoIosArrowForward />
             </button>
           </div>{" "}

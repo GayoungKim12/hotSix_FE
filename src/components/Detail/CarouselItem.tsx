@@ -14,12 +14,7 @@ const CarouselItem = (props: CarouselItemProps) => {
 
   return (
     <>
-      <img
-        src={item}
-        onClick={handleClick}
-        className={full ? "h-80 w-full object-cover" : "h-80 w-full object-contain"}
-        draggable="false"
-      />
+      <img src={item} onClick={handleClick} className={full ? "h-80 w-full object-cover" : "h-80 w-full object-contain"} draggable="false" />
     </>
   );
 };

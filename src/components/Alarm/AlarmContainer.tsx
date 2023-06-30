@@ -1,24 +1,23 @@
-import AlarmDiv from "./AlarmDiv"
+import AlarmDiv from "./AlarmDiv";
 
-interface isDeleteMode{
-    isDeleteMode:boolean;
-  }
-  
-
-const AlarmContainer = (props:isDeleteMode) => {
-  return (
-    <div className=' flex flex-col flex-grow '>
-        <AlarmDiv isDeleteMode={props.isDeleteMode}/>
-        <AlarmDiv isDeleteMode={props.isDeleteMode}/>
-        <AlarmDiv isDeleteMode={props.isDeleteMode}/>
-        <AlarmDiv isDeleteMode={props.isDeleteMode}/>
-        <AlarmDiv isDeleteMode={props.isDeleteMode}/>
-        <AlarmDiv isDeleteMode={props.isDeleteMode}/>
-        <AlarmDiv isDeleteMode={props.isDeleteMode}/>
-        <AlarmDiv isDeleteMode={props.isDeleteMode}/>
-        <AlarmDiv isDeleteMode={props.isDeleteMode}/>
-    </div>
-  )
+interface isDeleteMode {
+  isDeleteMode: boolean;
 }
 
-export default AlarmContainer
+const AlarmContainer = (props: isDeleteMode) => {
+  return (
+    <div className=" flex flex-col flex-grow ">
+      <AlarmDiv isDeleteMode={props.isDeleteMode} />
+      <AlarmDiv isDeleteMode={props.isDeleteMode} />
+      <AlarmDiv isDeleteMode={props.isDeleteMode} />
+      <AlarmDiv isDeleteMode={props.isDeleteMode} />
+      <AlarmDiv isDeleteMode={props.isDeleteMode} />
+      <AlarmDiv isDeleteMode={props.isDeleteMode} />
+      <AlarmDiv isDeleteMode={props.isDeleteMode} />
+      <AlarmDiv isDeleteMode={props.isDeleteMode} />
+      <AlarmDiv isDeleteMode={props.isDeleteMode} />
+    </div>
+  );
+};
+
+export default AlarmContainer;

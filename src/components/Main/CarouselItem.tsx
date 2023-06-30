@@ -5,11 +5,7 @@ interface PropsItem {
 const CarouselItem = ({ item }: PropsItem) => {
   return (
     <>
-      <img
-        src={item.imageURL}
-        className=" w-full rounded-lg bg-black"
-        draggable="false"
-      />
+      <img src={item.imageURL} className=" w-full rounded-lg bg-black" draggable="false" />
     </>
   );
 };

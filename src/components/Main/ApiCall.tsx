@@ -48,14 +48,7 @@ interface GetHasRoomProps {
 }
 
 //첫 화면 지역데이터 다 가져오기
-export async function regionAll({
-  REGION_URL,
-  setRegionList,
-  setUserRegion,
-  setRegionId,
-  accessToken,
-  regionId,
-}: RegionAllProps) {
+export async function regionAll({ REGION_URL, setRegionList, setUserRegion, setRegionId, accessToken, regionId }: RegionAllProps) {
   await axios
     .get(`${REGION_URL}`, {
       headers: {

@@ -15,16 +15,8 @@ const DetailPage = () => {
     <div className="pt-14 min-h-screen bg-main-100">
       <Header />
       <Detail handleShow={() => setShowPostButtons(true)} postId={postId} />
-      <CommentList
-        postId={postId}
-        handleShow={() => setShowPostButtons(false)}
-      />
-      {showPostButtons && (
-        <PostToolButtons
-          postId={postId}
-          handleShow={() => setShowPostButtons(false)}
-        />
-      )}
+      <CommentList postId={postId} handleShow={() => setShowPostButtons(false)} />
+      {showPostButtons && <PostToolButtons postId={postId} handleShow={() => setShowPostButtons(false)} />}
     </div>
   );
 };

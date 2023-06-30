@@ -146,10 +146,7 @@ const ChatList = (props: ChatListProps) => {
           })}
       </div>
       {props.isDeleteMode && (
-        <button
-          className="fixed z-10 w-full h-12 bottom-0 bg-main-400 rounded-none text-white focus:outline-none"
-          onClick={handleDelete}
-        >
+        <button className="fixed z-10 w-full h-12 bottom-0 bg-main-400 rounded-none text-white focus:outline-none" onClick={handleDelete}>
           삭제
         </button>
       )}
