@@ -1,3 +1,4 @@
+import { AiFillCheckCircle, AiOutlineCheckCircle } from "react-icons/ai";
 import { IoArrowBackOutline } from "react-icons/io5";
 
 interface HeaderDeleteModeProps {
@@ -13,7 +14,7 @@ const HeaderDeleteMode = (props: HeaderDeleteModeProps) => {
     DeleteMode();
   };
 
-  const onClickAllSelect = () => {
+  const clickAllSelect = () => {
     setAllSelect(true);
   };
 
@@ -27,9 +28,13 @@ const HeaderDeleteMode = (props: HeaderDeleteModeProps) => {
           <h2 className="ml-4">채팅</h2>
         </div>
       </div>
-      {!allSelect && (
-        <button className="px-2 py-0.5 bg-main-400 text-white font-light" onClick={onClickAllSelect}>
-          전체선택
+      {!allSelect ? (
+        <button className="flex justify-center items-center border-none text-main-400 hover:border-none focus:outline-none" onClick={clickAllSelect}>
+          <AiOutlineCheckCircle className="w-6 h-6" />
+        </button>
+      ) : (
+        <button className="flex justify-center items-center border-none text-main-400 hover:border-none focus:outline-none">
+          <AiFillCheckCircle className="w-6 h-6" />
         </button>
       )}
     </div>

@@ -1,6 +1,5 @@
 import { IoArrowBackOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { BsFillTrash3Fill } from "react-icons/bs";
 import { ChangeEvent } from "react";
 
 interface ChatListHeaderProps {
@@ -11,15 +10,15 @@ interface ChatListHeaderProps {
 
 const ChatListHeader = (props: ChatListHeaderProps) => {
   const navigate = useNavigate();
-  const { DeleteMode, filter, setFilter } = props;
+  const { filter, setFilter } = props;
 
   const onClickBackBtn = () => {
     navigate(-1);
   };
 
-  const onClickTrashBtn = () => {
+  /* const onClickTrashBtn = () => {
     DeleteMode();
-  };
+  }; */
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
@@ -34,9 +33,9 @@ const ChatListHeader = (props: ChatListHeaderProps) => {
           </div>
           <h2 className="ml-4">채팅</h2>
         </div>
-        <div onClick={onClickTrashBtn}>
+        {/* <button className="flex justify-center items-center hover:cursor-pointer hover:border-0 focus:outline-none" onClick={onClickTrashBtn}>
           <BsFillTrash3Fill />
-        </div>
+        </button> */}
       </div>
       <input className="p-2 shadow-sm" value={filter} placeholder="닉네임을 입력하세요" onChange={handleChange}></input>
     </header>
