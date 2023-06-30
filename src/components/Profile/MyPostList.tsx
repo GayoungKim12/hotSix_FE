@@ -124,9 +124,7 @@ const MyPostList = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-2 w-full pb-14">
-      <h3 className="flex items-center justify-center w-full h-12 border-b-2 border-main-400 text-main-400 text-md">
-        게시물
-      </h3>
+      <h3 className="flex items-center justify-center w-full h-12 border-b-2 border-main-400 text-main-400 text-md">게시물</h3>
       <div className="flex flex-col items-center p-4 gap-4 w-full">
         {postList !== null && postList.length
           ? postList.map((post) => {

@@ -12,10 +12,7 @@ const GoBackButton = () => {
   };
 
   return (
-    <button
-      className="border-0 text-2xl focus:outline-0 hover:border-0"
-      onClick={handleButton}
-    >
+    <button className="border-0 text-2xl focus:outline-0 hover:border-0" onClick={handleButton}>
       <BiArrowBack />
     </button>
   );

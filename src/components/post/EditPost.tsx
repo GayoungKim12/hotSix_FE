@@ -121,9 +121,7 @@ const EditPost = (props: EditPostProps) => {
         <Content content={content} setContent={setContent} />
         <AddImages files={files} setFiles={setFiles} imgPath={imgPath} setImgPath={setImgPath} />
       </article>
-      <button className="fixed bottom-0 block w-full h-12 rounded-none bg-main-400 text-white focus:outline-none">
-        등록하기
-      </button>
+      <button className="fixed bottom-0 block w-full h-12 rounded-none bg-main-400 text-white focus:outline-none">등록하기</button>
     </form>
   );
 };

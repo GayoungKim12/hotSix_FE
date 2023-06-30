@@ -30,28 +30,16 @@ const Footer = ({ selected }: Props) => {
   return (
     <div className="fixed w-full bottom-0 shadow">
       <article className="flex justify-around items-center py-3 bg-white text-indigo-300">
-        <HiOutlineUserCircle
-          className="text-3xl cursor-pointer"
-          onClick={moveToProfile}
-        />
+        <HiOutlineUserCircle className="text-3xl cursor-pointer" onClick={moveToProfile} />
         {selected ? (
-          <AiFillHeart
-            className="text-3xl cursor-pointer"
-            onClick={moveToCart}
-          />
+          <AiFillHeart className="text-3xl cursor-pointer" onClick={moveToCart} />
         ) : (
-          <AiOutlineHeart
-            className="text-3xl cursor-pointer"
-            onClick={moveToCart}
-          />
+          <AiOutlineHeart className="text-3xl cursor-pointer" onClick={moveToCart} />
         )}
 
         <BsHouse className="text-3xl cursor-pointer" onClick={moveToHome} />
         {/* <CiSearch className="text-3xl cursor-pointer" onClick={moveToSearch} /> */}
-        <TbMessageCircle
-          className="text-3xl cursor-pointer -scale-x-100"
-          onClick={moveToChat}
-        />
+        <TbMessageCircle className="text-3xl cursor-pointer -scale-x-100" onClick={moveToChat} />
       </article>
     </div>
   );

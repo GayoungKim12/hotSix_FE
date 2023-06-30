@@ -57,10 +57,7 @@ const ChatRoom = (props: isDeleteMode) => {
   };
 
   return (
-    <div
-      className="flex justify-between border-solid border-gray-300 border-b-2 p-3 w-full h-20 font-normal"
-      onClick={clickChatRoom}
-    >
+    <div className="flex justify-between border-solid border-gray-300 border-b-2 p-3 w-full h-20 font-normal" onClick={clickChatRoom}>
       <div className="flex justify-center items-center gap-3">
         <div className="relative flex justify-center items-center w-12 h-12 border-2 border-gray-300 rounded-full bg-white overflow-hidden">
           {chat.partner.imgPath.length ? (
@@ -72,8 +69,8 @@ const ChatRoom = (props: isDeleteMode) => {
           )}
         </div>
         <div className="mt-0.5">
-          <div className="font-semibold">닉네임</div>
-          <div className="text-sm">메세지내용...</div>
+          <div className="font-semibold">{chat.partner.nickname}</div>
+          <div className="text-sm">{chat.lastMessage}</div>
         </div>
       </div>
       <div className="flex items-center gap-4 mr-1">
@@ -90,11 +87,7 @@ const ChatRoom = (props: isDeleteMode) => {
             className="flex justify-center items-center border-none text-main-400 hover:border-none focus:outline-none"
             onClick={checkDeleteBtn}
           >
-            {!isDeleteBtnChecked ? (
-              <AiOutlineCheckCircle className="w-6 h-6" />
-            ) : (
-              <AiFillCheckCircle className="w-6 h-6" />
-            )}
+            {!isDeleteBtnChecked ? <AiOutlineCheckCircle className="w-6 h-6" /> : <AiFillCheckCircle className="w-6 h-6" />}
           </button>
         )}
       </div>

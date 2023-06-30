@@ -89,24 +89,11 @@ const CommentList = (props: CommentListProps) => {
       <section className="pb-16">
         {comments &&
           comments.map((co, i) => {
-            return (
-              <Comment
-                key={i}
-                commentData={co}
-                comments={comments}
-                setComments={setComments}
-                accessToken={accessToken}
-                userId={userId}
-              />
-            );
+            return <Comment key={i} commentData={co} comments={comments} setComments={setComments} accessToken={accessToken} userId={userId} />;
           })}{" "}
         <div ref={target}></div>
       </section>{" "}
-      <CommentForm
-        postId={postId}
-        comments={comments}
-        setComments={setComments}
-      />
+      <CommentForm postId={postId} comments={comments} setComments={setComments} />
     </>
   );
 };

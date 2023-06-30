@@ -64,11 +64,7 @@ const Profile = (props: ProfileProps) => {
       <div className="flex items-center gap-4">
         <div className="w-16 h-16 border-2 rounded-full bg-white text-black">
           {profile.imgPath.length ? (
-            <img
-              className="w-full h-full object-cover"
-              src={profile.imgPath}
-              alt={`${profile.nickname}의 프로필 이미지`}
-            />
+            <img className="w-full h-full object-cover" src={profile.imgPath} alt={`${profile.nickname}의 프로필 이미지`} />
           ) : (
             <div className={"absolute top-3 flex justify-center items-center text-4xl text-main-200"}>
               <FaUser />

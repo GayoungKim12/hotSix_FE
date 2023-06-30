@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { createLoginConfig } from '../API/AxiosModule';
+import { useEffect, useState } from "react";
+import { createLoginConfig } from "../API/AxiosModule";
 
 interface RegionOption {
   id: number;
@@ -20,7 +20,7 @@ const Region = ({ handleRegionIdChange, defaultRegionId }: RegionProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      createLoginConfig('get', 'regions', '').then((response) => {
+      createLoginConfig("get", "regions", "").then((response) => {
         setRegionOptions(response.data);
       });
     };
@@ -32,9 +32,7 @@ const Region = ({ handleRegionIdChange, defaultRegionId }: RegionProps) => {
   }, [regionId, handleRegionIdChange]);
 
   useEffect(() => {
-    const selectedRegion = regionOptions.find(
-      (option) => option.id === defaultRegionId
-    );
+    const selectedRegion = regionOptions.find((option) => option.id === defaultRegionId);
     if (selectedRegion) {
       setSido(selectedRegion.sido);
       setSigg(selectedRegion.sigg);
@@ -45,9 +43,7 @@ const Region = ({ handleRegionIdChange, defaultRegionId }: RegionProps) => {
   const handleSiggChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSigg = e.target.value;
     setSigg(selectedSigg);
-    const selectedRegion = regionOptions.find(
-      (option) => option.sido === sido && option.sigg === selectedSigg
-    );
+    const selectedRegion = regionOptions.find((option) => option.sido === sido && option.sigg === selectedSigg);
     if (selectedRegion && selectedRegion.id !== regionId) {
       setRegionId(selectedRegion.id);
     }
@@ -67,12 +63,7 @@ const Region = ({ handleRegionIdChange, defaultRegionId }: RegionProps) => {
         원하는 지역
       </label>
       <div className="flex justify-between mt-2 w-9/12">
-        <select
-          onChange={handleSidoChange}
-          className="py-1 w-5/12 text-sm"
-          id="input-region"
-          value={sido}
-        >
+        <select onChange={handleSidoChange} className="py-1 w-5/12 text-sm" id="input-region" value={sido}>
           <option>시도</option>
           {uniqueSidoOptions.map((option) => (
             <option key={option} value={option}>
@@ -80,27 +71,18 @@ const Region = ({ handleRegionIdChange, defaultRegionId }: RegionProps) => {
             </option>
           ))}
         </select>
-          <select
-            onChange={handleSiggChange}
-            className="w-5/12 text-sm"
-            value={sigg}
-          >
-            <option disabled>시군구</option>
-            {regionOptions
-              .filter((option) => option.sido === sido)
-              .map((option) => (
-                <option key={option.id} value={option.sigg}>
-                  {option.sigg}
-                </option>
-              ))}
-          </select>
+        <select onChange={handleSiggChange} className="w-5/12 text-sm" value={sigg}>
+          <option disabled>시군구</option>
+          {regionOptions
+            .filter((option) => option.sido === sido)
+            .map((option) => (
+              <option key={option.id} value={option.sigg}>
+                {option.sigg}
+              </option>
+            ))}
+        </select>
       </div>
-      <input
-        type="text"
-        name="regionId"
-        className="hidden"
-        defaultValue={regionId !== null ? String(regionId) : ""}
-      />
+      <input type="text" name="regionId" className="hidden" defaultValue={regionId !== null ? String(regionId) : ""} />
     </div>
   );
 };

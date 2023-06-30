@@ -36,16 +36,12 @@ const SearchPage = () => {
               <FiArrowLeft className="mr-4" />
             </div>
             <div className="flex">
-              <button className=" rounded-none rounded-tl-lg rounded-bl-lg p-1 bg-white text-sm">
-                제목{" "}
-              </button>
+              <button className=" rounded-none rounded-tl-lg rounded-bl-lg p-1 bg-white text-sm">제목 </button>
               <div className="border-r">
                 <RxTriangleDown className="h-full text-2xl cursor-pointer bg-white text-blue-100" />
               </div>
               <input placeholder=" 검색" className="w-3/5" />
-              <button className="rounded-none rounded-tr-lg rounded-br-lg p-1  bg-indigo-400 text-sm">
-                확인
-              </button>
+              <button className="rounded-none rounded-tr-lg rounded-br-lg p-1  bg-indigo-400 text-sm">확인</button>
             </div>
           </section>
 
@@ -66,9 +62,7 @@ const SearchPage = () => {
         </div>
       </div>
       <Footer selected={false} />
-      {showPostButtons && (
-        <PostToolButtons handleShow={() => setShowPostButtons(false)} />
-      )}
+      {showPostButtons && <PostToolButtons handleShow={() => setShowPostButtons(false)} />}
     </>
   );
 };

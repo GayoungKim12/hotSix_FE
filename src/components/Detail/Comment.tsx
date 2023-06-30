@@ -37,15 +37,11 @@ const Comment = (props: CommentProps) => {
   const editCommentData = () => {
     const data = { content: text };
     axios
-      .put(
-        `http://43.200.78.88:8080/api/comment/${commentData.commentId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
+      .put(`http://43.200.78.88:8080/api/comment/${commentData.commentId}`, data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((response) => {
         console.log(response);
         setComments(
@@ -78,9 +74,7 @@ const Comment = (props: CommentProps) => {
                 </div>
               )}
             </div>
-            <div className="text-sm font-semibold text-black">
-              {commentData.nickName}
-            </div>
+            <div className="text-sm font-semibold text-black">{commentData.nickName}</div>
           </div>
           {userId === commentData.memberId && (
             <button
@@ -96,15 +90,8 @@ const Comment = (props: CommentProps) => {
         {!editText ? (
           <p className="ml-1 text-lg">{commentData.content}</p>
         ) : (
-          <form
-            className="flex items-center p-2 gap-2 rounded-3xl bg-white"
-            onSubmit={handleSubmit}
-          >
-            <textarea
-              value={text}
-              onChange={onChange}
-              className="w-full px-3 py-1 rounded-lg resize-none focus:outline-none"
-            />
+          <form className="flex items-center p-2 gap-2 rounded-3xl bg-white" onSubmit={handleSubmit}>
+            <textarea value={text} onChange={onChange} className="w-full px-3 py-1 rounded-lg resize-none focus:outline-none" />
             <button onClick={editCommentData}>
               <IoIosSend className="text-2xl" />
             </button>
