@@ -2,19 +2,17 @@ import BoardCard from "../components/Main/BoardCard";
 import Footer from "../components/common/Footer";
 import Header from "../components/Main/Header";
 import { RxTriangleDown } from "react-icons/rx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { FaPencilAlt } from "react-icons/fa";
+import { BsGenderFemale } from "react-icons/bs";
 import AreaModal from "../components/Main/AreaModal";
 import { useNavigate } from "react-router-dom";
-import { atom, useAtom } from "jotai";
+import { SetStateAction, useAtom } from "jotai";
+import { Dispatch } from "react";
 import RoomExistence from "../components/Main/RoomExistence";
 import { getFindRoomPostData, getHasRoomPostData, regionAll } from "../components/Main/ApiCall";
 import jwtDecode from "jwt-decode";
-
-//뒤로가기 눌렀을때 regionId, 방구해요/방있어요 버튼 유지를 위해서 전역변수로 설정
-export const isSelectedFindRoomAtom = atom<boolean>(true);
-export const isSelectedHasRoomAtom = atom<boolean>(false);
-export const regionIdAtom = atom<number | undefined>();
+import { isSelectedFindRoomAtom, isSelectedHasRoomAtom, regionIdAtom } from "../components/Main/Jotai";
 
 interface RegionProps {
   regionId: number;
@@ -35,8 +33,18 @@ interface Board {
   createdAt: string;
   gender: number;
   content: string;
-  roomFiles: string[];
+  roomFiles: string;
   commentCount: string;
+  memberId: number;
+}
+
+interface GetFindRoomProps {
+  setBoardOneList: Dispatch<SetStateAction<Board[]>>;
+  boardOneOffset: number;
+  regionId?: number;
+  lastPostId: number | null;
+  setLastPostId: Dispatch<SetStateAction<number | null>>;
+  userId: number | undefined;
 }
 
 const MainPage = () => {
@@ -51,10 +59,10 @@ const MainPage = () => {
   const [regionName, setRegionName] = useState<undefined | string>();
   const [userRegion, setUserRegion] = useState<number | undefined>();
   const [regionId, setRegionId] = useAtom(regionIdAtom);
-  const [boardOneOffset, setBoardOneOffset] = useState(0);
-  const [boardTwoOffset, setBoardTwoOffset] = useState(0);
-  const [userId, setUserId] = useState();
-  const [lastPostId, setLastPostId] = useState(null);
+  const [boardOneOffset, setBoardOneOffset] = useState<number>(0);
+  const [boardTwoOffset, setBoardTwoOffset] = useState<number>(0);
+  const [userId, setUserId] = useState<number | undefined>();
+  const [lastPostId, setLastPostId] = useState<number | null>(null);
 
   //토큰에서 유저아이디 파싱
   const accessToken = localStorage.getItem("accessToken");
@@ -69,15 +77,13 @@ const MainPage = () => {
     }
   }, [accessToken]);
 
-  const SERVER = `http://43.200.78.88:8080/api/main/${userId}`;
-
-  //방 구해요 / 방 있어요 게시물 불러오는 api
-  const SERVER_BORDONE = `${SERVER}/${regionId}/1`;
-  const SERVER_BORDTWO = `${SERVER}/${regionId}/2`;
-
-  //지역데이터들 불러오는 api
-  const SERVER_REGION = `http://43.200.78.88:8080/api/main/${userId}`;
-  const REGION_URL = `${SERVER_REGION}`;
+  //방 구해요 게시물 불러오는 함수 useCallback 씌우기 (의존성 배열 issue)
+  const getFindRoomPostDataCall = useCallback(
+    async ({ setBoardOneList, boardOneOffset, regionId, lastPostId, setLastPostId, userId }: GetFindRoomProps) => {
+      await getFindRoomPostData({ setBoardOneList, boardOneOffset, regionId, lastPostId, setLastPostId, userId });
+    },
+    []
+  );
 
   //방구해요 버튼 클릭 시
   const handleFindRoom = () => {
@@ -92,8 +98,7 @@ const MainPage = () => {
         regionId,
         lastPostId,
         setLastPostId,
-        accessToken,
-        SERVER_BORDONE,
+        userId,
       });
     }
     setIsSelectedFindRoom(true);
@@ -112,8 +117,7 @@ const MainPage = () => {
         regionId,
         lastPostId,
         setLastPostId,
-        accessToken,
-        SERVER_BORDTWO,
+        userId,
       });
     }
     setIsSelectedHasRoom(true);
@@ -129,38 +133,27 @@ const MainPage = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
     if (!userId) return;
     regionAll({
-      REGION_URL,
       setRegionList,
       setUserRegion,
       setRegionId,
-      accessToken,
       regionId,
+      userId,
     });
-  }, [setRegionList, userId]);
-
-  //화면에 표시되는 유저가 선택한 첫 지역담기
-  const userRegionSigg = regionList.filter((re) => {
-    return re.regionId === regionId;
-  });
+  }, [regionId, setRegionId, setRegionList, userId]);
 
   //첫화면 모든지역 게시물 가져오기(방구해요)
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
+    //화면에 표시되는 유저가 선택한 첫 지역담기
+    const userRegionSigg = regionList?.filter((re) => {
+      return re.regionId === regionId;
+    });
     if (!userRegion && !userId) return;
     if (userRegion && userId) {
       setRegionName(userRegionSigg[0]?.sigg);
     }
     const fetchData = async () => {
       if (userRegion && isSelectedFindRoom && userId) {
-        await getFindRoomPostData({
-          setBoardOneList,
-          boardOneOffset,
-          regionId,
-          lastPostId,
-          setLastPostId,
-          accessToken,
-          SERVER_BORDONE,
-        });
+        await getFindRoomPostDataCall({ setBoardOneList, boardOneOffset, regionId, lastPostId, setLastPostId, userId });
       } else if (userRegion && isSelectedHasRoom && userId) {
         await getHasRoomPostData({
           setBoardTwoList,
@@ -168,13 +161,23 @@ const MainPage = () => {
           regionId,
           lastPostId,
           setLastPostId,
-          accessToken,
-          SERVER_BORDTWO,
+          userId,
         });
       }
     };
     fetchData();
-  }, [userRegion]);
+  }, [
+    boardOneOffset,
+    boardTwoOffset,
+    getFindRoomPostDataCall,
+    isSelectedFindRoom,
+    isSelectedHasRoom,
+    lastPostId,
+    regionId,
+    regionList,
+    userId,
+    userRegion,
+  ]);
 
   //무한스크롤구현 (방구해요 / 방있어요 )
   useEffect(() => {
@@ -205,36 +208,12 @@ const MainPage = () => {
     return () => window.removeEventListener("scroll", handScroll);
   }, [boardTwoOffset, isSelectedHasRoom]);
 
-  //방구해요, 방있어요 무한스크롤
-  useEffect(() => {
-    if (isSelectedFindRoom && userId) {
-      getFindRoomPostData({
-        setBoardOneList,
-        boardOneOffset,
-        regionId,
-        lastPostId,
-        setLastPostId,
-        accessToken,
-        SERVER_BORDONE,
-      });
-    } else if (isSelectedHasRoom && userId) {
-      getHasRoomPostData({
-        setBoardTwoList,
-        boardTwoOffset,
-        regionId,
-        lastPostId,
-        setLastPostId,
-        accessToken,
-        SERVER_BORDTWO,
-      });
-    }
-  }, [boardOneOffset, boardTwoOffset, regionId]);
   // console.log(regionList);
   // console.log(`userId : ${userId}`);
   console.log("boardOneList :", boardOneList);
   console.log("boardTwoList :", boardTwoList);
   console.log(`boardOneOffset : ${boardOneOffset}`);
-  // console.log(`boardTwoOffset : ${boardTwoOffset}`);
+  console.log(`boardTwoOffset : ${boardTwoOffset}`);
   // console.log(`regionId : ${regionId}`);
   // console.log(`userRegion : ${userRegion}`);
   // console.log(`lastPostId : ${lastPostId}`);
@@ -260,11 +239,11 @@ const MainPage = () => {
       <div className="bg-main-100 h-full">
         <section className="fixed w-full z-20 top-0 left-0 shadow bg-main-100">
           <Header />
-          <div className="relative">
+          <div className="relative mt-20">
             <div className="px-4 py-2 text-center bg-white">{regionName}</div>
-            <div className="absolute bottom-2 right-2" onClick={handleAreaModal}>
+            <div className="absolute bottom-2 right-2 cursor-pointer" onClick={handleAreaModal}>
               <RxTriangleDown className="text-3xl text-main-300" />
-            </div>{" "}
+            </div>
             {activeAreaModal && <AreaModal regionList={regionList} handleRegionArea={handleRegionArea} />}
           </div>
 
@@ -286,8 +265,9 @@ const MainPage = () => {
                       showPostButtons={showPostButtons}
                       setShowPostButtons={setShowPostButtons}
                       board={b}
-                      accessToken={accessToken}
                       userId={userId}
+                      boardList={boardOneList}
+                      setBoardList={setBoardOneList}
                     />
                   </div>
                 );
@@ -299,8 +279,9 @@ const MainPage = () => {
                       showPostButtons={showPostButtons}
                       setShowPostButtons={setShowPostButtons}
                       board={b}
-                      accessToken={accessToken}
                       userId={userId}
+                      boardList={boardTwoList}
+                      setBoardList={setBoardTwoList}
                     />
                   </div>
                 );
