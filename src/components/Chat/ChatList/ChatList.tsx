@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ChatRoom from "./ChatRoom";
 import jwtDecode from "jwt-decode";
-import axios from "axios";
+import { useQuery } from "react-query";
+import { JsonConfig } from "../../API/AxiosModule";
 
 interface ChatListProps {
   isDeleteMode: boolean;
@@ -26,14 +27,13 @@ interface ChatRoomType {
 }
 
 const ChatList = (props: ChatListProps) => {
-  const URL = "http://43.200.78.88:8080";
   const accessToken = localStorage.getItem("accessToken");
   const [userId, setUserId] = useState<number | null>(null);
 
   const [chatRooms, setChatRooms] = useState<ChatRoomType[] | null>(null);
   const [deleteList, setDeleteList] = useState<number[]>([]);
-  const { allSelect, isDeleteMode, setAllSelect, filter } = props;
   const [chatRoomList, setChatRoomList] = useState<ChatRoomType[] | null>(null);
+  const { allSelect, isDeleteMode, setAllSelect, filter } = props;
 
   useEffect(() => {
     if (!accessToken) return;
@@ -47,40 +47,46 @@ const ChatList = (props: ChatListProps) => {
 
   useEffect(() => {
     if (!chatRooms) return;
-    console.log(filter);
-    if (filter === "") {
+    if (filter === "" || isDeleteMode) {
       setChatRoomList(chatRooms);
     } else {
       const filterList = chatRooms.filter((room) => room.partner.nickname.includes(filter));
-      console.log(filterList);
       setChatRoomList(filterList);
     }
-  }, [chatRooms, filter]);
+  }, [chatRooms, filter, isDeleteMode]);
 
-  const getChatRooms = useCallback(async () => {
-    if (!userId) return;
+  const getChatRooms = async (userId: number | null) => {
+    if (!userId) return null;
+    console.log("실행");
     try {
-      const response = await axios({
-        url: `${URL}/api/chat/room`,
-        method: "get",
-        headers: {
-          Authorization: `${accessToken}`,
-        },
-        params: {
-          memberId: `${userId}`,
-        },
-      });
+      const response = await JsonConfig("get", `api/chat/room`, null, { memberId: userId });
       console.log(response);
-      setChatRooms(response.data);
+      return response.data;
     } catch (error) {
       console.error("채팅방 목록을 가져오는 중에 에러가 발생했습니다:", error);
+      throw error;
     }
-  }, [userId, accessToken]);
+  };
 
+  const { data, refetch } = useQuery(
+    ["chatRooms", userId],
+    async () => await getChatRooms(userId),
+    { refetchInterval: 5000 } // 5초마다 데이터 갱신
+  );
+
+  // chatRooms 데이터 업데이트 시 실행되는 부분
   useEffect(() => {
-    getChatRooms();
-  }, [getChatRooms]);
+    setChatRooms(data);
+  }, [data]);
 
+  // 컴포넌트 렌더링 후 초기 데이터 요청
+  useEffect(() => {
+    if (userId) {
+      refetch();
+    }
+  }, [refetch, userId]);
+
+  // deleteMode가 실행되면 deleteList 초기화
   useEffect(() => {
     if (isDeleteMode) {
       setDeleteList([]);
@@ -88,32 +94,26 @@ const ChatList = (props: ChatListProps) => {
   }, [isDeleteMode]);
 
   useEffect(() => {
-    if (chatRooms && allSelect) {
-      const newDeleteList = chatRooms.map((chatRoom) => chatRoom.chatRoomId);
+    if (!isDeleteMode) return;
+    if (chatRoomList && allSelect) {
+      const newDeleteList = chatRoomList.map((chatRoom) => chatRoom.chatRoomId);
       setDeleteList(newDeleteList);
     }
-  }, [allSelect, chatRooms]);
+  }, [allSelect, chatRoomList, isDeleteMode]);
 
   useEffect(() => {
-    if (chatRooms && chatRooms.length === deleteList.length && !allSelect) {
+    if (chatRoomList && chatRoomList.length === deleteList.length && !allSelect) {
       setAllSelect(true);
     }
-  }, [allSelect, chatRooms, deleteList.length, setAllSelect]);
+  }, [allSelect, chatRoomList, deleteList.length, setAllSelect]);
 
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     try {
-      await axios({
-        method: "put",
-        url: `${URL}/api/chat/room/${userId}`,
-        headers: {
-          Authorization: `${accessToken}`,
-        },
-        data: {
-          chatroomId: deleteList,
-          senderId: userId,
-        },
-      });
+      /* await JsonConfig("put", `api/chat/room/${userId}`, {
+        chatroomId: deleteList,
+        senderId: userId,
+      }); */
       setChatRooms((prev: ChatRoomType[] | null) => {
         if (!prev) return null;
         return prev.filter((room) => {
@@ -121,6 +121,7 @@ const ChatList = (props: ChatListProps) => {
         });
       });
       setDeleteList([]);
+      //setIsDeleteMode(false)
     } catch (err) {
       console.log(err);
     }
@@ -139,7 +140,7 @@ const ChatList = (props: ChatListProps) => {
                 chat={chat}
                 allSelect={allSelect}
                 setAllSelect={setAllSelect}
-                isDeleteMode={props.isDeleteMode}
+                isDeleteMode={isDeleteMode}
                 setDeleteList={setDeleteList}
               />
             );

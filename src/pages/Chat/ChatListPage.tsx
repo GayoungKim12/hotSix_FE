@@ -1,16 +1,27 @@
 import HeaderDeleteMode from "../../components/Chat/ChatList/HeaderDeleteMode";
 import ChatList from "../../components/Chat/ChatList/ChatList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../../components/common/Footer";
 import ChatListHeader from "../../components/Chat/ChatList/ChatListHeader";
+import jwtDecode from "jwt-decode";
 
 const ChatListPage = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [allSelect, setAllSelect] = useState(false);
   const [filter, setFilter] = useState("");
-  const userId = localStorage.getItem("accessToken");
 
-  // 삭제 시 배열로 보내줘도 되는지
+  const accessToken = localStorage.getItem("accessToken");
+  const [userId, setUserId] = useState(0);
+
+  useEffect(() => {
+    if (!accessToken) return;
+    const decodeToken = jwtDecode<{ id: string }>(accessToken);
+
+    if (decodeToken.id) {
+      console.log(Number(decodeToken.id));
+      setUserId(Number(decodeToken.id));
+    }
+  }, [accessToken]);
 
   const DeleteMode = () => {
     setIsDeleteMode(!isDeleteMode);
@@ -19,7 +30,7 @@ const ChatListPage = () => {
   if (!userId) return <></>;
 
   return (
-    <div className=" flex flex-col w-full h-full bg-main-100 ">
+    <div className="flex flex-col w-full min-h-screen bg-main-100">
       {isDeleteMode ? (
         <>
           <HeaderDeleteMode DeleteMode={DeleteMode} allSelect={allSelect} setAllSelect={setAllSelect} />
