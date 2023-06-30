@@ -5,12 +5,15 @@ import { GoKebabHorizontal } from "react-icons/go";
 import PostToolButtons from "../common/PostToolButtons";
 import { useNavigate } from "react-router-dom";
 import LikeButton from "../common/LikeButton";
+import { AiOutlineCalendar } from "react-icons/ai";
+import { FiMapPin } from "react-icons/fi";
+import { GiFemale, GiMale } from "react-icons/gi";
 
 interface PostType {
   nickname: string;
   imgPath: string;
   gender: number;
-  region: string;
+  address: string;
   createdAt: string;
   content: string;
   commentCount: number;
@@ -21,10 +24,11 @@ interface PostType {
 
 interface CardProps {
   post: PostType;
+  setPostList: (value: React.SetStateAction<PostType[] | null>) => void;
 }
 
 const Card = (props: CardProps) => {
-  const { post } = props;
+  const { post, setPostList } = props;
   const navigate = useNavigate();
   const [showPostButtons, setShowPostButtons] = useState(false);
   const [like, setLike] = useState(false);
@@ -32,6 +36,13 @@ const Card = (props: CardProps) => {
   useEffect(() => {
     setLike(post.like);
   }, [post.like]);
+
+  const deletePost = () => {
+    setPostList((prev: PostType[] | null) => {
+      if (!prev) return null;
+      return prev.filter((allPost) => allPost.postId !== post.postId);
+    });
+  };
 
   return (
     <>
@@ -51,12 +62,14 @@ const Card = (props: CardProps) => {
               )}
             </div>
             <div>
-              <div className="text-base font-semibold text-black">{post.nickname}</div>
-              <div className="text-xs text-gray-400">{post.createdAt.split("T")[0]}</div>
+              <div className="flex items-center justify-center gap-0.5 text-base font-semibold text-black">
+                {post.nickname}
+                {post.gender === 1 ? <GiMale className="text-blue-400" /> : <GiFemale className="text-red-400" />}
+              </div>
             </div>
           </div>
           <button
-            className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200"
+            className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-100"
             onClick={(e) => {
               e.stopPropagation();
               setShowPostButtons(true);
@@ -65,15 +78,21 @@ const Card = (props: CardProps) => {
             <GoKebabHorizontal />
           </button>
         </article>
-        <article className="flex flex-col gap-1.5 text-sm">
-          <div>
-            <div>성별 : {post.gender === 1 ? "남성" : "여성"}</div>
-            <div>지역 : {post.region}</div>
-            <div>내용 : {post.content.length > 5 ? `${post.content.substr(0, 5) + "..."}` : post.content}</div>
+        <article className="flex flex-col gap-1.5 text-sm text-black">
+          <div className="flex flex-col items-start gap-0.5 text-xs text-gray-500">
+            <div className="flex items-center gap-1">
+              {<FiMapPin className="flex items-center justify-center gap-1.5 text-sm text-main-400" />}
+              {post.address}
+            </div>
+            <div className="flex items-center gap-1">
+              <AiOutlineCalendar className="flex items-center justify-center gap-1.5 text-sm text-main-400" />
+              {post.createdAt.split("T")[0]}
+            </div>
           </div>
+          <p>{post.content.slice(0, 40)}</p>
           {post.postImgPath.length !== 0 && (
             <div className="inline-flex flex-col items-center justfiy-center">
-              <img src={post.postImgPath} className="w-full rounded-lg bg-black" draggable="false" />
+              <img src={post.postImgPath} className="w-full rounded-lg" draggable="false" />
             </div>
           )}
         </article>
@@ -87,7 +106,7 @@ const Card = (props: CardProps) => {
           <LikeButton postId={post.postId} like={like} setLike={setLike} />
         </article>
       </section>
-      {showPostButtons && <PostToolButtons handleShow={() => setShowPostButtons(false)} postId={post.postId} />}
+      {showPostButtons && <PostToolButtons deletePost={deletePost} handleShow={() => setShowPostButtons(false)} postId={post.postId} />}
     </>
   );
 };
