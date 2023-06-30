@@ -41,7 +41,7 @@ const SettingButtons = (props: SettingButtonsProps) => {
           </button>
           <button
             type="button"
-            className="rounded-none w-full h-12"
+            className="rounded-none w-full h-12 hover:border-gray-200 focus:outline-none"
             onClick={(e) => {
               e.stopPropagation();
               setShowModal(true);
@@ -49,29 +49,27 @@ const SettingButtons = (props: SettingButtonsProps) => {
           >
             회원탈퇴
           </button>
-          {showModal && (
-            <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-30">
-              <div className="flex flex-col items-center px-8 py-4 rounded-lg bg-white">
-                <h2 className="mt-4 text-center text-lg">회원 탈퇴를 하시겠습니까?</h2>
-                <div>
-                  <button type="button" className="px-3 py-1 my-4 mr-4 bg-main-400 text-white" onClick={deleteUser}>
-                    네
-                  </button>
-                  <button
-                    type="button"
-                    className="px-3 py-1 my-4 bg-main-400 text-white"
-                    onClick={() => {
-                      setShowModal(false);
-                      handleShow;
-                    }}
-                  >
-                    아니요
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
+        {showModal && (
+          <div className="fixed top-1/2 -translate-y-2/4 flex flex-col items-center gap-4 px-8 py-7 rounded-xl bg-white">
+            <h2 className="text-center text-lg">회원 탈퇴를 하시겠습니까?</h2>
+            <div className="flex justify-center items-center gap-4">
+              <button type="button" className="px-3 py-1 bg-main-400 text-white" onClick={deleteUser}>
+                네
+              </button>
+              <button
+                type="button"
+                className="px-3 py-1 bg-main-400 text-white"
+                onClick={() => {
+                  setShowModal(false);
+                  handleShow;
+                }}
+              >
+                아니요
+              </button>
+            </div>
+          </div>
+        )}
         <button className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none">닫기</button>
       </div>
     </div>
