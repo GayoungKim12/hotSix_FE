@@ -1,5 +1,5 @@
-import axios from "axios";
 import { Dispatch, SetStateAction } from "react";
+import { JsonConfig } from "../API/AxiosModule";
 
 interface Board {
   postId: number;
@@ -10,8 +10,9 @@ interface Board {
   createdAt: string;
   gender: number;
   content: string;
-  roomFiles: string[];
+  roomFiles: string;
   commentCount: string;
+  memberId: number;
 }
 interface RegionProps {
   regionId: number;
@@ -20,11 +21,11 @@ interface RegionProps {
 }
 
 interface RegionAllProps {
-  REGION_URL: string;
   setRegionList: Dispatch<SetStateAction<RegionProps[]>>;
   setUserRegion: Dispatch<SetStateAction<number | undefined>>;
   setRegionId: Dispatch<SetStateAction<number | undefined>>;
-  accessToken: string | null;
+  regionId: number | undefined;
+  userId: number | undefined;
 }
 
 interface GetFindRoomProps {
@@ -32,9 +33,8 @@ interface GetFindRoomProps {
   boardOneOffset: number;
   regionId?: number;
   lastPostId: number | null;
-  setLastPostId: Dispatch<SetStateAction<null>>;
-  accessToken: string | null;
-  SERVER_BORDONE: string;
+  setLastPostId: Dispatch<SetStateAction<number | null>>;
+  userId: number | undefined;
 }
 
 interface GetHasRoomProps {
@@ -42,19 +42,13 @@ interface GetHasRoomProps {
   boardTwoOffset: number;
   regionId?: number;
   lastPostId: number | null;
-  setLastPostId: Dispatch<SetStateAction<null>>;
-  accessToken: string | null;
-  SERVER_BORDTWO: string;
+  setLastPostId: Dispatch<SetStateAction<number | null>>;
+  userId: number | undefined;
 }
 
 //첫 화면 지역데이터 다 가져오기
-export async function regionAll({ REGION_URL, setRegionList, setUserRegion, setRegionId, accessToken, regionId }: RegionAllProps) {
-  await axios
-    .get(`${REGION_URL}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+export async function regionAll({ setRegionList, setUserRegion, setRegionId, regionId, userId }: RegionAllProps) {
+  await JsonConfig("get", `api/main/${userId}`, null, undefined)
     .then((response) => {
       console.log(response.data);
       setRegionList(response.data.regionMainDtoList);
@@ -69,81 +63,38 @@ export async function regionAll({ REGION_URL, setRegionList, setUserRegion, setR
 }
 
 // "방구해요" 게시물 가져오기
-export async function getFindRoomPostData({
-  setBoardOneList,
-  boardOneOffset,
-  regionId,
-  lastPostId,
-  setLastPostId,
-  accessToken,
-  SERVER_BORDONE,
-}: GetFindRoomProps) {
+export async function getFindRoomPostData({ setBoardOneList, boardOneOffset, regionId, lastPostId, setLastPostId, userId }: GetFindRoomProps) {
   if (regionId && boardOneOffset === 0) {
-    await axios
-      .get(`${SERVER_BORDONE}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          size: 5,
-          lastPostId: null,
-        },
-      })
+    const params = { size: 10, lastPostId: null };
+    await JsonConfig("get", `api/main/${userId}/${regionId}/1`, null, params)
       .then((response) => {
         console.log(response.data);
-        console.log("된거지?");
         setBoardOneList(response.data.postMainDtoList);
+        setLastPostId(response.data.lastPostId);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } else if (regionId && lastPostId !== null) {
+    const params = { size: 10, lastPostId: lastPostId };
+    await JsonConfig("get", `api/main/${userId}/${regionId}/1`, null, params)
+      .then((response) => {
+        console.log(response.data);
+        setBoardOneList((prev) => [...prev, ...response.data.postMainDtoList]);
         setLastPostId(response.data.lastPostId);
       })
       .catch((error) => {
         console.log(error);
         console.log("된거냐옹");
       });
-  } else if (regionId && lastPostId !== null) {
-    await axios
-      .get(`${SERVER_BORDONE}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          size: 5,
-          lastPostId: lastPostId,
-        },
-      })
-      .then((response) => {
-        // console.log(response.data);
-        // console.log(lastPostId);
-        setBoardOneList((prev) => [...prev, ...response.data.postMainDtoList]);
-        setLastPostId(response.data.lastPostId);
-      })
-
-      .catch((error) => {
-        console.log(error);
-      });
   }
 }
 
 //"방 있어요" 게시물 가져오기
-export async function getHasRoomPostData({
-  setBoardTwoList,
-  boardTwoOffset,
-  regionId,
-  lastPostId,
-  setLastPostId,
-  accessToken,
-  SERVER_BORDTWO,
-}: GetHasRoomProps) {
+export async function getHasRoomPostData({ setBoardTwoList, boardTwoOffset, regionId, lastPostId, setLastPostId, userId }: GetHasRoomProps) {
   if (regionId && boardTwoOffset === 0) {
-    await axios
-      .get(`${SERVER_BORDTWO}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          size: 5,
-          lastPostId: null,
-        },
-      })
+    const params = { size: 10, lastPostId: null };
+    await JsonConfig("get", `api/main/${userId}/${regionId}/2`, null, params)
       .then((response) => {
         console.log(response.data);
         setBoardTwoList(response.data.postMainDtoList);
@@ -153,18 +104,10 @@ export async function getHasRoomPostData({
         console.log(error);
       });
   } else if (regionId && lastPostId !== null) {
-    await axios
-      .get(`${SERVER_BORDTWO}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          size: 5,
-          lastPostId: lastPostId,
-        },
-      })
+    const params = { size: 10, lastPostId: lastPostId };
+    await JsonConfig("get", `api/main/${userId}/${regionId}/2`, null, params)
       .then((response) => {
-        // console.log(response.data);
+        console.log(response.data);
         setBoardTwoList((prev) => [...prev, ...response.data.postMainDtoList]);
         setLastPostId(response.data.lastPostId);
       })

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   selected: boolean;
-  userId: number;
+  userId: number | undefined;
 }
 
 const Footer = ({ selected, userId }: Props) => {
@@ -42,7 +42,6 @@ const Footer = ({ selected, userId }: Props) => {
         )}
 
         <BsHouse className="text-3xl cursor-pointer" onClick={moveToHome} />
-        {/* <CiSearch className="text-3xl cursor-pointer" onClick={moveToSearch} /> */}
         <TbMessageCircle className="text-3xl cursor-pointer -scale-x-100" onClick={moveToChat} />
       </article>
     </div>
