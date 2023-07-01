@@ -1,37 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SelectCategory from "./SelectCategory";
 import SelectRegion from "./SelectRegion";
 import Content from "./Content";
 import AddImages from "./AddImages";
-import jwtDecode from "jwt-decode";
 import { MultiConfig } from "../API/AxiosModule";
-
-interface DecodedToken {
-  id: string;
-}
+import { getUserId } from "../API/TokenAction";
 
 const EditPost = () => {
-  const navigate = useNavigate();
-
-  const accessToken = localStorage.getItem("accessToken");
-  const [userId, setUserId] = useState(0);
-
   const [boardId, setBoardId] = useState(0);
   const [regionId, setRegionId] = useState(0);
   const [address, setAddress] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
+  const navigate = useNavigate();
+  const userId = getUserId();
 
   // 폼 db에 보내기
   const postData = async () => {
@@ -81,14 +64,14 @@ const EditPost = () => {
   };
 
   return (
-    <form className="pt-14 pb-12 min-w-0 min-h-screen overflow-auto" onSubmit={handleSubmit}>
+    <form className="pt-16 pb-12 min-w-0 min-h-screen overflow-auto" onSubmit={handleSubmit}>
       <article className="px-4 pb-4">
         <SelectCategory buttons={["방 구해요", "방 있어요"]} value={boardId} setValue={setBoardId} />
         <SelectRegion regionId={regionId} address={address} setRegionId={setRegionId} setAddress={setAddress} />
         <Content content={content} setContent={setContent} />
         <AddImages files={files} setFiles={setFiles} />
       </article>
-      <button className="fixed bottom-0 block w-full h-12 rounded-none bg-main-400 text-white focus:outline-none">등록하기</button>
+      <button className="fixed bottom-0 block w-full h-14 rounded-none bg-main-400 text-white focus:outline-none">등록하기</button>
     </form>
   );
 };
