@@ -91,29 +91,36 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
   }, []);
 
   const sendMessage = async () => {
-    isTokenValid();
-    if (newChatRef.current !== null && userId) {
-      if (!client.connected) {
-        // console.log("재연결함");
-        client.connect(
-          {
-            Authorization: `${token}`,
-          },
-          (frame: Frame) => {
-            if (frame.headers && frame.headers["error"]) {
-              const errorCode = frame.headers["error"];
-              console.log("^^^");
-              console.error(`Socket connection failed with error code: ${errorCode}`);
-              return;
-            } else {
-              sendChatMessage();
-            }
+    const checkTokenValidity = async () => {
+      const isValid = await isTokenValid();
+      if(isValid)
+      {
+        if (newChatRef.current !== null && userId) {
+          if (!client.connected) {
+            // console.log("재연결함");
+            client.connect(
+              {
+                Authorization: `${token}`,
+              },
+              (frame: Frame) => {
+                if (frame.headers && frame.headers["error"]) {
+                  const errorCode = frame.headers["error"];
+                  console.log("^^^");
+                  console.error(`Socket connection failed with error code: ${errorCode}`);
+                  return;
+                } else {
+                  sendChatMessage();
+                }
+              }
+            );
+          } else {
+            sendChatMessage();
           }
-        );
-      } else {
-        sendChatMessage();
       }
+    
     }
+    }
+    checkTokenValidity();
   };
 
   const sendChatMessage = async () => {
