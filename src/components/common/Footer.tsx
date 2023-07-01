@@ -13,11 +13,7 @@ const Footer = ({ selected, userId }: Props) => {
   const navigate = useNavigate();
 
   const moveToHome = () => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-    //스크롤이 먼저 올라가고 메인으로 이동 (스크롤 이벤트 방지)
-    setTimeout(() => {
-      navigate("/");
-    }, 0);
+    navigate("/");
   };
   const moveToCart = () => {
     navigate("/cart");
