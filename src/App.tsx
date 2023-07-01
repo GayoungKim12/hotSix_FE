@@ -8,7 +8,7 @@ import ChatListPage from "./pages/Chat/ChatListPage";
 import AlarmPage from "./pages/AlarmPage";
 import { Provider } from "jotai";
 import SignUp from "./pages/SignupPage";
-import Signin from "./components/Signin/Signin";
+import SigninPage from "./pages/SigninPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { CookiesProvider } from "react-cookie";
 import CartPage from "./pages/CartPage";
@@ -24,7 +24,8 @@ function App() {
       <CookiesProvider>
         <QueryClientProvider client={queryClient}>
           <Routes>
-            <Route path="/" element={<MainPage />}></Route>
+            <Route path="/" element={<SigninPage />}></Route>
+            <Route path="/main" element={<MainPage />}></Route>
             <Route path="/post" element={<PostPage />}></Route>
             <Route path="/edit/:postId" element={<PostPage />}></Route>
             <Route path="/detail/:postId" element={<DetailPage />}></Route>
@@ -34,7 +35,6 @@ function App() {
             <Route path="/chat/:chatRoomId" element={<ChatRoomPage />}></Route>
             <Route path="/AlarmPage" element={<AlarmPage />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
-            <Route path="/signin" element={<Signin />}></Route>
             <Route path="/editprofile" element={<Editprofile />}></Route>
             <Route path="/findPassword" element={<Findpassword />}></Route>
             <Route path="/editpassword" element={<Editpassword />}></Route>

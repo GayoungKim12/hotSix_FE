@@ -26,7 +26,10 @@ const ChatUtil = () => {
 
   // 다른 컴포넌트에서 setChats 함수를 호출하여 chats 상태를 업데이트할 수 있는 함수
   const updateChats = (newChats: Message[]) => {
-    setChats((prevChats: Message[]) => [...prevChats, ...newChats]);
+    console.log(getChats());
+    console.log(newChats);
+    setChats((prevChats: Message[]) => [...prevChats, ...newChats]);//배열을 업데이트 하는 코드
+    console.log(getChats());
   };
 
   return {

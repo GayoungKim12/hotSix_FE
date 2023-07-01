@@ -29,7 +29,6 @@ const getRefreshToken = () => {
 
 const getUserId = () => {
   const userId = Number(localStorage.getItem("userId"));
-
   return userId;
 };
 
@@ -70,7 +69,7 @@ const isTokenValid = async () => {
 
         console.log("둘다 만료");
         alert("토큰이 만료됐습니다!");
-        window.location.href = "/signin";
+        window.location.href = "/";
         return false;
 
         // 로그아웃
@@ -85,7 +84,7 @@ const isTokenValid = async () => {
         removeAccessToken();
         removeRefreshToken();
         console.log("둘다 만료");
-        window.location.href = "/signin";
+        window.location.href = "/";
         return false;
         // 로그아웃
       }
@@ -118,6 +117,9 @@ const getTokenExpiration = (tokenName: string, kakaoExpire: number = -1) => {
       if (decoded && decoded.exp) {
         expirationTime = new Date(decoded.exp * 1000);
         console.log(`${tokenName} 만료시간:`, expirationTime);
+        const offset = 9 * 60;
+        expirationTime.setMinutes(expirationTime.getMinutes() + offset);
+        console.log(`${tokenName} 만료시간:`, expirationTime.toISOString());
       } else {
         console.log("잘못된 토큰.");
       }
@@ -132,7 +134,10 @@ const getTokenExpiration = (tokenName: string, kakaoExpire: number = -1) => {
     const currentTime = new Date().getTime();
     const remainingTimeInSeconds = kakaoExpire;
     expirationTime = new Date(currentTime + remainingTimeInSeconds * 1000);
-    console.log(`${tokenName} 만료시간:`, expirationTime);
+
+
+    console.log(`${tokenName} 만료시간:`, expirationTime.toISOString());
+
   } else {
     console.log(`${tokenName} 없음.`);
   }
@@ -146,16 +151,25 @@ const getTokenExpiration = (tokenName: string, kakaoExpire: number = -1) => {
 //토큰이 만료되기 30분전인지 확인 (테스트 완료)
 let a = 0;
 const checkTokenExpiration = (tokenName: string) => {
-  const expirationTime =
-    tokenName === "refreshToken" ? getCookie("refreshTokenExpire") : tokenName === "accessToken" ? localStorage.getItem("accessTokenExpire") : null;
+  const expirationTimeString  =
+    tokenName === "refreshToken" ? 
+    getCookie("refreshTokenExpire") : tokenName === "accessToken" ? 
+    localStorage.getItem("accessTokenExpire") : null;
+    const tokenCategory = localStorage.getItem("tokenCategory");
 
-  if (expirationTime) {
+  if (expirationTimeString && tokenCategory === "default") {
+    const offset = 9 * 60;
+    console.log("예상종료시간",expirationTimeString)
+    const  expirationTime  = new Date(expirationTimeString);
+    expirationTime.setMinutes(expirationTime.getMinutes() - offset);
     const currentTime = new Date();
-    let timeDiffMinutes = Math.round((new Date(expirationTime).getTime() - currentTime.getTime()) / (1000 * 60));
-    // if(tokenName ==='accessToken' && a<1 )
-    // {
+    const expirationTimeMs = expirationTime.getTime();
+    const currentTimeMs = currentTime.getTime();
+    let timeDiffMinutes = Math.ceil((expirationTimeMs - currentTimeMs) / 1000 / 60);
+    
+    // if (tokenName === "accessToken" && a < 1) {
     //   a++;
-    //   timeDiffMinutes=timeDiffMinutes-99999999999
+    //   timeDiffMinutes = timeDiffMinutes - 99999999999;
     // }
 
     console.log(`${tokenName}이 만료되기까지` + timeDiffMinutes + `분 남았습니다`);
@@ -166,8 +180,20 @@ const checkTokenExpiration = (tokenName: string) => {
       console.log(`${tokenName}이 유효합니다.`);
       return true;
     }
-  } else {
-    console.log("유효하지 않은 토큰.");
+  }
+  else if(expirationTimeString && tokenCategory === "kakao"){
+    const currentTime = new Date();
+    console.log("예상종료시간",expirationTimeString)
+    let timeDiffMinutes = Math.round((new Date(expirationTimeString).getTime() - currentTime.getTime()) / (1000 * 60));
+    if (timeDiffMinutes <= 5) {
+      console.log(`${tokenName}이 만료되기 5분전입니다. 갱신합니다`);
+      return false;
+    } else {
+      console.log(`${tokenName}이 유효합니다.`);
+      return true;
+    }
+  }else{
+    console.log("유효하지 않은 토큰");
   }
 };
 
@@ -181,17 +207,19 @@ const refreshAccessToken = async () => {
       Authorization: accessToken,
       "Authorization-refresh": refreshToken,
     };
-
+    //만료안된 액세스토큰으로 재발급신청하면 재발급이 되는데
+    //만료된 액세스토큰으로 재발급신청하면 response.data에 null이 찍힘
     const response = await axios.post("http://43.200.78.88:8080/refresh", null, {
       headers: headers,
     });
-
+    console.log(response.data);
     const newAceessToken = response.data["Authorization"];
-
+    console.log(newAceessToken);
     removeAccessToken();
     setAccessToken(newAceessToken);
-
+    console.log(getAccessToken());
     getTokenExpiration("accessToken");
+
     console.log("Access token 갱신.");
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {

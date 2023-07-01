@@ -105,7 +105,7 @@ const Signin = () => {
       isTokenValid().then((response) => {
         if (response === true) {
           //console.log(getUserId());
-          navigate("/"); //메인페이지로 이동
+          navigate("/main"); //메인페이지로 이동
         }
       });
     }
