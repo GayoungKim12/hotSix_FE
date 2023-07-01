@@ -2,21 +2,33 @@ import Header from "../components/Main/Header";
 import Footer from "../components/common/Footer";
 import { useState, useEffect, useCallback, useRef } from "react";
 import BoardCard from "../components/Main/BoardCard";
-import PostToolButtons from "../components/common/PostToolButtons";
-import axios from "axios";
 import jwtDecode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { JsonConfig } from "../components/API/AxiosModule";
+
+interface DecodedToken {
+  id: string;
+}
+
+interface CartProps {
+  postId: number;
+  nickName: string;
+  address: string;
+  likesFlag: boolean;
+  userFile: string;
+  createdAt: string;
+  gender: number;
+  content: string;
+  roomFiles: string;
+  commentCount: string;
+  memberId: number;
+}
 
 const CartPage = () => {
-  const [userId, setUserId] = useState();
+  const [userId, setUserId] = useState<number | undefined>();
   const [lastPostId, setLastPostId] = useState();
-  const [showPostButtons, setShowPostButtons] = useState(false);
-  const navigate = useNavigate();
 
-  const [cartList, setCartList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [offset, setOffset] = useState(0);
-  const target = useRef(null);
+  const [cartList, setCartList] = useState<CartProps[]>([]);
+  const target = useRef<HTMLDivElement | null>(null);
 
   //토큰에서 유저아이디 파싱
   const accessToken = localStorage.getItem("accessToken");
@@ -31,44 +43,27 @@ const CartPage = () => {
     }
   }, [accessToken]);
 
+  const getLikesData = useCallback(async () => {
+    const params = { lastPostId: null, size: 10 };
+    await JsonConfig("get", `api/membership/like/${userId}`, null, params).then((response) => {
+      console.log(response.data);
+      setCartList(response.data.likeListPost);
+      setLastPostId(response.data.lastPostId);
+    });
+  }, [userId]);
+
   //좋아요 누른 게시물 불러오는 첫 화면
   useEffect(() => {
     if (!userId) return;
-    const getLikesData = async () => {
-      if (!lastPostId) {
-        await axios
-          .get(`http://43.200.78.88:8080/api/membership/like/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            params: {
-              lastPostId: null,
-              size: 5,
-            },
-          })
-          .then((response) => {
-            console.log(response.data);
-            setCartList(response.data.likeListPost);
-            setLastPostId(response.data.lastPostId);
-          });
-      }
-    };
     getLikesData();
-  }, [userId]);
+  }, [getLikesData, userId]);
 
   //좋아요 누른 게시물 무한스크롤로 가져오기
   const loadMore = useCallback(async () => {
     if (lastPostId) {
       try {
-        const response = await axios.get(`http://43.200.78.88:8080/api/membership/like/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          params: {
-            lastPostId: lastPostId,
-            size: 5,
-          },
-        });
+        const params = { lastPostId: lastPostId, size: 10 };
+        const response = await JsonConfig("get", `api/membership/like/${userId}`, null, params);
         console.log(response.data);
         setCartList((prev) => [...prev, ...response.data.likeListPost]);
         setLastPostId(response.data.lastPostId);
@@ -76,15 +71,14 @@ const CartPage = () => {
         console.error(error);
       }
     }
-  }, [userId, accessToken, lastPostId]);
+  }, [userId, lastPostId]);
 
   //intersection callback 함수 작성
   const intersectionCallback = useCallback(
-    (entries) => {
+    (entries: IntersectionObserverEntry[]) => {
       const entry = entries[0];
-      console.log("entry", entry);
       if (entry.isIntersecting) {
-        console.log("이제됨?");
+        console.log("교차");
         loadMore();
       }
     },
@@ -96,42 +90,49 @@ const CartPage = () => {
     const observer = new IntersectionObserver(intersectionCallback, {
       threshold: 1,
     });
-    observer.observe(target.current);
+    observer.observe(target.current as Element);
     return () => {
       observer.disconnect();
     };
   }, [intersectionCallback]);
-  console.log(`target.current :`, target.current);
-  console.log(`lastPostId : ${lastPostId}`);
-  console.log(`cartList :`, cartList);
-  console.log(`loading :${isLoading}`);
-  console.log(`offset : ${offset}`);
-
+  // console.log(`target.current :`, target.current);
+  // console.log(`lastPostId : ${lastPostId}`);
+  // console.log(`cartList :`, cartList);
+  // console.log(`loading :${isLoading}`);
+  // console.log(`offset : ${offset}`);
   console.log(cartList);
   return (
     <>
       <div className="h-full bg-main-100">
         <Header />
 
-        <section className=" mb-20 pb-10">
-          {cartList?.map((cart) => {
-            return (
-              <div
-                onClick={() => {
-                  navigate(`/detail/${cart.postId}`);
-                }}
-                key={cart.postId}
-              >
-                <BoardCard board={cart} setShowPostButtons={setShowPostButtons} accessToken={accessToken} userId={userId} />
-              </div>
-            );
-          })}
+        <section className="mt-10 mb-20 pt-10 pb-10">
+          {cartList?.map(
+            (cart: {
+              postId: number;
+              nickName: string;
+              address: string;
+              likesFlag: boolean;
+              userFile: string;
+              createdAt: string;
+              gender: number;
+              content: string;
+              roomFiles: string;
+              commentCount: string;
+              memberId: number;
+            }) => {
+              return (
+                <div key={cart.postId}>
+                  <BoardCard board={cart} userId={userId} boardList={cartList} setBoardList={setCartList} />
+                </div>
+              );
+            }
+          )}
           <div ref={target}></div>
         </section>
       </div>
 
-      <Footer selected={true} />
-      {showPostButtons && <PostToolButtons handleShow={() => setShowPostButtons(false)} setShowPostButtons={setShowPostButtons} />}
+      <Footer selected={true} userId={userId} />
     </>
   );
 };
