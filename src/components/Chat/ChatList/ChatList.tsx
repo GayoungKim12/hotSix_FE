@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import ChatRoom from "./ChatRoom";
-import jwtDecode from "jwt-decode";
 import { useQuery } from "react-query";
 import { JsonConfig } from "../../API/AxiosModule";
+import { getUserId } from "../../API/TokenAction";
 
 interface ChatListProps {
   isDeleteMode: boolean;
   allSelect: boolean;
   setAllSelect: (value: React.SetStateAction<boolean>) => void;
   filter: string;
-}
-
-interface DecodedToken {
-  id: string;
 }
 
 interface ChatRoomType {
@@ -27,23 +23,11 @@ interface ChatRoomType {
 }
 
 const ChatList = (props: ChatListProps) => {
-  const accessToken = localStorage.getItem("accessToken");
-  const [userId, setUserId] = useState<number | null>(null);
-
+  const { allSelect, isDeleteMode, setAllSelect, filter } = props;
   const [chatRooms, setChatRooms] = useState<ChatRoomType[] | null>(null);
   const [deleteList, setDeleteList] = useState<number[]>([]);
   const [chatRoomList, setChatRoomList] = useState<ChatRoomType[] | null>(null);
-  const { allSelect, isDeleteMode, setAllSelect, filter } = props;
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
+  const userId = getUserId();
 
   useEffect(() => {
     if (!chatRooms) return;
@@ -55,11 +39,9 @@ const ChatList = (props: ChatListProps) => {
     }
   }, [chatRooms, filter, isDeleteMode]);
 
-  const getChatRooms = async (userId: number | null) => {
-    if (!userId) return null;
-    console.log("실행");
+  const getChatRooms = async (uid: number | null) => {
     try {
-      const response = await JsonConfig("get", `api/chat/room`, null, { memberId: userId });
+      const response = await JsonConfig("get", `api/chat/room`, null, { memberId: uid });
       console.log(response);
       return response.data;
     } catch (error) {
@@ -81,10 +63,8 @@ const ChatList = (props: ChatListProps) => {
 
   // 컴포넌트 렌더링 후 초기 데이터 요청
   useEffect(() => {
-    if (userId) {
-      refetch();
-    }
-  }, [refetch, userId]);
+    refetch();
+  }, [refetch]);
 
   // deleteMode가 실행되면 deleteList 초기화
   useEffect(() => {
@@ -110,10 +90,10 @@ const ChatList = (props: ChatListProps) => {
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     try {
-      /* await JsonConfig("put", `api/chat/room/${userId}`, {
+      await JsonConfig("put", `api/chat/room/${userId}`, {
         chatroomId: deleteList,
         senderId: userId,
-      }); */
+      });
       setChatRooms((prev: ChatRoomType[] | null) => {
         if (!prev) return null;
         return prev.filter((room) => {
@@ -127,11 +107,9 @@ const ChatList = (props: ChatListProps) => {
     }
   };
 
-  if (!userId) return <></>;
-
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col pt-16">
         {chatRoomList &&
           chatRoomList.map((chat) => {
             return (

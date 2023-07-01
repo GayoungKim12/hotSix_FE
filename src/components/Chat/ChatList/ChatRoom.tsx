@@ -57,7 +57,7 @@ const ChatRoom = (props: isDeleteMode) => {
   };
 
   return (
-    <div className="flex justify-between border-solid border-gray-300 border-b-2 p-3 w-full h-20 font-normal" onClick={clickChatRoom}>
+    <div className="flex justify-between items-center border-solid border-b-2 border-gray-300 p-3 w-full h-20 font-normal" onClick={clickChatRoom}>
       <div className="flex justify-center items-center gap-3">
         {isDeleteMode && (
           <button
@@ -67,7 +67,7 @@ const ChatRoom = (props: isDeleteMode) => {
             {!isDeleteBtnChecked ? <AiOutlineCheckCircle className="w-6 h-6" /> : <AiFillCheckCircle className="w-6 h-6" />}
           </button>
         )}
-        <div className="relative flex justify-center items-center w-12 h-12 border-2 border-gray-300 rounded-full bg-white overflow-hidden">
+        <div className="relative flex justify-center items-center w-12 h-12 border-2 shrink-0 rounded-full bg-white overflow-hidden">
           {chat.partner.imgPath.length ? (
             <img src={chat.partner.imgPath} className="w-full h-full object-cover" />
           ) : (
@@ -76,13 +76,13 @@ const ChatRoom = (props: isDeleteMode) => {
             </div>
           )}
         </div>
-        <div className="mt-0.5">
+        <div className="mt-0.5 ">
           <div className="font-semibold">{chat.partner.nickname}</div>
-          <div className="text-sm">{chat.lastMessage}</div>
+          <div className="text-sm w-40 overflow-hidden text-ellipsis whitespace-nowrap">{chat.lastMessage}</div>
         </div>
       </div>
-      <div className="mr-1">
-        <div className="flex flex-col justify-center items-end gap-2">
+      <div className="mr-1 w-14">
+        <div className="flex justify-center items-center gap-2">
           <div className="text-sm">{utility.getDiffTime(chat.lastTime)}</div>
           {/* <div className="flex text-sm">
             <span className="flex justify-center items-center bg-main-400 rounded-full px-2 py-1 text-white text-sm font-normal leading-none">
