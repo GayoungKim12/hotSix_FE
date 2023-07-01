@@ -18,7 +18,7 @@ const PostToolButtons = (props: PostToolButtonsProps) => {
       await JsonConfig("delete", `api/post/${postId}`);
 
       if (page === "detail") {
-        navigate("/");
+        navigate("/main");
       } else if (deletePost) {
         deletePost();
       }
