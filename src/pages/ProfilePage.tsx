@@ -4,13 +4,9 @@ import { useEffect, useState } from "react";
 import SettingButtons from "../components/Profile/SettingButtons";
 import Header from "../components/Profile/Header";
 import { useNavigate, useParams } from "react-router-dom";
-import jwtDecode from "jwt-decode";
 import Footer from "../components/common/Footer";
-import axios from "axios";
-
-interface DecodedToken {
-  id: string;
-}
+import { getUserId } from "../components/API/TokenAction";
+import { JsonConfig } from "../components/API/AxiosModule";
 
 interface PartnerType {
   membershipId: number;
@@ -19,11 +15,6 @@ interface PartnerType {
 }
 
 const ProfilePage = () => {
-  const URL = "http://43.200.78.88:8080";
-  const accessToken = localStorage.getItem("accessToken");
-  const [userId, setUserId] = useState<number | null>(null);
-  const navigate = useNavigate();
-
   const [showSettingButtons, setShowSettingButtons] = useState(false);
   const [mypage, setMypage] = useState(false);
   const [notMyProfile, setNotMyProfile] = useState(false);
@@ -33,16 +24,12 @@ const ProfilePage = () => {
     imgPath: "",
     nickname: "",
   });
+  const navigate = useNavigate();
+  const userId = getUserId();
 
   useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, []);
 
   useEffect(() => {
     if (Number(profileId) === userId) {
@@ -54,18 +41,11 @@ const ProfilePage = () => {
     }
   }, [userId, profileId]);
 
-  const sendChat = async () => {
+  const goChatRoom = async () => {
     try {
-      const response = await axios({
-        method: "post",
-        url: `${URL}/api/chat/room`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`, //액세스토큰을 넣고
-        },
-        data: {
-          senderId: userId,
-          receiverId: Number(profileId),
-        },
+      const response = await JsonConfig("post", "api/chat/room", {
+        senderId: userId,
+        receiverId: Number(profileId),
       });
       navigate(`/chat/${response.data}`, { state: partner });
     } catch (err) {
@@ -73,10 +53,10 @@ const ProfilePage = () => {
     }
   };
 
-  if (!profileId || !userId) return <></>;
+  if (!profileId) return <></>;
 
   return (
-    <div className="pt-14 min-h-screen bg-main-100">
+    <div className="pt-16 min-h-screen bg-main-100">
       <Header handleShow={() => setShowSettingButtons(true)} mypage={mypage} />
       <Profile profileId={profileId} setPartner={setPartner} />
       {mypage && userId && (
@@ -88,7 +68,7 @@ const ProfilePage = () => {
       {notMyProfile && (
         <button
           className="fixed bottom-16 left-1/2 -translate-x-2/4 block w-11/12 h-12 rounded-md bg-main-400 text-white focus:outline-none"
-          onClick={sendChat}
+          onClick={goChatRoom}
         >
           채팅 보내기
         </button>

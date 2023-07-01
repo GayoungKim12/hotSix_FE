@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { JsonConfig } from "../API/AxiosModule";
 import { FaUser } from "react-icons/fa";
+import { GiFemale, GiMale } from "react-icons/gi";
 
 interface ProfileType {
   nickname: string;
@@ -57,10 +58,28 @@ const Profile = (props: ProfileProps) => {
     })();
   }, [profileId, accessToken, setPartner]);
 
-  if (!profile) return <></>;
+  if (!profile)
+    return (
+      <div className="flex flex-col gap-2 p-4 pb-0">
+        <div className="flex items-center gap-4">
+          <div className="relative flex justify-center items-center w-16 h-16 border-2 rounded-full bg-white text-black overflow-hidden">
+            <div className={"absolute top-4 flex justify-center items-center text-5xl text-main-200"}>
+              <FaUser />
+            </div>
+          </div>
+          <div className="text-lg font-semibold text-black w-16 h-5 bg-gray-300 rounded"></div>
+        </div>
+        <div className="flex flex-col items-start gap-2 text-sm rounded-sm">
+          <div className="w-16 h-4 bg-gray-300 rounded"></div>
+          <div className="w-32 h-4 bg-gray-300 rounded"></div>
+          <div className="w-20 h-4 bg-gray-300 rounded"></div>
+          <div className="w-48 h-4 bg-gray-300 rounded"></div>
+        </div>
+      </div>
+    );
 
   return (
-    <div className="flex flex-col gap-2 pt-4 px-4">
+    <div className="flex flex-col gap-2 p-4 pb-0">
       <div className="flex items-center gap-4">
         <div className="relative flex justify-center items-center w-16 h-16 border-2 rounded-full bg-white text-black overflow-hidden">
           {profile.imgPath.length ? (
@@ -71,10 +90,12 @@ const Profile = (props: ProfileProps) => {
             </div>
           )}
         </div>
-        <div className="text-lg font-semibold text-black">{profile.nickname}</div>
+        <div className="flex items-center justify-center gap-0.5 text-lg font-semibold text-black">
+          {profile.nickname}
+          {profile.gender === 1 ? <GiMale className="text-blue-400 text-xl" /> : <GiFemale className="text-red-400 text-xl" />}
+        </div>
       </div>
       <div className="flex flex-col items-start gap-0.5 text-sm">
-        <div>{profile.gender === 1 ? "남성" : "여성"}</div>
         <div>{profile.birth}</div>
         <div>{`${profile.region.sido} ${profile.region.sigg}`}</div>
         <div className="flex items-center flex-wrap gap-1">

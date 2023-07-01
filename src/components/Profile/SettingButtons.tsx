@@ -17,7 +17,7 @@ const SettingButtons = (props: SettingButtonsProps) => {
     JsonConfig("delete", `api/membership/delete/${userId}`).then(() => {
       removeRefreshToken;
       removeAccessToken;
-      navigate("/signin");
+      navigate("/");
     });
     handleShow;
   };
