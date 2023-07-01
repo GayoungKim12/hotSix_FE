@@ -1,42 +1,48 @@
-import axios from "axios";
-import jwtDecode from "jwt-decode";
-
-import { useState, useEffect } from "react";
+import { JsonConfig } from "../API/AxiosModule";
+import { Dispatch, SetStateAction } from "react";
+interface Comments {
+  commentId: number;
+  content: string;
+  createdAt: string;
+  imgPath: string;
+  memberId: number;
+  nickName: string;
+}
+[];
 
 interface CommentToolButtonsProps {
   handleShow: () => void;
+  comments: {
+    commentId: number;
+    content: string;
+    createdAt: string;
+    imgPath: string;
+    memberId: number;
+    nickName: string;
+  }[];
+  setComments: Dispatch<SetStateAction<Comments[]>>;
+  editComment: () => void;
+  onClickClose: () => void;
+  commentData: {
+    nickName: string;
+    imgPath: string;
+    createdAt: string;
+    content: string;
+    commentId: number;
+    memberId: number;
+  };
+  setShowCommentButtons: Dispatch<SetStateAction<boolean>>;
 }
 
 const CommentToolButtons = (props: CommentToolButtonsProps) => {
-  const { comments, commentId, setComments, editComment, onClickClose, commentData, setShowCommentButtons } = props;
-  const [userId, setUserId] = useState();
-
-  //토큰에서 유저아이디 파싱
-  const accessToken = localStorage.getItem("accessToken");
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
-
-  // console.log(commentId);
-
-  // console.log(comments);
+  const { comments, setComments, editComment, onClickClose, commentData, setShowCommentButtons } = props;
 
   //댓글 삭제
   const deleteComment = () => {
-    axios
-      .delete(`http://43.200.78.88:8080/api/comment/${commentData.commentId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((res) => {
+    const ok = window.confirm("정말 삭제하실꺼죠😃?");
+
+    if (ok) {
+      JsonConfig("delete", `api/comment/${commentData.commentId}`, null, undefined).then((res) => {
         console.log(res);
         setComments(
           comments.filter((c) => {
@@ -44,12 +50,12 @@ const CommentToolButtons = (props: CommentToolButtonsProps) => {
           })
         );
       });
-    alert("삭제되었습니다");
+      alert("삭제되었습니다😉");
+    }
 
     setShowCommentButtons(false);
   };
-
-  //댓글 수정
+  console.log(comments);
 
   return (
     <div onClick={props.handleShow}>
@@ -62,11 +68,7 @@ const CommentToolButtons = (props: CommentToolButtonsProps) => {
           >
             댓글 수정
           </button>
-          <button
-            className="block px-4 py-3 w-full border-0 rounded-t-none rounded-b-xl hover:border-0 focus:outline-none"
-            onClick={deleteComment}
-            // onClick={setDeletes(true)}
-          >
+          <button className="block px-4 py-3 w-full border-0 rounded-t-none rounded-b-xl hover:border-0 focus:outline-none" onClick={deleteComment}>
             댓글 삭제
           </button>
         </div>

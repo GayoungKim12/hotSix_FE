@@ -1,25 +1,53 @@
 import { GoKebabHorizontal } from "react-icons/go";
 import { FaUser } from "react-icons/fa";
-import { useState } from "react";
-
+import { ChangeEvent, useState } from "react";
 import CommentToolButtons from "./CommentToolButtons";
 import { IoIosSend } from "react-icons/io";
 import { RiDeleteBinLine } from "react-icons/ri";
-import axios from "axios";
+import { JsonConfig } from "../API/AxiosModule";
+import { Dispatch, SetStateAction } from "react";
+
+interface Comments {
+  commentId: number;
+  content: string;
+  createdAt: string;
+  imgPath: string;
+  memberId: number;
+  nickName: string;
+}
+[];
+
 interface CommentProps {
-  handleShow: () => void;
+  commentData: {
+    nickName: string;
+    imgPath: string;
+    createdAt: string;
+    content: string;
+    commentId: number;
+    memberId: number;
+  };
+  comments: {
+    commentId: number;
+    content: string;
+    createdAt: string;
+    imgPath: string;
+    memberId: number;
+    nickName: string;
+  }[];
+  setComments: Dispatch<SetStateAction<Comments[]>>;
+  userId: number | undefined;
 }
 
 const Comment = (props: CommentProps) => {
-  const { commentData, comments, setComments, accessToken, userId } = props;
+  const { commentData, comments, setComments, userId } = props;
   const [text, setText] = useState(commentData.content);
   const [editText, setEditText] = useState(false);
   const [showCommentButtons, setShowCommentButtons] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
-  const onChange = (e) => {
+  const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
     e.target.style.height = "auto";
     e.target.style.height = e.target.scrollHeight + "px";
@@ -36,21 +64,15 @@ const Comment = (props: CommentProps) => {
   //댓글 수정해서 서버 / 배열 에 보냄
   const editCommentData = () => {
     const data = { content: text };
-    axios
-      .put(`http://43.200.78.88:8080/api/comment/${commentData.commentId}`, data, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setComments(
-          comments.map((c) => {
-            console.log(c);
-            return c.commentId === response.data ? { ...c, content: text } : c;
-          })
-        );
-      });
+    JsonConfig("put", `api/comment/${commentData.commentId}`, data, undefined).then((response) => {
+      console.log(response);
+      setComments(
+        comments.map((c) => {
+          console.log(c);
+          return c.commentId === response.data ? { ...c, content: text } : c;
+        })
+      );
+    });
     setEditText(false);
   };
 
@@ -60,6 +82,11 @@ const Comment = (props: CommentProps) => {
     setText(commentData.content);
   };
 
+  function handleShow(): void {
+    throw new Error("Function not implemented.");
+  }
+  console.log(commentData.createdAt.split("T"));
+
   return (
     <>
       <div className="flex flex-col gap-2 p-4 border-b-2">
@@ -67,14 +94,22 @@ const Comment = (props: CommentProps) => {
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-8 h-8 border-2 rounded-full text-black">
               {commentData.imgPath !== "" ? (
-                <img src={commentData.imgPath} />
+                <img src={commentData.imgPath} className="w-8 h-8 rounded-full" />
               ) : (
                 <div className="text-main-300 text-lg">
                   <FaUser />
                 </div>
               )}
             </div>
-            <div className="text-sm font-semibold text-black">{commentData.nickName}</div>
+
+            <div className="flex items-center justify-between w-full">
+              <div className="text-sm font-semibold text-black">{commentData.nickName}</div>
+              <div className="flex text-xs text-gray-400">
+                {" "}
+                <div className="mr-1">{commentData.createdAt.split("T")[0]}</div>
+                <div className="text-right">{commentData.createdAt.split("T")[1]} </div>
+              </div>
+            </div>
           </div>
           {userId === commentData.memberId && (
             <button
@@ -100,14 +135,11 @@ const Comment = (props: CommentProps) => {
             </button>
           </form>
         )}
-
-        <div className="flex items-start justify-between w-full">
-          <div className="text-xs text-gray-400">{commentData.created_at}</div>
-        </div>
       </div>
 
       {showCommentButtons && (
         <CommentToolButtons
+          handleShow={handleShow}
           commentData={commentData}
           comments={comments}
           setComments={setComments}
