@@ -1,8 +1,8 @@
-import jwtDecode from "jwt-decode";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { IoIosSend } from "react-icons/io";
 import Footer from "../common/Footer";
 import { JsonConfig } from "../API/AxiosModule";
+import { getUserId } from "../API/TokenAction";
 
 interface Comments {
   commentId: number;
@@ -12,10 +12,9 @@ interface Comments {
   memberId: number;
   nickName: string;
 }
-[];
 
 interface CommentFormProps {
-  postId: number | string;
+  postId: number;
   comments: {
     commentId: number;
     content: string;
@@ -25,26 +24,12 @@ interface CommentFormProps {
     nickName: string;
   }[];
   setComments: Dispatch<SetStateAction<Comments[]>>;
+  setCommentCount: Dispatch<SetStateAction<number>>;
 }
 
-interface DecodedToken {
-  id: string;
-}
-
-const CommentForm = ({ postId, comments, setComments }: CommentFormProps) => {
-  const [userId, setUserId] = useState<number | undefined>();
+const CommentForm = ({ postId, comments, setComments, setCommentCount }: CommentFormProps) => {
   const [content, setContent] = useState("");
-  const accessToken = localStorage.getItem("accessToken");
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
+  const userId = getUserId();
 
   const handleResizeHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
@@ -68,6 +53,7 @@ const CommentForm = ({ postId, comments, setComments }: CommentFormProps) => {
       console.log(res);
       setComments([res.data, ...comments]);
     });
+    setCommentCount((prev) => prev + 1);
     setContent("");
   };
 

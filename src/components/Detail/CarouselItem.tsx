@@ -8,8 +8,14 @@ const CarouselItem = (props: CarouselItemProps) => {
   const { item } = props;
   const [full, setFull] = useState(false);
 
+  const isMobileDevice = () => {
+    return navigator.userAgent.indexOf("Mobile") !== -1;
+  };
+
   const handleClick = () => {
-    setFull(!full);
+    if (isMobileDevice()) {
+      setFull(!full);
+    }
   };
 
   return (
