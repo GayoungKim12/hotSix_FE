@@ -8,6 +8,7 @@ import LikeButton from "../common/LikeButton";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { FiMapPin } from "react-icons/fi";
 import { GiFemale, GiMale } from "react-icons/gi";
+import utility from "../../utils/utils";
 
 interface PostType {
   nickname: string;
@@ -78,7 +79,7 @@ const Card = (props: CardProps) => {
             <GoKebabHorizontal />
           </button>
         </article>
-        <article className="flex flex-col gap-1.5 text-sm text-black">
+        <article className="flex flex-col gap-1 text-sm text-black">
           <div className="flex flex-col items-start gap-0.5 text-xs text-gray-500">
             <div className="flex items-center gap-1">
               {<FiMapPin className="flex items-center justify-center gap-1.5 text-sm text-main-400" />}
@@ -89,10 +90,10 @@ const Card = (props: CardProps) => {
               {post.createdAt.split("T")[0]}
             </div>
           </div>
-          <p>{post.content.slice(0, 40)}</p>
+          <p className="two-line">{utility.changeLineBreak(post.content)}</p>
           {post.postImgPath.length !== 0 && (
-            <div className="inline-flex flex-col items-center justfiy-center">
-              <img src={post.postImgPath} className="w-full rounded-lg" draggable="false" />
+            <div className="inline-flex flex-col items-center rounded-lg justfiy-center mt-1 h-60 overflow-hidden">
+              <img src={post.postImgPath} className="w-full h-full object-cover" draggable="false" />
             </div>
           )}
         </article>
