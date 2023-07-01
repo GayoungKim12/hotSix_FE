@@ -9,6 +9,7 @@ import { GiFemale, GiMale } from "react-icons/gi";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { JsonConfig } from "../API/AxiosModule";
 import { Dispatch, SetStateAction } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface boardProps {
   postId: number;
@@ -25,8 +26,6 @@ interface boardProps {
 }
 
 interface Props {
-  showPostButtons: boolean;
-  setShowPostButtons: React.Dispatch<React.SetStateAction<boolean>>;
   userId: number | undefined;
   board: {
     postId: number;
@@ -57,9 +56,10 @@ interface Props {
   setBoardList: Dispatch<SetStateAction<boardProps[]>>;
 }
 
-const BoardCard: React.FC<Props> = ({ showPostButtons, setShowPostButtons, userId, board, boardList, setBoardList }: Props) => {
+const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: Props) => {
   const [like, setLike] = useState<boolean | null>();
-
+  const [showPostButtons, setShowPostButtons] = useState<boolean>(false);
+  const navigate = useNavigate();
   //좋아요 상태 최신화
   useEffect(() => {
     setLike(board.likesFlag);
@@ -96,10 +96,13 @@ const BoardCard: React.FC<Props> = ({ showPostButtons, setShowPostButtons, userI
       });
     }
   };
+  const onClickBoard = () => {
+    navigate(`/detail/${board.postId}`);
+  };
 
   return (
     <>
-      <div className="mt-6">
+      <div className="mt-6" onClick={onClickBoard}>
         <div className="relative bg-white rounded-lg m-4 p-4 drop-shadow-xl">
           <section className="cursor-pointer">
             <article className="flex ">
@@ -144,12 +147,12 @@ const BoardCard: React.FC<Props> = ({ showPostButtons, setShowPostButtons, userI
                   </div>
                 </div>
               </div>
-              <div> {board.content.length > 60 ? `${board.content.substr(0, 60) + "..."}` : board.content}</div>
+              <div className="mt-1"> {board.content.length > 60 ? `${board.content.substr(0, 60) + "..."}` : board.content}</div>
             </article>
           </section>
 
           {board.roomFiles !== "" && (
-            <div className="inline-flex flex-col items-center justfiy-center">
+            <div className="inline-flex flex-col items-center justfiy-center mb-3">
               <img src={board.roomFiles} className=" w-full rounded-lg" draggable="false" />
             </div>
           )}

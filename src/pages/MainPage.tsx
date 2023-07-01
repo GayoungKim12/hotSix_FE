@@ -2,15 +2,14 @@ import BoardCard from "../components/Main/BoardCard";
 import Footer from "../components/common/Footer";
 import Header from "../components/Main/Header";
 import { RxTriangleDown } from "react-icons/rx";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { FaPencilAlt } from "react-icons/fa";
-import { BsGenderFemale } from "react-icons/bs";
 import AreaModal from "../components/Main/AreaModal";
 import { useNavigate } from "react-router-dom";
 import { SetStateAction, useAtom } from "jotai";
 import { Dispatch } from "react";
 import RoomExistence from "../components/Main/RoomExistence";
-import { getFindRoomPostData, getHasRoomPostData, regionAll } from "../components/Main/ApiCall";
+import { getFindRoomPostData, getHasRoomPostData, loadMoreFindRoom, loadMoreHasRoom, regionAll } from "../components/Main/ApiCall";
 import jwtDecode from "jwt-decode";
 import { isSelectedFindRoomAtom, isSelectedHasRoomAtom, regionIdAtom } from "../components/Main/Jotai";
 
@@ -40,9 +39,7 @@ interface Board {
 
 interface GetFindRoomProps {
   setBoardOneList: Dispatch<SetStateAction<Board[]>>;
-  boardOneOffset: number;
   regionId?: number;
-  lastPostId: number | null;
   setLastPostId: Dispatch<SetStateAction<number | null>>;
   userId: number | undefined;
 }
@@ -52,17 +49,15 @@ const MainPage = () => {
   const [isSelectedFindRoom, setIsSelectedFindRoom] = useAtom(isSelectedFindRoomAtom);
   const [isSelectedHasRoom, setIsSelectedHasRoom] = useAtom(isSelectedHasRoomAtom);
   const [activeAreaModal, setActiveAreaModal] = useState<boolean>(false);
-  const [showPostButtons, setShowPostButtons] = useState<boolean>(false);
   const [boardOneList, setBoardOneList] = useState<Board[]>([]);
   const [boardTwoList, setBoardTwoList] = useState<Board[]>([]);
   const [regionList, setRegionList] = useState<RegionProps[]>([]);
   const [regionName, setRegionName] = useState<undefined | string>();
   const [userRegion, setUserRegion] = useState<number | undefined>();
   const [regionId, setRegionId] = useAtom(regionIdAtom);
-  const [boardOneOffset, setBoardOneOffset] = useState<number>(0);
-  const [boardTwoOffset, setBoardTwoOffset] = useState<number>(0);
   const [userId, setUserId] = useState<number | undefined>();
   const [lastPostId, setLastPostId] = useState<number | null>(null);
+  const target = useRef<HTMLDivElement | null>(null);
 
   //토큰에서 유저아이디 파싱
   const accessToken = localStorage.getItem("accessToken");
@@ -78,29 +73,21 @@ const MainPage = () => {
   }, [accessToken]);
 
   //방 구해요 게시물 불러오는 함수 useCallback 씌우기 (의존성 배열 issue)
-  const getFindRoomPostDataCall = useCallback(
-    async ({ setBoardOneList, boardOneOffset, regionId, lastPostId, setLastPostId, userId }: GetFindRoomProps) => {
-      await getFindRoomPostData({ setBoardOneList, boardOneOffset, regionId, lastPostId, setLastPostId, userId });
-    },
-    []
-  );
+  const getFindRoomPostDataCall = useCallback(async ({ setBoardOneList, regionId, setLastPostId, userId }: GetFindRoomProps) => {
+    await getFindRoomPostData({ setBoardOneList, regionId, setLastPostId, userId });
+  }, []);
 
   //방구해요 버튼 클릭 시
   const handleFindRoom = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
     setBoardTwoList([]);
-    setBoardOneOffset(0);
     setIsSelectedHasRoom(false);
-    if (boardOneOffset === 0) {
-      getFindRoomPostData({
-        setBoardOneList,
-        boardOneOffset,
-        regionId,
-        lastPostId,
-        setLastPostId,
-        userId,
-      });
-    }
+    getFindRoomPostData({
+      setBoardOneList,
+      regionId,
+      setLastPostId,
+      userId,
+    });
     setIsSelectedFindRoom(true);
   };
 
@@ -108,18 +95,14 @@ const MainPage = () => {
   const handleHasRoom = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
     setBoardOneList([]);
-    setBoardTwoOffset(0);
     setIsSelectedFindRoom(false);
-    if (boardTwoOffset === 0) {
-      getHasRoomPostData({
-        setBoardTwoList,
-        boardTwoOffset,
-        regionId,
-        lastPostId,
-        setLastPostId,
-        userId,
-      });
-    }
+    getHasRoomPostData({
+      setBoardTwoList,
+      regionId,
+      setLastPostId,
+      userId,
+    });
+
     setIsSelectedHasRoom(true);
   };
 
@@ -153,67 +136,51 @@ const MainPage = () => {
     }
     const fetchData = async () => {
       if (userRegion && isSelectedFindRoom && userId) {
-        await getFindRoomPostDataCall({ setBoardOneList, boardOneOffset, regionId, lastPostId, setLastPostId, userId });
+        await getFindRoomPostDataCall({ setBoardOneList, regionId, setLastPostId, userId });
       } else if (userRegion && isSelectedHasRoom && userId) {
         await getHasRoomPostData({
           setBoardTwoList,
-          boardTwoOffset,
           regionId,
-          lastPostId,
           setLastPostId,
           userId,
         });
       }
     };
     fetchData();
-  }, [
-    boardOneOffset,
-    boardTwoOffset,
-    getFindRoomPostDataCall,
-    isSelectedFindRoom,
-    isSelectedHasRoom,
-    lastPostId,
-    regionId,
-    regionList,
-    userId,
-    userRegion,
-  ]);
+  }, [getFindRoomPostDataCall, isSelectedFindRoom, isSelectedHasRoom, regionId, regionList, userId, userRegion]);
 
-  //무한스크롤구현 (방구해요 / 방있어요 )
-  useEffect(() => {
-    const handScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const currentHeight = document.documentElement.scrollTop + window.innerHeight;
-      if (currentHeight + 1 >= scrollHeight && isSelectedFindRoom) {
-        setBoardOneOffset(boardOneOffset + 1);
+  // intersection callback 함수 작성
+  const intersectionCallback = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const entry = entries[0];
+      console.log("entry", entry);
+      if (entry.isIntersecting) {
+        console.log("교차");
+        if (isSelectedFindRoom) {
+          loadMoreFindRoom({ regionId, lastPostId, userId, setBoardOneList, setLastPostId });
+        } else if (isSelectedHasRoom) {
+          loadMoreHasRoom({ regionId, lastPostId, userId, setBoardTwoList, setLastPostId });
+        }
       }
-    };
+    },
+    [isSelectedFindRoom, isSelectedHasRoom, lastPostId, regionId, userId]
+  );
 
-    window.addEventListener("scroll", handScroll);
-
+  //관찰자가 target을 관찰시작
+  useEffect(() => {
+    const observer = new IntersectionObserver(intersectionCallback, {
+      threshold: 1,
+    });
+    observer.observe(target.current as Element);
     return () => {
-      window.removeEventListener("scroll", handScroll);
+      observer.disconnect();
     };
-  }, [boardOneOffset, isSelectedFindRoom]);
-
-  useEffect(() => {
-    const handScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const currentHeight = document.documentElement.scrollTop + window.innerHeight;
-      if (currentHeight + 1 >= scrollHeight && isSelectedHasRoom) {
-        setBoardTwoOffset(boardTwoOffset + 1);
-      }
-    };
-    window.addEventListener("scroll", handScroll);
-    return () => window.removeEventListener("scroll", handScroll);
-  }, [boardTwoOffset, isSelectedHasRoom]);
+  }, [intersectionCallback]);
 
   // console.log(regionList);
   // console.log(`userId : ${userId}`);
   console.log("boardOneList :", boardOneList);
   console.log("boardTwoList :", boardTwoList);
-  console.log(`boardOneOffset : ${boardOneOffset}`);
-  console.log(`boardTwoOffset : ${boardTwoOffset}`);
   // console.log(`regionId : ${regionId}`);
   // console.log(`userRegion : ${userRegion}`);
   // console.log(`lastPostId : ${lastPostId}`);
@@ -223,10 +190,15 @@ const MainPage = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
     if (userId) {
       if (isSelectedFindRoom) {
-        setBoardOneOffset(0);
+        getFindRoomPostData({ setBoardOneList, regionId, setLastPostId, userId });
       }
       if (isSelectedHasRoom) {
-        setBoardTwoOffset(0);
+        getHasRoomPostData({
+          setBoardTwoList,
+          regionId,
+          setLastPostId,
+          userId,
+        });
       }
       setActiveAreaModal(false);
       setRegionName(region.sigg);
@@ -254,35 +226,15 @@ const MainPage = () => {
           {boardOneList?.length > 0
             ? boardOneList.map((b, i) => {
                 return (
-                  <div
-                    onClick={() => {
-                      navigate(`/detail/${b.postId}`);
-                    }}
-                    key={i}
-                    className={i === 0 ? "mt-12" : ""}
-                  >
-                    <BoardCard
-                      showPostButtons={showPostButtons}
-                      setShowPostButtons={setShowPostButtons}
-                      board={b}
-                      userId={userId}
-                      boardList={boardOneList}
-                      setBoardList={setBoardOneList}
-                    />
+                  <div key={i} className={i === 0 ? "mt-12" : ""}>
+                    <BoardCard board={b} userId={userId} boardList={boardOneList} setBoardList={setBoardOneList} />
                   </div>
                 );
               })
             : boardTwoList?.map((b, i) => {
                 return (
-                  <div onClick={() => navigate(`/detail/${b.postId}`)} key={i}>
-                    <BoardCard
-                      showPostButtons={showPostButtons}
-                      setShowPostButtons={setShowPostButtons}
-                      board={b}
-                      userId={userId}
-                      boardList={boardTwoList}
-                      setBoardList={setBoardTwoList}
-                    />
+                  <div key={i} className={i === 0 ? "mt-12" : ""}>
+                    <BoardCard board={b} userId={userId} boardList={boardTwoList} setBoardList={setBoardTwoList} />
                   </div>
                 );
               })}
@@ -297,6 +249,7 @@ const MainPage = () => {
           </div>
         </section>
       </div>
+      <div ref={target}></div>
       <Footer selected={false} userId={userId} />
     </>
   );
