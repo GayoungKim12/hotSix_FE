@@ -44,7 +44,8 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
 
         //연결에 성공하면 밑에코드 실행
         //console.log("연결성공")
-        subscription = client.subscribe(
+        //subscription = 
+          client.subscribe(
           //구독해서 앞으로 이 url로 메시지오면
           `/sub/room/${roomId}`,
           (arrivalChat) => {
