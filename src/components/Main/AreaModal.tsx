@@ -25,7 +25,7 @@ const AreaModal = ({ regionList, handleRegionArea }: AreaModalProps) => {
           <ul>{regionListSido}</ul>
         </div>
 
-        <ul className="w-full grid gap-1 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+        <ul className="w-full grid gap-1 grid-cols-3 min-[320px]:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7">
           {regionList.map((region) => {
             return (
               <li key={region.regionId} className=" mb-1 text-sm text-center cursor-pointer" onClick={() => handleRegionArea(region)}>
