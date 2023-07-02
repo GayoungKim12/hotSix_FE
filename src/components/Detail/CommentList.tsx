@@ -48,7 +48,7 @@ const CommentList = (props: CommentListProps) => {
       const params = { lastCommentId: lastCommentId, size: 10 };
       await JsonConfig("get", `api/comment/${postId}`, null, params).then((res) => {
         console.log(res);
-        setComments((prev: Comment[]) => [...prev, ...res.data.data]);
+        setComments((prev: CommentType[]) => [...prev, ...res.data.data]);
         setLoading(false);
         setLastCommentId(res.data.data[res.data.data.length - 1]?.commentId);
       });
