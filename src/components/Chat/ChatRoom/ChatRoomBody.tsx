@@ -143,7 +143,7 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
     <div ref={chatContainerRef} className="relative flex-grow overflow-hidden" style={{ overflowY: "scroll" }}>
       <div className="w-full h-full">
         <div className="relative flex-grow">
-          <div className="h-full overflow-y-auto max-h-full">
+          <div className="h-full max-h-full overflow-y-auto ">
             <ul>
               <li ref={startRef}></li>
               {visibleChats.map((message, index) => {
@@ -220,13 +220,13 @@ const ChatMessage = ({
             {targetMonth}월{targetDay}일
           </div>
         ) : null}
-        <li className={`relative h-auto my-4 flex items-end ${isMyChat ? "flex-row-reverse" : "flex-row"}`}>
+        <li className={`relative h-auto items-end my-4 flex  ${isMyChat ? "flex-row-reverse" : "flex-row"}`}>
           {isMyChat ? (
             <>
-              <span className="bg-white px-3 py-1 max-w-4/5 inline-flex flex-col break-all mx-1 my-1 rounded-md flex justify-center items-center">
+              <span className="flex justify-center items-center inline-flex flex-col px-3 py-1 mx-1 my-1 max-w-4/5 rounded-md bg-white break-all ">
                 {message.message}
               </span>
-              <span className="font-light text-sm ml-1">
+              <span className="ml-1 font-light text-sm ">
                 {hours}:{minutes}
               </span>
             </>
@@ -234,9 +234,9 @@ const ChatMessage = ({
             <>
               
               {imgPath.length ? (
-                <img className="ml-1 w-12 h-12 rounded-full " src={imgPath} alt="" />
+                <img className="rounded-full ml-1 w-12 h-12" src={imgPath} alt="" />
               ) : (
-                <div className={"bg-white ml-1 w-12 h-12 flex justify-center items-center  text-4xl rounded-full text-main-200"}>
+                <div className={"flex justify-center rounded-full items-center ml-1 w-12 h-12 text-4xl text-main-200 bg-white "}>
                   <FaUser />
                 </div>
               )}
@@ -245,8 +245,8 @@ const ChatMessage = ({
               
               <div className="ml-4 max-w-4/5">
                 <div className="mb-1">{nickname}</div>
-                <span className="inline-flex flex-col mx-1 my-1 px-1 py-1 bg-gray-300 break-all  rounded-md ">{message.message}</span>
-                <span className="font-light text-sm mr-1">
+                <span className="inline-flex flex-col rounded-md mx-1 my-1 px-1 py-1 bg-gray-300 break-all   ">{message.message}</span>
+                <span className="mr-1 font-light text-sm ">
                   {hours}:{minutes}
                 </span>
               </div>
