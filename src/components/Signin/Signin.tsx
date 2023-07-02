@@ -21,7 +21,7 @@ const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const redirect_uri = "http://localhost:5173/signin";
+  const redirect_uri = "http://localhost:8080/login/oauth2/code/kakao";
 
   useEffect(() => {
     handleAuthorizationCode();
@@ -87,7 +87,7 @@ const Signin = () => {
   const kakaotalkSignIn = () => {
     removeAccessToken();
     removeRefreshToken();
-    localStorage.setItem("Rest_api_key", "ba688a75557d3918702599015fe8d999");
+    localStorage.setItem("Rest_api_key", "f97c55d9d92ac41363b532958776d378");
     const Rest_api_key = localStorage.getItem("Rest_api_key");
     const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
     window.location.href = kakaoURL;

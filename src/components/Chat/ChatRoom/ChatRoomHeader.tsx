@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { partnerInfo } from "../../../pages/Chat/ChatRoomPage";
+import { FaUser } from "react-icons/fa";
 
 const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo }) => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo 
     if(partnerInfomation.nickname !== null)
     {
       setImgPath(partnerInfomation.imgPath);
+      
       setNickname(partnerInfomation.nickname);
     }
   },[partnerInfomation]);
@@ -27,7 +29,15 @@ const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo 
         <div className="hover:cursor-pointer" onClick={onClickBackBtn}>
           <IoArrowBackOutline></IoArrowBackOutline>
         </div>
-        <img className="ml-4 w-12 h-12 border-2 rounded-full" src={imgPath} alt="" />
+        
+        {imgPath.length ? (
+                <img className="ml-4 w-12 h-12 rounded-full " src={imgPath} alt="" />
+              ) : (
+                <div className={"bg-white ml-4 w-12 h-12 flex justify-center items-center  text-4xl rounded-full text-main-200"}>
+                  <FaUser />
+                </div>
+              )}
+        {/* <img className="ml-4 w-12 h-12 border-2 rounded-full" src={imgPath} alt="" /> */}
       </div>
       <div className="mr-4">{nickname}</div>
     </div>
