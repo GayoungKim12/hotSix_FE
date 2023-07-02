@@ -236,7 +236,7 @@ const ChatMessage = ({
               {imgPath.length ? (
                 <img className="rounded-full ml-1 w-12 h-12" src={imgPath} alt="" />
               ) : (
-                <div className={"flex justify-center rounded-full items-center ml-1 w-12 h-12 text-4xl text-main-200 bg-white "}>
+                <div className={"flex top-3 justify-center rounded-full items-center pt-3  ml-1 w-12 h-12 border-2 text-4xl text-main-200 bg-white overflow-hidden "}>
                   <FaUser />
                 </div>
               )}
