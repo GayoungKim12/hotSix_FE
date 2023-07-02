@@ -150,7 +150,7 @@ const Signin = () => {
           <Link to={"/findPassword"}>비밀번호찾기</Link>
           <Link to={"/Signup"}>회원가입</Link>
         </div>
-        <img src="public/kakao_login_medium_wide.png" className="mx-auto mt-2 w-9/12" onClick={kakaotalkSignIn} />
+        <img src="kakao_login_medium_wide.png" className="mx-auto mt-2 w-9/12" onClick={kakaotalkSignIn} />
       </div>
     </div>
   );
