@@ -149,7 +149,7 @@ const getTokenExpiration = (tokenName: string, kakaoExpire: number = -1) => {
 };
 
 //토큰이 만료되기 30분전인지 확인 (테스트 완료)
-let a = 0;
+//let a = 0;
 const checkTokenExpiration = (tokenName: string) => {
   const expirationTimeString  =
     tokenName === "refreshToken" ? 
