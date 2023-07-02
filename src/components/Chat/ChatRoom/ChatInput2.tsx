@@ -1,7 +1,6 @@
-import { Frame, StompHeaders, StompSubscription } from "@stomp/stompjs";
+import { Frame, StompHeaders } from "@stomp/stompjs";
 
 import React, { useEffect, useRef } from "react";
-
 
 import { getAccessToken, getUserId, isTokenValid } from "../../API/TokenAction";
 
@@ -17,7 +16,7 @@ interface ChatUtil {
 
 const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
   const newChatRef = useRef<HTMLInputElement>(null);
-  const {  updateChats } = chatUtil;
+  const { updateChats } = chatUtil;
   //let subscription: StompSubscription | null | undefined = null;
   const client = connectSocket(); //이건 원래 여기서 하는게 아님(소켓연결 자체는 로그인 하자마자 함)
 
@@ -44,8 +43,8 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
 
         //연결에 성공하면 밑에코드 실행
         //console.log("연결성공")
-        //subscription = 
-          client.subscribe(
+        //subscription =
+        client.subscribe(
           //구독해서 앞으로 이 url로 메시지오면
           `/sub/room/${roomId}`,
           (arrivalChat) => {
@@ -94,8 +93,7 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
   const sendMessage = async () => {
     const checkTokenValidity = async () => {
       const isValid = await isTokenValid();
-      if(isValid)
-      {
+      if (isValid) {
         if (newChatRef.current !== null && userId) {
           if (!client.connected) {
             // console.log("재연결함");
@@ -117,10 +115,9 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
           } else {
             sendChatMessage();
           }
+        }
       }
-    
-    }
-    }
+    };
     checkTokenValidity();
   };
 
