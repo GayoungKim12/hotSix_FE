@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { createKakaoLoginConfig, createLoginConfig } from "../API/AxiosModule";
 import {
   getTokenExpiration,
-  getUserId,
   isTokenValid,
   removeAccessToken,
   removeRefreshToken,
