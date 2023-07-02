@@ -31,9 +31,9 @@ const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo 
         </div>
         
         {imgPath.length ? (
-                <img className="ml-4 w-12 h-12 rounded-full " src={imgPath} alt="" />
+                <img className="rounded-full ml-4 w-12 h-12" src={imgPath} alt="" />
               ) : (
-                <div className={"bg-white ml-4 w-12 h-12 flex justify-center items-center  text-4xl rounded-full text-main-200"}>
+                <div className={"flex rounded-full justify-center items-center ml-4 w-12 h-12 bg-white text-4xl text-main-200 "}>
                   <FaUser />
                 </div>
               )}
