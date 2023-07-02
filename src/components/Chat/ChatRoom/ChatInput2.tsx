@@ -17,8 +17,8 @@ interface ChatUtil {
 
 const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
   const newChatRef = useRef<HTMLInputElement>(null);
-  //const { getChats, updateChats } = chatUtil;
-  let subscription: StompSubscription | null | undefined = null;
+  const {  updateChats } = chatUtil;
+  //let subscription: StompSubscription | null | undefined = null;
   const client = connectSocket(); //이건 원래 여기서 하는게 아님(소켓연결 자체는 로그인 하자마자 함)
 
   const roomId = Number(useParams().chatRoomId);
