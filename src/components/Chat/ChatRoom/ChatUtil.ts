@@ -1,7 +1,7 @@
 import SockJS from "sockjs-client/dist/sockjs";
-import { useRef, useState } from "react";
-import { CompatClient, Stomp, IMessage, StompHeaders } from "@stomp/stompjs";
-import { getAccessToken } from "../../API/TokenAction";
+import { useState } from "react";
+import { Stomp } from "@stomp/stompjs";
+
 
 export interface Message {
   chatRoomId: Number;
