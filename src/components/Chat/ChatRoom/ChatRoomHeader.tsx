@@ -24,7 +24,7 @@ const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo 
   },[partnerInfomation]);
 
   return (
-    <div className="flex justify-between items-center h-16 px-3 border-solid border-black border-b-2">
+    <div className="flex justify-between items-center h-16 px-3 border-solid border-black shadow-md">
       <div className="flex items-center p-4">
         <div className="hover:cursor-pointer" onClick={onClickBackBtn}>
           <IoArrowBackOutline></IoArrowBackOutline>
