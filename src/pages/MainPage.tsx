@@ -10,17 +10,13 @@ import { SetStateAction, useAtom } from "jotai";
 import { Dispatch } from "react";
 import RoomExistence from "../components/Main/RoomExistence";
 import { getFindRoomPostData, getHasRoomPostData, loadMoreFindRoom, loadMoreHasRoom, regionAll } from "../components/Main/ApiCall";
-import jwtDecode from "jwt-decode";
 import { isSelectedFindRoomAtom, isSelectedHasRoomAtom, regionIdAtom } from "../components/Main/Jotai";
+import { getUserId } from "../components/API/TokenAction";
 
 interface RegionProps {
   regionId: number;
   sido: string;
   sigg: string;
-}
-
-interface DecodedToken {
-  id: string;
 }
 
 interface Board {
@@ -55,22 +51,10 @@ const MainPage = () => {
   const [regionName, setRegionName] = useState<undefined | string>();
   const [userRegion, setUserRegion] = useState<number | undefined>();
   const [regionId, setRegionId] = useAtom(regionIdAtom);
-  const [userId, setUserId] = useState<number | undefined>();
   const [lastPostId, setLastPostId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const target = useRef<HTMLDivElement | null>(null);
-
-  //토큰에서 유저아이디 파싱
-  const accessToken = localStorage.getItem("accessToken");
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
+  const userId = getUserId();
 
   //방 구해요 게시물 불러오는 함수 useCallback 씌우기 (의존성 배열 issue)
   const getFindRoomPostDataCall = useCallback(async ({ setBoardOneList, regionId, setLastPostId, userId }: GetFindRoomProps) => {
@@ -136,6 +120,7 @@ const MainPage = () => {
     }
     const fetchData = async () => {
       if (userRegion && isSelectedFindRoom && userId) {
+        setIsLoading(true);
         await getFindRoomPostDataCall({ setBoardOneList, regionId, setLastPostId, userId });
       } else if (userRegion && isSelectedHasRoom && userId) {
         await getHasRoomPostData({
@@ -147,21 +132,24 @@ const MainPage = () => {
       }
     };
     fetchData();
+    setIsLoading(false);
   }, [getFindRoomPostDataCall, isSelectedFindRoom, isSelectedHasRoom, regionId, regionList, userId, userRegion]);
 
   // intersection callback 함수 작성
   const intersectionCallback = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const entry = entries[0];
-      console.log("entry", entry);
+      // console.log("entry", entry);
       if (entry.isIntersecting) {
         console.log("교차");
+        setIsLoading(true);
         if (isSelectedFindRoom) {
           loadMoreFindRoom({ regionId, lastPostId, userId, setBoardOneList, setLastPostId });
         } else if (isSelectedHasRoom) {
           loadMoreHasRoom({ regionId, lastPostId, userId, setBoardTwoList, setLastPostId });
         }
       }
+      setIsLoading(false);
     },
     [isSelectedFindRoom, isSelectedHasRoom, lastPostId, regionId, userId]
   );
@@ -211,9 +199,9 @@ const MainPage = () => {
       <div className="bg-main-100 h-full">
         <section className="fixed w-full z-20 top-0 left-0 shadow bg-main-100">
           <Header />
-          <div className="relative mt-20">
+          <div className="relative mt-16" onClick={handleAreaModal}>
             <div className="px-4 py-2 text-center bg-white">{regionName}</div>
-            <div className="absolute bottom-2 right-2 cursor-pointer" onClick={handleAreaModal}>
+            <div className="absolute bottom-2 right-2 cursor-pointer">
               <RxTriangleDown className="text-3xl text-main-300" />
             </div>
             {activeAreaModal && <AreaModal regionList={regionList} handleRegionArea={handleRegionArea} />}
@@ -226,18 +214,27 @@ const MainPage = () => {
           {boardOneList?.length > 0
             ? boardOneList.map((b, i) => {
                 return (
-                  <div key={i} className={i === 0 ? "mt-12" : ""}>
+                  <div key={i} className={i === 0 ? "mt-10" : ""}>
                     <BoardCard board={b} userId={userId} boardList={boardOneList} setBoardList={setBoardOneList} />
                   </div>
                 );
               })
             : boardTwoList?.map((b, i) => {
                 return (
-                  <div key={i} className={i === 0 ? "mt-12" : ""}>
+                  <div key={i} className={i === 0 ? "mt-10" : ""}>
                     <BoardCard board={b} userId={userId} boardList={boardTwoList} setBoardList={setBoardTwoList} />
                   </div>
                 );
               })}
+          {isLoading && <div className="mt-20 text-center text-xl">Loading...</div>}
+          {boardOneList.length < 0 && boardTwoList.length < 0 && (
+            <>
+              <div className="mt-20 pt-20 bg-main-200 text-center">
+                <h1 className="text-4xl mb-10">텅</h1>
+                <div className="text-xl h-20">게시물이 없습니다 😅</div>
+              </div>
+            </>
+          )}
 
           <div className="flex justify-end mb-14 pt-1 pb-6 mr-5">
             <div

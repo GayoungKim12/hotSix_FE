@@ -109,7 +109,7 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
               <div className="flex items-start justify-between w-full">
                 <div className="flex items-center gap-2 ">
                   <div className="relative flex justify-center items-center w-12 h-12 border-2 rounded-full bg-white text-black overflow-hidden">
-                    {board.userFile === null ? (
+                    {board.userFile !== "" ? (
                       <img className="w-full h-full object-cover" src={board.userFile} alt={`${board.nickName}의 프로필 이미지`} />
                     ) : (
                       <div className={"absolute top-3 flex justify-center items-center text-4xl text-main-200"}>
@@ -147,7 +147,7 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
                   </div>
                 </div>
               </div>
-              <div className="mt-1"> {board.content.length > 60 ? `${board.content.substr(0, 60) + "..."}` : board.content}</div>
+              <div className="mt-1 break-all two-line"> {board.content}</div>
             </article>
           </section>
 
@@ -160,14 +160,14 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
           <section className="flex justify-between items-center px-1">
             <article className="flex items-center">
               <div className="text-indigo-300">
-                <BiComment className="text-2xl" />
+                <BiComment className="text-2xl cursor-pointer" />
               </div>
               <div className="ml-1">{board.commentCount}</div>
             </article>
 
             <article className="flex">
               {like ? (
-                <AiFillHeart className="cursor-pointer text-red-500 text-2xl" onClick={onClickHeart} />
+                <AiFillHeart className="cursor-pointer text-red-400 text-2xl" onClick={onClickHeart} />
               ) : (
                 <span className="text-indigo-300">
                   <AiOutlineHeart className="cursor-pointer text-2xl" onClick={onClickHeart} />

@@ -2,12 +2,8 @@ import Header from "../components/Main/Header";
 import Footer from "../components/common/Footer";
 import { useState, useEffect, useCallback, useRef } from "react";
 import BoardCard from "../components/Main/BoardCard";
-import jwtDecode from "jwt-decode";
 import { JsonConfig } from "../components/API/AxiosModule";
-
-interface DecodedToken {
-  id: string;
-}
+import { getUserId } from "../components/API/TokenAction";
 
 interface CartProps {
   postId: number;
@@ -24,24 +20,11 @@ interface CartProps {
 }
 
 const CartPage = () => {
-  const [userId, setUserId] = useState<number | undefined>();
   const [lastPostId, setLastPostId] = useState();
 
   const [cartList, setCartList] = useState<CartProps[]>([]);
   const target = useRef<HTMLDivElement | null>(null);
-
-  //토큰에서 유저아이디 파싱
-  const accessToken = localStorage.getItem("accessToken");
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
+  const userId = getUserId();
 
   const getLikesData = useCallback(async () => {
     const params = { lastPostId: null, size: 10 };
@@ -54,6 +37,7 @@ const CartPage = () => {
 
   //좋아요 누른 게시물 불러오는 첫 화면
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
     if (!userId) return;
     getLikesData();
   }, [getLikesData, userId]);
@@ -106,7 +90,7 @@ const CartPage = () => {
       <div className="h-full bg-main-100">
         <Header />
 
-        <section className="mt-10 mb-20 pt-10 pb-10">
+        <section className="mt-10 mb-20 pt-5 pb-10">
           {cartList?.map(
             (cart: {
               postId: number;

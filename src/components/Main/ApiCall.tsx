@@ -80,7 +80,7 @@ export async function getFindRoomPostData({ setBoardOneList, regionId, setLastPo
     const params = { size: 10, lastPostId: null };
     await JsonConfig("get", `api/main/${userId}/${regionId}/1`, null, params)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setBoardOneList(response.data.postMainDtoList);
         setLastPostId(response.data.lastPostId);
       })
@@ -95,7 +95,7 @@ export async function loadMoreFindRoom({ regionId, lastPostId, userId, setBoardO
     const params = { size: 10, lastPostId: lastPostId };
     await JsonConfig("get", `api/main/${userId}/${regionId}/1`, null, params)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setBoardOneList((prev) => [...prev, ...response.data.postMainDtoList]);
         setLastPostId(response.data.lastPostId);
       })
@@ -111,7 +111,7 @@ export async function getHasRoomPostData({ setBoardTwoList, regionId, setLastPos
     const params = { size: 10, lastPostId: null };
     await JsonConfig("get", `api/main/${userId}/${regionId}/2`, null, params)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setBoardTwoList(response.data.postMainDtoList);
         setLastPostId(response.data.lastPostId);
       })
