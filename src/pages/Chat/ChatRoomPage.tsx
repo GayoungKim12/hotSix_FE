@@ -14,13 +14,12 @@ export interface partnerInfo{
 function ChatRoomPage() {
   const chatUtil = ChatUtil();
   const location = useLocation();
-  const [membershipId, setMembershipId] = useState("");
+
   const [imgPath, setImgPath] = useState("");
   const [nickname, setNickname] = useState("null");
 
   useEffect(() => {
     const partnerInfo = location.state;
-    setMembershipId(partnerInfo.membershipId);
     setImgPath(partnerInfo.imgPath);
     setNickname(partnerInfo.nickname);
   },[]);
