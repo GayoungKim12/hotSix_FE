@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { IoArrowBackOutline } from "react-icons/io5";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { partnerInfo } from "../../../pages/Chat/ChatRoomPage";
 
 const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo }) => {
   const navigate = useNavigate();
   
-  const [membershipId, setMembershipId] = useState("");
+  
   const [imgPath, setImgPath] = useState("");
   const [nickname, setNickname] = useState("null");
   const onClickBackBtn = () => {
