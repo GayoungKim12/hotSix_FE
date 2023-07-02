@@ -170,7 +170,7 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
 
   return (
     <div className="bottom-0 h-12 chat-input-container ">
-      <div className="flex items-center justify-between ">
+      <div className="flex justify-between items-center  ">
         <label className="z-10 rounded-l-2xl h-12 w-8 bg-white ">
           <input type="file" accept="image/*" className="hidden " />
           <span className="relative top-3 left-1">img</span>
