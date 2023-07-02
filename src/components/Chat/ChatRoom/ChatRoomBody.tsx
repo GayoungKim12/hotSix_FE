@@ -6,6 +6,7 @@ import { getAccessToken, getUserId, isTokenValid } from "../../API/TokenAction";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { partnerInfo } from "../../../pages/Chat/ChatRoomPage";
+import { FaUser } from "react-icons/fa";
 
 interface ChatUtil {
   getChats: () => Message[];
@@ -41,9 +42,9 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
         })
           .then((response) => {
             console.log("이전기록요청성공!!");
-            //console.log(response.data)
+
             updateChats(response.data);
-            console.log(getChats()); //여기서 빈 배열로 나오는 이유가 뭘까??
+            console.log(getChats()); 
           })
           .catch((error) => {
             console.error(error);
@@ -59,24 +60,24 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
   useEffect(() => {
     if (partnerInfomation.nickname !== null) {
       setImgPath(partnerInfomation.imgPath);
-      //setNickname("ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ")
+
       setNickname(partnerInfomation.nickname);
     }
   }, [partnerInfomation]);
 
   useEffect(() => {
     if (getChats().length > 0) {
-      //console.log(getChats());
+
       console.log(getChats().length);
       setpreviousIndex(chats.length);
-      //console.log(previousIndex); //대체 chats.length가 제대로떠도 처음에 0이 나오지...
+      
     }
   }, [getChats()]);
 
   useEffect(() => {
     console.log(chats.length);
     setpreviousIndex(chats.length);
-    //console.log(previousIndex); //대체 chats.length가 제대로떠도 처음에 0이 나오지...
+
   }, [chats, previousIndex]);
 
   useEffect(() => {
@@ -105,7 +106,7 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
 
   useEffect(() => {
     const handleNewMessage = (newChats: Message[]) => {
-      //console.log(startIndex)
+
       const visibleChats = newChats.slice(startIndex);
       setVisibleChats(visibleChats);
     };
@@ -122,7 +123,7 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
         //스크롤이 화면 맨위로 올라갔을때
 
         console.log(getChats().length);
-        console.log(getChats()); //여기서도 새로 가져오는데 왜 빈배열이 나올까
+        console.log(getChats()); 
         //loadPreviousChats();
       }
     });
@@ -147,18 +148,18 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
               <li ref={startRef}></li>
               {visibleChats.map((message, index) => {
                 /////////////////날짜 표시하는 로직
-                let targetDay = -1;
-                let targetMonth = -1;
+                let targetTime = "";
+                targetTime = new Date(chats[index].createdAt as string).toLocaleDateString();
+                let [year, month, day] = "";
                 if (index === 0) {
-                  targetDay = new Date(chats[index].createdAt as string).getDay();
-                  targetMonth = new Date(chats[index].createdAt as string).getMonth();
+                  [year, month, day] = targetTime.split(".");
                 }
                 if (index !== chats.length - 1) {
-                  const isCreated = new Date(chats[index].createdAt as string).getDay();
-                  const nextCreated = new Date(chats[index + 1].createdAt as string).getDay();
+                  const isCreated = new Date(chats[index].createdAt as string).toLocaleDateString();
+                  const nextCreated = new Date(chats[index+1].createdAt as string).toLocaleDateString();
                   if (isCreated !== nextCreated) {
-                    targetDay = new Date(chats[index + 1].createdAt as string).getDay();
-                    targetMonth = new Date(chats[index + 1].createdAt as string).getMonth();
+                    targetTime = new Date(chats[index + 1].createdAt as string).toLocaleDateString();
+                    [year, month, day] = targetTime.split(".");
                   }
                 }
                 ////////내 채팅이면 true 상대채팅이면 false
@@ -167,8 +168,9 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
                   <ChatMessage
                     key={index}
                     message={message}
-                    targetDay={targetDay}
-                    targetMonth={targetMonth}
+                    targetYear={year}
+                    targetDay={day}
+                    targetMonth={month}
                     imgPath={imgPath}
                     nickname={nickname}
                     isMyChat={isMyChat}
@@ -191,9 +193,11 @@ const ChatMessage = ({
   nickname,
   targetDay,
   targetMonth,
+  targetYear,
 }: {
-  targetMonth: number;
-  targetDay: number;
+  targetYear:string;
+  targetMonth: string;
+  targetDay: string;
   message: Message;
   isMyChat: boolean;
   imgPath: string;
@@ -204,7 +208,7 @@ const ChatMessage = ({
   } else {
     const targetDate = new Date(message.createdAt as string);
     let isSameDay = true;
-    if (targetDay !== -1) {
+    if (targetYear !== undefined) {
       isSameDay = false;
     }
     const hours = targetDate.getHours();
@@ -228,7 +232,17 @@ const ChatMessage = ({
             </>
           ) : (
             <>
-              <img className="ml-1 w-12 h-12 border-2 rounded-full" src={imgPath} alt="" />
+              
+              {imgPath.length ? (
+                <img className="ml-1 w-12 h-12 rounded-full " src={imgPath} alt="" />
+              ) : (
+                <div className={"bg-white ml-1 w-12 h-12 flex justify-center items-center  text-4xl rounded-full text-main-200"}>
+                  <FaUser />
+                </div>
+              )}
+              
+              
+              
               <div className="ml-4 max-w-4/5">
                 <div className="mb-1">{nickname}</div>
                 <span className="inline-flex flex-col mx-1 my-1 px-1 py-1 bg-gray-300 break-all  rounded-md ">{message.message}</span>
