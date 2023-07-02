@@ -5,7 +5,6 @@ import DetailPage from "./pages/DetailPage";
 import ProfilePage from "./pages/ProfilePage";
 import ChatRoomPage from "./pages/Chat/ChatRoomPage";
 import ChatListPage from "./pages/Chat/ChatListPage";
-import AlarmPage from "./pages/AlarmPage";
 import { Provider } from "jotai";
 import SignUp from "./pages/SignupPage";
 import SigninPage from "./pages/SigninPage";
@@ -33,7 +32,6 @@ function App() {
             <Route path="/profile/:profileId" element={<ProfilePage />}></Route>
             <Route path="/chatlist" element={<ChatListPage />}></Route>
             <Route path="/chat/:chatRoomId" element={<ChatRoomPage />}></Route>
-            <Route path="/AlarmPage" element={<AlarmPage />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
             <Route path="/editprofile" element={<Editprofile />}></Route>
             <Route path="/findPassword" element={<Findpassword />}></Route>
