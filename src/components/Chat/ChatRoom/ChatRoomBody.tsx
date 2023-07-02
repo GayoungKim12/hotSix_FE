@@ -128,15 +128,15 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
     });
   };
 
-  const loadPreviousChats = () => {
-    console.log(previousIndex);
-    if (previousIndex - 40 >= 0) {
-      setpreviousIndex((previousIndex: number) => previousIndex - 40);
-      setStartIndex((prevStartIndex) => prevStartIndex - 40);
-    } else {
-      setStartIndex(0);
-    }
-  };
+  // const loadPreviousChats = () => {
+  //   console.log(previousIndex);
+  //   if (previousIndex - 40 >= 0) {
+  //     setpreviousIndex((previousIndex: number) => previousIndex - 40);
+  //     setStartIndex((prevStartIndex) => prevStartIndex - 40);
+  //   } else {
+  //     setStartIndex(0);
+  //   }
+  // };
 
   return (
     <div ref={chatContainerRef} className="relative flex-grow overflow-hidden" style={{ overflowY: "scroll" }}>
