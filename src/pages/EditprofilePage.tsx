@@ -91,7 +91,7 @@ const Editprofile = () => {
     MultiConfig("put", `api/membership/update/${userId}`, formData)
       .then(() => {
         alert("수정이 완료되었습니다.");
-        navigate("/profile");
+        navigate(`/profile/${userId}`);
       })
       .catch((error) => {
         console.log(error);
