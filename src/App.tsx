@@ -37,7 +37,7 @@ function App() {
             <Route path="/editprofile" element={<Editprofile />}></Route>
             <Route path="/findPassword" element={<Findpassword />}></Route>
             <Route path="/editpassword" element={<Editpassword />}></Route>
-            <Route path="/socialsignup" element={<SocialsignUp />}></Route>
+            <Route path="/socialsignup/:userId" element={<SocialsignUp />}></Route>
           </Routes>
         </QueryClientProvider>
       </CookiesProvider>

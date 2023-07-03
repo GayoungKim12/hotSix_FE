@@ -6,7 +6,6 @@ import Personality from "../components/Signup/Personality";
 import GoBackButton from "../components/common/GoBackButton";
 import { SignupConfig, createLoginConfig } from "../components/API/AxiosModule";
 import utility from "../utils/utils";
-import { getUserId } from "../components/API/TokenAction";
 
 const SocialsignUp = () => {
   const [year, setYear] = useState<number | "year">("year");
@@ -22,7 +21,8 @@ const SocialsignUp = () => {
   const [nicknameCheckError, setenicknameCheckError] = useState<string | null>("");
   const [countdown, setCountdown] = useState<number | null>(null);
 
-  const userId = getUserId();
+  const url = window.location.href;
+  const userId = url.split("/").pop();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -68,7 +68,7 @@ const SocialsignUp = () => {
       setGender(0);
     }
   };
-
+  console.log(userId);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const isValid = utility.socialvalidateForm(nickname, personality, regionId, birth, introduction);
     e.preventDefault();
@@ -85,9 +85,9 @@ const SocialsignUp = () => {
       const formData = new FormData();
       formData.append("form", new Blob([JSON.stringify(data)], { type: "application/json" }));
 
-      SignupConfig("patch", `/oauth/signup/${userId}`, formData)
+      SignupConfig("patch", `oauth/signup/${userId}`, formData)
         .then(() => {
-          navigate("/signin");
+          navigate("/");
         })
         .catch((error) => {
           console.log(error);
