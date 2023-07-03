@@ -126,7 +126,7 @@ const Editprofile = () => {
   const removeImg = () => {
     setImgFile(null);
     if (userData) {
-      const updatedUserData = { ...userData, img_path: "" };
+      const updatedUserData = { ...userData, imgPath: "" };
       setUserData(updatedUserData);
     }
   };
