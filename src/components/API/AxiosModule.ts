@@ -55,7 +55,7 @@ axiosInstance.interceptors.response.use(
 //로그인할때만 필요
 const createLoginConfig = (method: string, url: string, requestBody: unknown) => {
   const config = {
-    baseURL: `http://43.200.78.88:8080/${url}`,
+    baseURL: `https://43.200.78.88:8080/${url}`,
     method: method,
     headers: {
       "Content-Type": "application/json",
@@ -68,7 +68,7 @@ const createLoginConfig = (method: string, url: string, requestBody: unknown) =>
 
 const SignupConfig = (method: string, url: string, requestBody: unknown) => {
   const config = {
-    baseURL: `http://43.200.78.88:8080/${url}`,
+    baseURL: `https://43.200.78.88:8080/${url}`,
     method: method,
     headers: {
       "Content-Type": "multipart/form-data",
@@ -112,7 +112,7 @@ const createKakaoRenewAccessTokenConfig = (method: string, grant_type: string, c
 
 const JsonConfig = (method: string, url: string, requestBody: unknown = null, params: object = {}) => {
   const config = {
-    baseURL: `http://43.200.78.88:8080/${url}`, //요청을보낼url
+    baseURL: `https://43.200.78.88:8080/${url}`, //요청을보낼url
     method: method, //get,post,delete등 요청을 보낼방식
     headers: {
       //요청 헤더에 들어갈 부분
@@ -128,7 +128,7 @@ const JsonConfig = (method: string, url: string, requestBody: unknown = null, pa
 
 const MultiConfig = (method: string, url: string, requestBody: unknown = null, params: object = {}) => {
   const config = {
-    baseURL: `http://43.200.78.88:8080/${url}`,
+    baseURL: `https://43.200.78.88:8080/${url}`,
     method: method,
     headers: {
       Authorization: `Bearer ${accessToken}`,
