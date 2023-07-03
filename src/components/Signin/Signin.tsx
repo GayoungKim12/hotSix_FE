@@ -2,14 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { createKakaoLoginConfig, createLoginConfig } from "../API/AxiosModule";
-import {
-  getTokenExpiration,
-  isTokenValid,
-  removeAccessToken,
-  removeRefreshToken,
-  setAccessToken,
-  setRefreshToken,
-} from "../API/TokenAction";
+import { getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 
 interface TokenResponse {
   accessToken: string;
@@ -21,7 +14,7 @@ const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const redirect_uri = "https://iamnotalone.vercel.app/login/oauth2/code/kakao";
+  const redirect_uri = "https://www.imnotalone.online/login/oauth2/code/kakao";
 
   useEffect(() => {
     handleAuthorizationCode();
@@ -88,12 +81,12 @@ const Signin = () => {
     removeAccessToken();
     removeRefreshToken();
     localStorage.setItem("Rest_api_key", "f97c55d9d92ac41363b532958776d378");
-    const Rest_api_key = localStorage.getItem("Rest_api_key");
+    // const Rest_api_key = localStorage.getItem("Rest_api_key");
     const kakaoURL = `https://www.imnotalone.online/oauth2/authorization/kakao`;
     window.location.href = kakaoURL;
   };
 
-  const handleTokenResponse = (tokenResponse: TokenResponse, accessTokenExpire: number = -1, refreshTokenExpire: number = -1) => {
+  const handleTokenResponse = (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {
     if (tokenResponse.accessToken && tokenResponse.refreshToken) {
       setAccessToken(tokenResponse.accessToken); // 로컬스토리지에 액세스토큰 저장
       setRefreshToken(tokenResponse.refreshToken); // httponly 쿠키에 refresh 토큰 저장
