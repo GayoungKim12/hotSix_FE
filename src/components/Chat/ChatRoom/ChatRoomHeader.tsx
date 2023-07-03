@@ -15,6 +15,7 @@ const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo 
   };
 
   useEffect(() => {
+    console.log("채팅방입장 4")
     if(partnerInfomation.nickname !== null)
     {
       setImgPath(partnerInfomation.imgPath);
@@ -32,8 +33,8 @@ const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo 
         
         {imgPath.length ? (
                 <img className="rounded-full ml-4 w-12 h-12" src={imgPath} alt="" />
-              ) : (
-                <div className={"flex rounded-full justify-center items-center pt-3 ml-4 w-12 h-12 bg-white text-4xl text-main-200  overflow-hidden "}>
+              ) : ( 
+                <div className={"pt-3 flex rounded-full justify-center items-center ml-4 w-12 h-12 bg-white text-4xl text-main-200  overflow-hidden "}>
                   <FaUser />
                 </div>
               )}

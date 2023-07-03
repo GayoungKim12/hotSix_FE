@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ChatUtil } from "./ChatUtil";
 import { Message } from "./ChatUtil";
-import { getAccessToken, getUserId, isTokenValid } from "../../API/TokenAction";
+import { getUserId } from "../../API/TokenAction";
 
-import { useParams } from "react-router-dom";
-import axios from "axios";
+
 import { partnerInfo } from "../../../pages/Chat/ChatRoomPage";
 import { FaUser } from "react-icons/fa";
 
@@ -19,9 +18,8 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
   const startRef = useRef<HTMLLIElement>(null);
   const endRef = useRef<HTMLLIElement>(null);
   const [startIndex] = useState(0);
-  const { getChats, updateChats } = chatUtil;
-  const roomId = Number(useParams().chatRoomId);
-  const token = getAccessToken();
+  const { getChats } = chatUtil;
+
   const [visibleChats, setVisibleChats] = useState<Message[]>([]);
   const [previousIndex, setpreviousIndex] = useState(0);
   const chats = getChats();
@@ -29,33 +27,7 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
   const [imgPath, setImgPath] = useState("");
   const [nickname, setNickname] = useState("null");
 
-  useEffect(() => {
-    const checkTokenValidity = async () => {
-      const isValid = await isTokenValid();
-      if (isValid) {
-        axios({
-          method: "get",
-          url: `http://43.200.78.88:8080/api/chat/room/${roomId}`,
-          headers: {
-            Authorization: `${token}`,
-          },
-        })
-          .then((response) => {
-            console.log("이전기록요청성공!!");
 
-            updateChats(response.data);
-            console.log(getChats()); 
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-        console.log("^^^^^^^^^^^^^^^^");
-        console.log(getChats());
-      }
-    };
-
-    checkTokenValidity();
-  }, []);
 
   useEffect(() => {
     if (partnerInfomation.nickname !== null) {
@@ -106,16 +78,17 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
 
   useEffect(() => {
     const handleNewMessage = (newChats: Message[]) => {
-
+      console.log("테스트",getChats())
       const visibleChats = newChats.slice(startIndex);
       setVisibleChats(visibleChats);
     };
 
     const chats = getChats();
     if (getChats().length > 0) {
+
       handleNewMessage(chats);
     }
-  }, [getChats(), startIndex]);
+  }, [getChats().length, startIndex]);
 
   const handleIntersection = (entries: IntersectionObserverEntry[]) => {
     entries.forEach((entry) => {
@@ -147,6 +120,7 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
             <ul>
               <li ref={startRef}></li>
               {visibleChats.map((message, index) => {
+                
                 /////////////////날짜 표시하는 로직
                 let targetTime = "";
                 targetTime = new Date(chats[index].createdAt as string).toLocaleDateString();
@@ -240,9 +214,6 @@ const ChatMessage = ({
                   <FaUser />
                 </div>
               )}
-              
-              
-              
               <div className="ml-4 max-w-4/5">
                 <div className="mb-1">{nickname}</div>
                 <span className="inline-flex flex-col rounded-md mx-1 my-1 px-1 py-1 bg-gray-300 break-all   ">{message.message}</span>

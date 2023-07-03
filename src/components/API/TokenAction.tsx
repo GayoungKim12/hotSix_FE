@@ -209,7 +209,7 @@ const refreshAccessToken = async () => {
     };
     //만료안된 액세스토큰으로 재발급신청하면 재발급이 되는데
     //만료된 액세스토큰으로 재발급신청하면 response.data에 null이 찍힘
-    const response = await axios.post("http://43.200.78.88:8080/refresh", null, {
+    const response = await axios.post("https://www.imnotalone.online/refresh", null, {
       headers: headers,
     });
     console.log(response.data);

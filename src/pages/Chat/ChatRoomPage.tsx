@@ -19,8 +19,10 @@ function ChatRoomPage() {
   const [nickname, setNickname] = useState("null");
 
   useEffect(() => {
+    console.log("채팅방입장 1")
     const partnerInfo = location.state;
     setImgPath(partnerInfo.imgPath);
+    
     setNickname(partnerInfo.nickname);
   },[]);
 
