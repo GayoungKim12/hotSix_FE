@@ -17,6 +17,7 @@ const Signin = () => {
   
 
   useEffect(() => {
+    console.log("로그인")
   }, []);
 
   const handleAuthorizationCode = () => {
