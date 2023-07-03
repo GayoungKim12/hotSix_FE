@@ -172,13 +172,13 @@ const SignUp = () => {
 
   return (
     <div className="relative bg-main-100">
-      <div className="flex flex-row justify-center items-center pt-4">
-        <div onClick={() => navigate(-1)} className="absolute left-5">
+      <div className="flex flex-row justify-center items-center h-16">
+        <div className="absolute left-5">
           <GoBackButton />
         </div>
         <h2 className="mx-10 text-center text-3xl">회원가입</h2>
       </div>
-      <form action="http://43.200.78.88:8080/signup" onSubmit={handleSubmit} method="post">
+      <form onSubmit={handleSubmit} method="post">
         <div className="flex flex-col items-center mx-auto w-9/12 mt-5 ">
           {imgFile ? (
             <img className="block rounded-full w-24 h-24 " src={URL.createObjectURL(imgFile)} alt="프로필 사진" />
@@ -386,7 +386,7 @@ const SignUp = () => {
             className="h-40 p-4 mt-2.5"
           ></textarea>
         </div>
-        <button type="submit" className="rounded-none mt-16 w-full h-12 bg-main-400 text-white">
+        <button type="submit" className="rounded-none mt-16 w-full h-14 bg-main-400 text-white">
           가입하기
         </button>
       </form>
