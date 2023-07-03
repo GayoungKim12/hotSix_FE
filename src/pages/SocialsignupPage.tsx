@@ -6,6 +6,13 @@ import Personality from "../components/Signup/Personality";
 import GoBackButton from "../components/common/GoBackButton";
 import { createLoginConfig } from "../components/API/AxiosModule";
 import utility from "../utils/utils";
+import { getTokenExpiration, isTokenValid, setAccessToken, setRefreshToken } from "../components/API/TokenAction";
+
+interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
+  tokenCategory: string;
+}
 
 const SocialsignUp = () => {
   const [year, setYear] = useState<number | "year">("year");
@@ -23,6 +30,22 @@ const SocialsignUp = () => {
 
   const url = window.location.href;
   const userId = url.split("/").pop();
+
+  const handleTokenResponse = (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {
+    if (tokenResponse.accessToken && tokenResponse.refreshToken) {
+      setAccessToken(tokenResponse.accessToken); // 로컬스토리지에 액세스토큰 저장
+      setRefreshToken(tokenResponse.refreshToken); // httponly 쿠키에 refresh 토큰 저장
+      localStorage.setItem("tokenCategory", tokenResponse.tokenCategory);
+      getTokenExpiration("accessToken", accessTokenExpire);
+      getTokenExpiration("refreshToken", refreshTokenExpire);
+      isTokenValid().then((response) => {
+        if (response === true) {
+          //console.log(getUserId());
+          navigate("/main"); //메인페이지로 이동
+        }
+      });
+    }
+  };
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -83,8 +106,17 @@ const SocialsignUp = () => {
         verify,
       };
       createLoginConfig("patch", `oauth/signup/${userId}`, data)
-        .then(() => {
-          navigate("/");
+        .then((response) => {
+          const accessToken = response.data["Authorization"];
+          const refreshToken = response.data["Authorization-refresh"];
+
+          const tokenResponse: TokenResponse = {
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            tokenCategory: "default",
+          };
+
+          handleTokenResponse(tokenResponse);
         })
         .catch((error) => {
           console.log(error);
