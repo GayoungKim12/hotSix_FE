@@ -52,7 +52,6 @@ const MainPage = () => {
   const [userRegion, setUserRegion] = useState<number | undefined>();
   const [regionId, setRegionId] = useAtom(regionIdAtom);
   const [lastPostId, setLastPostId] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const target = useRef<HTMLDivElement | null>(null);
   const userId = getUserId();
 
@@ -119,7 +118,6 @@ const MainPage = () => {
       setRegionName(userRegionSigg[0]?.sigg);
     }
     const fetchData = async () => {
-      setIsLoading(true);
       if (userRegion && isSelectedFindRoom && userId) {
         await getFindRoomPostDataCall({ setBoardOneList, regionId, setLastPostId, userId });
       } else if (userRegion && isSelectedHasRoom && userId) {
@@ -132,7 +130,6 @@ const MainPage = () => {
       }
     };
     fetchData();
-    setIsLoading(false);
   }, [getFindRoomPostDataCall, isSelectedFindRoom, isSelectedHasRoom, regionId, regionList, userId, userRegion]);
 
   // intersection callback 함수 작성
@@ -142,14 +139,13 @@ const MainPage = () => {
       // console.log("entry", entry);
       if (entry.isIntersecting) {
         console.log("교차");
-        setIsLoading(true);
+
         if (isSelectedFindRoom) {
           loadMoreFindRoom({ regionId, lastPostId, userId, setBoardOneList, setLastPostId });
         } else if (isSelectedHasRoom) {
           loadMoreHasRoom({ regionId, lastPostId, userId, setBoardTwoList, setLastPostId });
         }
       }
-      setIsLoading(false);
     },
     [isSelectedFindRoom, isSelectedHasRoom, lastPostId, regionId, userId]
   );
@@ -227,13 +223,12 @@ const MainPage = () => {
                   </div>
                 );
               })}
-          {isLoading && <div className="mt-20 text-center text-xl">Loading...</div>}
+
           {boardOneList.length === 0 && boardTwoList.length === 0 && (
             <>
               <div className="mt-20 pt-20 bg-main-200 text-center">
                 <h1 className="text-4xl mb-10">텅</h1>
                 <div className="text-xl h-20">게시물이 없습니다 😅</div>
-                <div className="text-xl h-20"> Loading...</div>
               </div>
             </>
           )}

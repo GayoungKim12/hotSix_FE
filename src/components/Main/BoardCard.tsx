@@ -128,7 +128,7 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
                   </div>
                 </div>
                 {userId === board.memberId && (
-                  <button className="relative p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200" onClick={postButtonOpen}>
+                  <button className="relative p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-100" onClick={postButtonOpen}>
                     <GoKebabHorizontal />
                   </button>
                 )}
@@ -169,7 +169,7 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
               {like ? (
                 <AiFillHeart className="cursor-pointer text-red-400 text-2xl" onClick={onClickHeart} />
               ) : (
-                <span className="text-indigo-300">
+                <span className="text-main-300">
                   <AiOutlineHeart className="cursor-pointer text-2xl" onClick={onClickHeart} />
                 </span>
               )}
