@@ -89,7 +89,7 @@ const Signin = () => {
     removeRefreshToken();
     localStorage.setItem("Rest_api_key", "f97c55d9d92ac41363b532958776d378");
     const Rest_api_key = localStorage.getItem("Rest_api_key");
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+    const kakaoURL = `https://www.imnotalone.online/oauth2/authorization/kakao`;
     window.location.href = kakaoURL;
   };
 
