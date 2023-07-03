@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { createKakaoLoginConfig, createLoginConfig } from "../API/AxiosModule";
-import {
-  getTokenExpiration,
-  isTokenValid,
-  removeAccessToken,
-  removeRefreshToken,
-  setAccessToken,
-  setRefreshToken,
-} from "../API/TokenAction";
+import { createLoginConfig } from "../API/AxiosModule";
+import { getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 
 interface TokenResponse {
   accessToken: string;
@@ -21,37 +14,17 @@ const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const redirect_uri = "https://iamnotalone.vercel.app/login/oauth2/code/kakao";
+  
 
   useEffect(() => {
-    handleAuthorizationCode();
+    console.log("로그인")
   }, []);
 
   const handleAuthorizationCode = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    const Rest_api_key = localStorage.getItem("Rest_api_key");
-
-    if (code && Rest_api_key) {
-      createKakaoLoginConfig("POST", "authorization_code", Rest_api_key, redirect_uri, code)
-        .then((response) => {
-          const accessToken = response.data["access_token"];
-          const refreshToken = response.data["refresh_token"];
-
-          const tokenResponse: TokenResponse = {
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-            tokenCategory: "kakao",
-          };
-          const accessTokenExpire = response.data["expires_in"];
-          const refreshTokenExpire = response.data["refresh_token_expires_in"];
-
-          handleTokenResponse(tokenResponse, accessTokenExpire, refreshTokenExpire);
-        })
-        .catch((error) => {
-          console.log("에러");
-          console.error(error);
-        });
+    const cookie = document.cookie;
+    if(cookie)
+    {
+      console.log(cookie);
     }
   };
 
@@ -88,12 +61,13 @@ const Signin = () => {
     removeAccessToken();
     removeRefreshToken();
     localStorage.setItem("Rest_api_key", "f97c55d9d92ac41363b532958776d378");
-    const Rest_api_key = localStorage.getItem("Rest_api_key");
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+    // const Rest_api_key = localStorage.getItem("Rest_api_key");
+    const kakaoURL = `https://www.imnotalone.online/oauth2/authorization/kakao`;
     window.location.href = kakaoURL;
+    handleAuthorizationCode();
   };
 
-  const handleTokenResponse = (tokenResponse: TokenResponse, accessTokenExpire: number = -1, refreshTokenExpire: number = -1) => {
+  const handleTokenResponse = (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {
     if (tokenResponse.accessToken && tokenResponse.refreshToken) {
       setAccessToken(tokenResponse.accessToken); // 로컬스토리지에 액세스토큰 저장
       setRefreshToken(tokenResponse.refreshToken); // httponly 쿠키에 refresh 토큰 저장

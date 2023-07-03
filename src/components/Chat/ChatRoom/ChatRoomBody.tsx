@@ -141,6 +141,7 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
                 return (
                   <ChatMessage
                     key={index}
+                    index={index}
                     message={message}
                     targetYear={year}
                     targetDay={day}
@@ -168,6 +169,7 @@ const ChatMessage = ({
   targetDay,
   targetMonth,
   targetYear,
+  index,
 }: {
   targetYear:string;
   targetMonth: string;
@@ -176,20 +178,26 @@ const ChatMessage = ({
   isMyChat: boolean;
   imgPath: string;
   nickname: string;
+  index:number;
 }) => {
   if (!message) {
     return null;
   } else {
     const targetDate = new Date(message.createdAt as string);
     let isSameDay = true;
+    let isFirstDay=false;
     if (targetYear !== undefined) {
       isSameDay = false;
+    }
+    if(index === 0 )
+    {
+      isFirstDay=true;
     }
     const hours = targetDate.getHours();
     const minutes = targetDate.getMinutes();
     return (
       <>
-        {!isSameDay ? (
+        {isFirstDay ? (
           <div className="text-center">
             {targetMonth}월{targetDay}일
           </div>
@@ -224,6 +232,11 @@ const ChatMessage = ({
             </>
           )}
         </li>
+        {!isSameDay&&!isFirstDay  ? (
+          <div className="text-center">
+            {targetMonth}월{targetDay}일
+          </div>
+        ) : null}
       </>
     );
   }

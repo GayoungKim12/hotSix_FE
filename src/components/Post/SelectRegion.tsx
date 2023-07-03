@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { JsonConfig } from "../API/AxiosModule";
 
 interface RegionType {
   id: number;
@@ -15,8 +15,6 @@ interface SelectRegionProps {
 }
 
 const SelectRegion = (props: SelectRegionProps) => {
-  const URL = "http://43.200.78.88:8080";
-
   const { regionId, address, setRegionId, setAddress } = props;
 
   const [regions, setResions] = useState<RegionType[] | null>(null);
@@ -27,8 +25,7 @@ const SelectRegion = (props: SelectRegionProps) => {
   useEffect(() => {
     (async () => {
       try {
-        const serverUrl = `${URL}/regions`;
-        const response = await axios.get(serverUrl);
+        const response = await JsonConfig("get", "regions");
         setResions(response.data);
       } catch (err) {
         console.log(err);
