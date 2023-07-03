@@ -79,7 +79,7 @@ const Comment = (props: CommentProps) => {
       <div className="flex flex-col gap-1 p-4 border-b-2">
         <div className="flex items-center justify-between w-full">
           <div className="flex justify-center items-center gap-2">
-            <div className="relative flex justify-center items-center w-12 h-9 border-2 rounded-full bg-white text-black overflow-hidden">
+            <div className="relative flex justify-center items-center shrink-0 w-9 h-9 border-2 rounded-full bg-white text-black overflow-hidden">
               {commentData.imgPath !== "" ? (
                 <img className="w-full h-full object-cover" src={commentData.imgPath} alt={`${commentData.imgPath}의 프로필 이미지`} />
               ) : (
@@ -88,16 +88,14 @@ const Comment = (props: CommentProps) => {
                 </div>
               )}
             </div>
-
-            <div className="flex items-end gap-1.5 w-full">
-              <div className="text-sm font-semibold text-black">{commentData.nickName}</div>
+            <div className="flex items-end w-full flex-wrap">
+              <div className="text-sm font-semibold text-black mr-1">{commentData.nickName}</div>
               <div className="flex text-xs text-gray-400">
                 <div className="mr-1">{commentData.createdAt.split("T")[0]}</div>
                 <div className="text-right">{commentData.createdAt.split("T")[1]} </div>
               </div>
             </div>
           </div>
-
           <button
             className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200"
             onClick={() => {

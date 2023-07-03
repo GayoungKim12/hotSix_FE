@@ -15,6 +15,9 @@ const PostToolButtons = (props: PostToolButtonsProps) => {
 
   const handleDelete = async () => {
     try {
+      const ok = confirm("정말 삭제하시겠습니까😃?");
+      if (!ok) return null;
+
       await JsonConfig("delete", `api/post/${postId}`);
 
       if (page === "detail") {
