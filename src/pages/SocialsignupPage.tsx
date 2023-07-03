@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Region from "../components/Signup/Region";
 import Personality from "../components/Signup/Personality";
 import GoBackButton from "../components/common/GoBackButton";
-import { SignupConfig, createLoginConfig } from "../components/API/AxiosModule";
+import { createLoginConfig } from "../components/API/AxiosModule";
 import utility from "../utils/utils";
 
 const SocialsignUp = () => {
@@ -85,7 +85,7 @@ const SocialsignUp = () => {
       const formData = new FormData();
       formData.append("form", new Blob([JSON.stringify(data)], { type: "application/json" }));
 
-      SignupConfig("patch", `oauth/signup/${userId}`, formData)
+      createLoginConfig("patch", `oauth/signup/${userId}`, formData)
         .then(() => {
           navigate("/");
         })
