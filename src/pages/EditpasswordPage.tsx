@@ -1,29 +1,14 @@
-import { useNavigate } from "react-router-dom";
 import GoBackButton from "../components/common/GoBackButton";
-import jwtDecode from "jwt-decode";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { JsonConfig } from "../components/API/AxiosModule";
-
-interface DecodedToken {
-  id: string;
-}
+import { getUserId } from "../components/API/TokenAction";
 
 const Editpassword = () => {
-  const accessToken = localStorage.getItem("accessToken");
-  const [userId, setUserId] = useState(0);
   const [password, setPassword] = useState<string>("");
   const [changepassword, setChangePassword] = useState<string>("");
   const [passwordCheck, setPasswordCheck] = useState<string>("");
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
 
-    if (decodeToken.id) {
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
-
-  const navigate = useNavigate();
+  const userId = getUserId();
   const validatePassword = () => {
     return changepassword === passwordCheck;
   };
@@ -51,8 +36,8 @@ const Editpassword = () => {
 
   return (
     <div className="relative min-h-screen bg-main-100">
-      <div className="flex flex-row justify-center items-center pt-4">
-        <div onClick={() => navigate(-1)} className="absolute left-5">
+      <div className="flex flex-row justify-center items-center h-16">
+        <div className="absolute left-5">
           <GoBackButton />
         </div>
         <h2 className="mx-10 text-center text-3xl">비밀번호 수정</h2>
@@ -104,7 +89,7 @@ const Editpassword = () => {
             <span className="text-green-500 text-sm">비밀번호가 일치합니다</span>
           )}
         </div>
-        <button type="submit" className="fixed bottom-0 rounded-none  w-full h-12 bg-main-400 text-white">
+        <button type="submit" className="fixed bottom-0 rounded-none  w-full h-14 bg-main-400 text-white">
           가입하기
         </button>
       </form>
