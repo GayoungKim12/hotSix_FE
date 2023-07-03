@@ -168,14 +168,10 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
     }
   };
 
-  return (
+ return (
     <div className="bottom-0 h-12 chat-input-container ">
       <div className="flex justify-between items-center  ">
-        <label className="z-10 rounded-l-2xl h-12 w-8 bg-white ">
-          <input type="file" accept="image/*" className="hidden " />
-          <span className="relative top-3 left-1">img</span>
-        </label>
-        <input ref={newChatRef} onKeyDown={pressEnter} className="h-12 w-full px-4 " placeholder="채팅을 입력" />
+        <input ref={newChatRef} onKeyDown={pressEnter} className="h-12 w-full px-4 rounded-l-2xl" placeholder="채팅을 입력" />
         <button onClick={sendMessage} className="rounded-r-2xl h-12 w-10 bg-white  border-black border-l-2  ">
           확인
         </button>
