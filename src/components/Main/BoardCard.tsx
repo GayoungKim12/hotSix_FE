@@ -100,6 +100,14 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
     navigate(`/detail/${board.postId}`);
   };
 
+  const deletePost = () => {
+    setBoardList(
+      boardList.filter((b) => {
+        return b.postId !== board.postId;
+      })
+    );
+  };
+
   return (
     <>
       <div className="mt-6" onClick={onClickBoard}>
@@ -177,7 +185,7 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
           </section>
         </div>
       </div>
-      {showPostButtons && <PostToolButtons handleShow={() => setShowPostButtons(false)} postId={board.postId} />}
+      {showPostButtons && <PostToolButtons deletePost={deletePost} handleShow={() => setShowPostButtons(false)} postId={board.postId} />}
     </>
   );
 };
