@@ -2,11 +2,14 @@ import GoBackButton from "../components/common/GoBackButton";
 import { useState } from "react";
 import { JsonConfig } from "../components/API/AxiosModule";
 import { getUserId } from "../components/API/TokenAction";
+import { useNavigate } from "react-router-dom";
 
 const Editpassword = () => {
   const [password, setPassword] = useState<string>("");
   const [changepassword, setChangePassword] = useState<string>("");
   const [passwordCheck, setPasswordCheck] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const userId = getUserId();
   const validatePassword = () => {
@@ -28,6 +31,7 @@ const Editpassword = () => {
     JsonConfig("put", `api/membership/update/password/${userId}`, requestData)
       .then(() => {
         console.log("전송 성공");
+        navigate("/profile");
       })
       .catch((error) => {
         console.log("전송 실패", error);

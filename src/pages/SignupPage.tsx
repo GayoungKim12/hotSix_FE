@@ -108,7 +108,7 @@ const SignUp = () => {
       console.log(formData);
       SignupConfig("post", "signup", formData)
         .then(() => {
-          navigate("/signin");
+          navigate("/");
         })
         .catch((error) => {
           console.log(error);

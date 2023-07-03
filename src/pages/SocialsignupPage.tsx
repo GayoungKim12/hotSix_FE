@@ -82,10 +82,7 @@ const SocialsignUp = () => {
         introduction,
         verify,
       };
-      const formData = new FormData();
-      formData.append("form", new Blob([JSON.stringify(data)], { type: "application/json" }));
-
-      createLoginConfig("patch", `oauth/signup/${userId}`, formData)
+      createLoginConfig("patch", `oauth/signup/${userId}`, data)
         .then(() => {
           navigate("/");
         })
