@@ -21,7 +21,7 @@ const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const redirect_uri = "http://localhost:8080/login/oauth2/code/kakao";
+  const redirect_uri = "https://iamnotalone.vercel.app/login/oauth2/code/kakao";
 
   useEffect(() => {
     handleAuthorizationCode();
