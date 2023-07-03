@@ -119,8 +119,8 @@ const MainPage = () => {
       setRegionName(userRegionSigg[0]?.sigg);
     }
     const fetchData = async () => {
+      setIsLoading(true);
       if (userRegion && isSelectedFindRoom && userId) {
-        setIsLoading(true);
         await getFindRoomPostDataCall({ setBoardOneList, regionId, setLastPostId, userId });
       } else if (userRegion && isSelectedHasRoom && userId) {
         await getHasRoomPostData({
@@ -172,6 +172,7 @@ const MainPage = () => {
   // console.log(`regionId : ${regionId}`);
   // console.log(`userRegion : ${userRegion}`);
   // console.log(`lastPostId : ${lastPostId}`);
+  // console.log("isLoading :", isLoading);
 
   //지역 선택 시 해당 게시물 가져오기
   const handleRegionArea = (region: RegionProps) => {
@@ -227,21 +228,22 @@ const MainPage = () => {
                 );
               })}
           {isLoading && <div className="mt-20 text-center text-xl">Loading...</div>}
-          {boardOneList.length < 0 && boardTwoList.length < 0 && (
+          {boardOneList.length === 0 && boardTwoList.length === 0 && (
             <>
               <div className="mt-20 pt-20 bg-main-200 text-center">
                 <h1 className="text-4xl mb-10">텅</h1>
                 <div className="text-xl h-20">게시물이 없습니다 😅</div>
+                <div className="text-xl h-20"> Loading...</div>
               </div>
             </>
           )}
 
-          <div className="flex justify-end mb-14 pt-1 pb-6 mr-5">
+          <div className="flex justify-end mb-10 pt-1 pb-6 mr-5">
             <div
-              className="fixed bottom-20 right-5 flex justify-center items-center w-12 h-12 bg-indigo-300 rounded-full"
+              className="fixed bottom-20 right-5 flex justify-center items-center w-12 h-12 bg-main-300 rounded-full"
               onClick={() => navigate("/post")}
             >
-              <FaPencilAlt className="cursor-pointer text-2xl" />
+              <FaPencilAlt className="cursor-pointer text-2xl text-white" />
             </div>
           </div>
         </section>
