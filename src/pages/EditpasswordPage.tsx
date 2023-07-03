@@ -1,7 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import GoBackButton from "../components/common/GoBackButton";
-import jwtDecode from "jwt-decode";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { JsonConfig } from "../components/API/AxiosModule";
 import { getUserId } from "../components/API/TokenAction";
 
