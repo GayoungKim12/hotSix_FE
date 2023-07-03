@@ -1,6 +1,5 @@
-import SockJS from "sockjs-client/dist/sockjs";
+
 import { useState } from "react";
-import { Stomp } from "@stomp/stompjs";
 
 
 export interface Message {
@@ -9,13 +8,6 @@ export interface Message {
   message: String;
   createdAt: String;
 }
-
-const connectSocket = () => {
-  const stompClient = Stomp.over(function () {
-    return new SockJS("http://43.200.78.88:8080/ws");
-  });
-  return stompClient;
-};
 
 const ChatUtil = () => {
   const [chats, setChats] = useState<Message[]>([]);
@@ -39,6 +31,4 @@ const ChatUtil = () => {
   };
 };
 
-//방id도 여기서 넘겨주기 ? 굳이?
-//그외에도 공통적으로 사용하는건 여기서
-export { ChatUtil, connectSocket };
+export { ChatUtil };
