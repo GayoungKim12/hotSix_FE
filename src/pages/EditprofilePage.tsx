@@ -4,13 +4,10 @@ import { AiOutlineCheck } from "react-icons/ai";
 import Region from "../components/Signup/Region";
 import Personality from "../components/Signup/Personality";
 import { useEffect, useRef, useState } from "react";
-import jwtDecode from "jwt-decode";
 import { JsonConfig, MultiConfig, createLoginConfig } from "../components/API/AxiosModule";
 import { FaUser } from "react-icons/fa";
+import { getUserId } from "../components/API/TokenAction";
 
-interface DecodedToken {
-  id: string;
-}
 interface UserData {
   nickname: string;
   imgPath: string;
@@ -28,21 +25,13 @@ const Editprofile = () => {
   const [nickname, setNickname] = useState<string>("");
   const [regionId, setRegionId] = useState<number | null>(null);
   const [introduction, setIntroduction] = useState<string>("");
-  const accessToken = localStorage.getItem("accessToken");
-  const [userId, setUserId] = useState(0);
   const imgRef = useRef<HTMLInputElement>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [nicknameCheckError, setenicknameCheckError] = useState<string | null>("");
   const defaultRegionId = userData?.region?.id || null;
 
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
+  const userId = getUserId();
 
-    if (decodeToken.id) {
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
   const saveImgFile = () => {
     const file = imgRef.current?.files?.[0];
     setImgFile(file || null);
@@ -102,7 +91,7 @@ const Editprofile = () => {
     MultiConfig("put", `api/membership/update/${userId}`, formData)
       .then(() => {
         alert("수정이 완료되었습니다.");
-        navigate(-1);
+        navigate("/profile");
       })
       .catch((error) => {
         console.log(error);
@@ -157,8 +146,8 @@ const Editprofile = () => {
 
   return (
     <div className="relative bg-main-100">
-      <div className="flex flex-row justify-center items-center pt-4">
-        <div onClick={() => navigate(-1)} className="absolute left-5">
+      <div className="flex flex-row justify-center items-center h-16">
+        <div className="absolute left-5">
           <GoBackButton />
         </div>
         <h2 className="mx-10 text-center text-3xl">프로필 편집</h2>
@@ -220,7 +209,7 @@ const Editprofile = () => {
           onClick={() => {
             fileSubmit;
           }}
-          className="rounded-none mt-16 w-full h-12 bg-main-400 text-white"
+          className="rounded-none mt-16 w-full h-14 bg-main-400 text-white"
         >
           수정 완료
         </button>
