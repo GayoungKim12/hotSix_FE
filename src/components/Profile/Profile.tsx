@@ -103,7 +103,7 @@ const Profile = (props: ProfileProps) => {
             return <div key={item}>{`#${item}`}</div>;
           })}
         </div>
-        <div>{profile.introduction}</div>
+        <div className="flex-wrap break-all">{profile.introduction}</div>
       </div>
     </div>
   );
