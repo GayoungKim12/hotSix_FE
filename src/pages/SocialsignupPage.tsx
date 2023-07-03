@@ -48,10 +48,6 @@ const SocialsignUp = () => {
   };
 
   useEffect(() => {
-    handleTokenResponse;
-  }, []);
-
-  useEffect(() => {
     let timer: NodeJS.Timeout;
 
     if (countdown !== null && countdown > 0) {
