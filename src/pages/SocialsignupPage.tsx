@@ -70,7 +70,7 @@ const SocialsignUp = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const isValid = utility.validateForm("", "", "", nickname, personality, regionId, birth, introduction);
+    const isValid = utility.socialvalidateForm(nickname, personality, regionId, birth, introduction);
     e.preventDefault();
     if (isValid) {
       const data = {
