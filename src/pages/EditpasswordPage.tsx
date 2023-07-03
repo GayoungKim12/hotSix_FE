@@ -31,7 +31,7 @@ const Editpassword = () => {
     JsonConfig("put", `api/membership/update/password/${userId}`, requestData)
       .then(() => {
         console.log("전송 성공");
-        navigate("/profile");
+        navigate(`/profile/${userId}`);
       })
       .catch((error) => {
         console.log("전송 실패", error);
