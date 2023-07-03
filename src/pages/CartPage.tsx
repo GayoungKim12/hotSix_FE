@@ -90,7 +90,7 @@ const CartPage = () => {
       <div className="h-full bg-main-100">
         <Header />
 
-        <section className="mt-10 mb-20 pt-5 pb-10">
+        <section className="mt-10  pt-5 pb-16">
           {cartList?.map(
             (cart: {
               postId: number;
@@ -112,6 +112,7 @@ const CartPage = () => {
               );
             }
           )}
+          {cartList.length === 0 && <div className="h-screen text-center p-10 text-xl"> 찜한 게시물이 없습니다 😂</div>}
           <div ref={target}></div>
         </section>
       </div>

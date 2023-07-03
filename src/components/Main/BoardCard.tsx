@@ -152,14 +152,14 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
           </section>
 
           {board.roomFiles !== "" && (
-            <div className="inline-flex flex-col items-center justfiy-center mb-3">
-              <img src={board.roomFiles} className=" w-full rounded-lg" draggable="false" />
+            <div className="w-full inline-flex flex-col items-center justfiy-center mb-3">
+              <img src={board.roomFiles} className="w-full h-60 object-cover rounded-lg" draggable="false" />
             </div>
           )}
 
           <section className="flex justify-between items-center px-1">
             <article className="flex items-center">
-              <div className="text-indigo-300">
+              <div className="text-main-300">
                 <BiComment className="text-2xl cursor-pointer" />
               </div>
               <div className="ml-1">{board.commentCount}</div>
