@@ -14,6 +14,7 @@ import CartPage from "./pages/CartPage";
 import Editprofile from "./pages/EditprofilePage";
 import Findpassword from "./pages/FindpasswordPage";
 import Editpassword from "./pages/EditpasswordPage";
+import SocialsignUp from "./pages/SocialsignupPage";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ function App() {
             <Route path="/editprofile" element={<Editprofile />}></Route>
             <Route path="/findPassword" element={<Findpassword />}></Route>
             <Route path="/editpassword" element={<Editpassword />}></Route>
+            <Route path="/socialsignup" element={<SocialsignUp />}></Route>
           </Routes>
         </QueryClientProvider>
       </CookiesProvider>
