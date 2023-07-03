@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { createKakaoLoginConfig, createLoginConfig } from "../API/AxiosModule";
+import { createLoginConfig } from "../API/AxiosModule";
 import { getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 
 interface TokenResponse {
