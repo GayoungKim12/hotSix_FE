@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import GoBackButton from "../components/common/GoBackButton";
-import { useState } from "react";
+import jwtDecode from "jwt-decode";
+import { useEffect, useState } from "react";
 import { JsonConfig } from "../components/API/AxiosModule";
 import { getUserId } from "../components/API/TokenAction";
 
@@ -9,7 +11,6 @@ const Editpassword = () => {
   const [passwordCheck, setPasswordCheck] = useState<string>("");
 
   const userId = getUserId();
-
   const validatePassword = () => {
     return changepassword === passwordCheck;
   };

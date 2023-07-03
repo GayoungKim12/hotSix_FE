@@ -4,50 +4,32 @@ import SelectRegion from "./SelectRegion";
 import Content from "./Content";
 import AddImages from "./AddImages";
 import SelectCategory from "./SelectCategory";
-import jwtDecode from "jwt-decode";
 import { JsonConfig, MultiConfig } from "../API/AxiosModule";
+import { getUserId } from "../API/TokenAction";
 
 interface EditPostProps {
   postId: string;
 }
 
-interface DecodedToken {
-  id: string;
-}
-
 const EditPost = (props: EditPostProps) => {
-  const accessToken = localStorage.getItem("accessToken");
-  const [userId, setUserId] = useState(0);
-
-  const navigate = useNavigate();
   const { postId } = props;
-
   const [boardId, setBoardId] = useState(0);
   const [regionId, setRegionId] = useState(0);
   const [address, setAddress] = useState("");
   const [content, setContent] = useState("");
   const [imgPath, setImgPath] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
+  const navigate = useNavigate();
+  const userId = getUserId();
 
   useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
-
-  useEffect(() => {
-    if (!userId) return;
     (async () => {
       try {
         const response = await JsonConfig("get", `api/post/${postId}/${userId}`);
         const data = response.data;
         if (data.membership.membershipId !== userId) {
           alert("게시물을 수정하실 수 없습니다.");
-          navigate("/");
+          navigate("/main");
           return;
         }
         setBoardId(data.boardId);
@@ -64,7 +46,7 @@ const EditPost = (props: EditPostProps) => {
         console.log(err);
       }
     })();
-  }, [postId, accessToken, navigate, userId]);
+  }, [postId, navigate, userId]);
 
   // 폼 db에 보내기
   const patchData = async () => {
@@ -114,16 +96,14 @@ const EditPost = (props: EditPostProps) => {
   };
 
   return (
-    <form className="pt-14 pb-12 min-w-0 min-h-screen overflow-auto" onSubmit={handleSubmit}>
+    <form className="pt-16 pb-12 min-w-0 min-h-screen overflow-auto" onSubmit={handleSubmit}>
       <article className="px-4 pb-4">
         <SelectCategory buttons={["방 구해요", "방 있어요"]} value={boardId} setValue={setBoardId} />
         <SelectRegion regionId={regionId} address={address} setRegionId={setRegionId} setAddress={setAddress} />
         <Content content={content} setContent={setContent} />
         <AddImages files={files} setFiles={setFiles} imgPath={imgPath} setImgPath={setImgPath} />
       </article>
-      <button className="fixed bottom-0 block w-full h-12 rounded-none bg-main-400 text-white focus:outline-none">
-        등록하기
-      </button>
+      <button className="fixed bottom-0 block w-full h-14 rounded-none bg-main-400 text-white focus:outline-none">등록하기</button>
     </form>
   );
 };

@@ -1,18 +1,13 @@
-import axios from "axios";
-import jwtDecode from "jwt-decode";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Card from "./Card";
 import { JsonConfig } from "../API/AxiosModule";
-
-interface DecodedToken {
-  id: string;
-}
+import { getUserId } from "../API/TokenAction";
 
 interface PostType {
   nickname: string;
   imgPath: string;
   gender: number;
-  region: string;
+  address: string;
   createdAt: string;
   content: string;
   commentCount: number;
@@ -22,25 +17,14 @@ interface PostType {
 }
 
 const MyPostList = () => {
-  const accessToken = localStorage.getItem("accessToken");
-  const [userId, setUserId] = useState(0);
   const [postList, setPostList] = useState<PostType[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [lastPostId, setLastPostId] = useState(0);
-
-  const limit = 5;
-  const target = useRef<HTMLDivElement>(null);
   const [more, setMore] = useState(true);
+  const userId = getUserId();
 
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
+  const limit = 10;
+  const target = useRef<HTMLDivElement>(null);
 
   const getFirstPage = useCallback(async () => {
     try {
@@ -123,14 +107,12 @@ const MyPostList = () => {
   }, [onIntersect, isLoading]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 w-full pb-14">
-      <h3 className="flex items-center justify-center w-full h-12 border-b-2 border-main-400 text-main-400 text-md">
-        게시물
-      </h3>
+    <div className="flex flex-col items-center justify-center w-full pb-14">
+      <h3 className="flex items-center justify-center w-full h-12 border-b-2 text-black text-md">게시물</h3>
       <div className="flex flex-col items-center p-4 gap-4 w-full">
         {postList !== null && postList.length
           ? postList.map((post) => {
-              return <Card post={post} key={post.postId} />;
+              return <Card post={post} key={post.postId} setPostList={setPostList} />;
             })
           : "작성한 게시물이 없습니다."}
       </div>

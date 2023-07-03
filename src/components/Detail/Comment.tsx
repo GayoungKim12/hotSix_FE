@@ -1,25 +1,41 @@
 import { GoKebabHorizontal } from "react-icons/go";
 import { FaUser } from "react-icons/fa";
-import { useState } from "react";
-
+import { ChangeEvent, useState } from "react";
 import CommentToolButtons from "./CommentToolButtons";
 import { IoIosSend } from "react-icons/io";
-import { RiDeleteBinLine } from "react-icons/ri";
-import axios from "axios";
+import { MdCancel } from "react-icons/md";
+import { JsonConfig } from "../API/AxiosModule";
+import { Dispatch, SetStateAction } from "react";
+import utility from "../../utils/utils";
+
+interface Comment {
+  commentId: number;
+  content: string;
+  createdAt: string;
+  imgPath: string;
+  memberId: number;
+  nickName: string;
+}
+
 interface CommentProps {
-  handleShow: () => void;
+  commentData: Comment;
+  comments: Comment[];
+  setComments: Dispatch<SetStateAction<Comment[]>>;
+  userId: number;
+  setCommentCount: Dispatch<SetStateAction<number>>;
 }
 
 const Comment = (props: CommentProps) => {
-  const { commentData, comments, setComments, accessToken, userId } = props;
+  const { commentData, comments, setComments, userId, setCommentCount } = props;
   const [text, setText] = useState(commentData.content);
   const [editText, setEditText] = useState(false);
   const [showCommentButtons, setShowCommentButtons] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
-  const onChange = (e) => {
+
+  const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
     e.target.style.height = "auto";
     e.target.style.height = e.target.scrollHeight + "px";
@@ -36,25 +52,15 @@ const Comment = (props: CommentProps) => {
   //댓글 수정해서 서버 / 배열 에 보냄
   const editCommentData = () => {
     const data = { content: text };
-    axios
-      .put(
-        `http://43.200.78.88:8080/api/comment/${commentData.commentId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        setComments(
-          comments.map((c) => {
-            console.log(c);
-            return c.commentId === response.data ? { ...c, content: text } : c;
-          })
-        );
-      });
+    JsonConfig("put", `api/comment/${commentData.commentId}`, data, undefined).then((response) => {
+      console.log(response);
+      setComments(
+        comments.map((c) => {
+          console.log(c);
+          return c.commentId === response.data ? { ...c, content: text } : c;
+        })
+      );
+    });
     setEditText(false);
   };
 
@@ -64,59 +70,54 @@ const Comment = (props: CommentProps) => {
     setText(commentData.content);
   };
 
+  const handleDelete = () => {
+    setCommentCount((prev) => prev - 1);
+  };
+
   return (
     <>
-      <div className="flex flex-col gap-2 p-4 border-b-2">
-        <div className="flex items-start justify-between w-full">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-8 h-8 border-2 rounded-full text-black">
+      <div className="flex flex-col gap-1 p-4 border-b-2">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex justify-center items-center gap-2">
+            <div className="relative flex justify-center items-center shrink-0 w-9 h-9 border-2 rounded-full bg-white text-black overflow-hidden">
               {commentData.imgPath !== "" ? (
-                <img src={commentData.imgPath} />
+                <img className="w-full h-full object-cover" src={commentData.imgPath} alt={`${commentData.imgPath}의 프로필 이미지`} />
               ) : (
-                <div className="text-main-300 text-lg">
+                <div className={"absolute top-2.5 flex justify-center items-center text-2xl text-main-200"}>
                   <FaUser />
                 </div>
               )}
             </div>
-            <div className="text-sm font-semibold text-black">
-              {commentData.nickName}
+            <div className="flex items-end w-full flex-wrap">
+              <div className="text-sm font-semibold text-black mr-1">{commentData.nickName}</div>
+              <div className="flex text-xs text-gray-400">
+                <div className="mr-1">{commentData.createdAt.split("T")[0]}</div>
+                <div className="text-right">{commentData.createdAt.split("T")[1]} </div>
+              </div>
             </div>
           </div>
-          {userId === commentData.memberId && (
-            <button
-              className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200"
-              onClick={() => {
-                setShowCommentButtons(true);
-              }}
-            >
-              <GoKebabHorizontal />
-            </button>
-          )}
+          <button
+            className="p-2 border-0 text-lg rounded-full focus:outline-0 hover:bg-main-200"
+            onClick={() => {
+              setShowCommentButtons(true);
+            }}
+          >
+            <GoKebabHorizontal />
+          </button>
         </div>
         {!editText ? (
-          <p className="ml-1 text-lg">{commentData.content}</p>
+          <p className="ml-1 text-base whitespace-pre-line break-all">{utility.changeLineBreak(commentData.content)}</p>
         ) : (
-          <form
-            className="flex items-center p-2 gap-2 rounded-3xl bg-white"
-            onSubmit={handleSubmit}
-          >
-            <textarea
-              value={text}
-              onChange={onChange}
-              className="w-full px-3 py-1 rounded-lg resize-none focus:outline-none"
-            />
-            <button onClick={editCommentData}>
-              <IoIosSend className="text-2xl" />
-            </button>
+          <form className="flex items-center p-2 gap-2 rounded-3xl bg-white" onSubmit={handleSubmit}>
+            <textarea value={text} onChange={onChange} className="w-full px-3 py-1 rounded-lg resize-none focus:outline-none" />
             <button onClick={cancelCommentData}>
-              <RiDeleteBinLine className="text-2xl" />
+              <MdCancel className="text-2xl text-main-400" />
+            </button>
+            <button onClick={editCommentData}>
+              <IoIosSend className={text.length ? "text-2xl text-main-400" : "text-2xl text-gray-400"} />
             </button>
           </form>
         )}
-
-        <div className="flex items-start justify-between w-full">
-          <div className="text-xs text-gray-400">{commentData.created_at}</div>
-        </div>
       </div>
 
       {showCommentButtons && (
@@ -127,6 +128,8 @@ const Comment = (props: CommentProps) => {
           editComment={editComment}
           onClickClose={onClickClose}
           setShowCommentButtons={setShowCommentButtons}
+          handleDelete={handleDelete}
+          myComment={userId === commentData.memberId}
         />
       )}
     </>

@@ -1,7 +1,6 @@
-import { IoArrowBackOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
-import { BsFillTrash3Fill } from "react-icons/bs";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
+import { BiSearch } from "react-icons/bi";
+import { useNavigate } from "react-router";
 
 interface ChatListHeaderProps {
   DeleteMode: () => void;
@@ -10,36 +9,38 @@ interface ChatListHeaderProps {
 }
 
 const ChatListHeader = (props: ChatListHeaderProps) => {
+  const { filter, setFilter } = props;
+  const [search, setSearch] = useState(false);
   const navigate = useNavigate();
-  const { DeleteMode, filter, setFilter } = props;
 
-  const onClickBackBtn = () => {
-    navigate(-1);
-  };
-
-  const onClickTrashBtn = () => {
+  /* const onClickTrashBtn = () => {
     DeleteMode();
-  };
+  }; */
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
   };
 
   return (
-    <header className="flex flex-col justify-between">
-      <div className="flex justify-between p-4">
-        <div className="flex">
-          <div className="flex justify-center items-center hover:cursor-pointer" onClick={onClickBackBtn}>
-            <IoArrowBackOutline />
-          </div>
-          <h2 className="ml-4">채팅</h2>
-        </div>
-        <div onClick={onClickTrashBtn}>
+    <>
+      <header className="fixed top-0 flex flex-col justify-between items-center w-full z-50 bg-main-100 shadow">
+        <div className="flex justify-between items-center w-full h-16 px-3">
+          <img src="/logo.png" className="w-16 cursor-pointer" onClick={() => navigate("/main")} />
+          <button
+            className="flex justify-center items-center text-3xl text-main-400 hover:cursor-pointer hover:border-0 focus:outline-none"
+            onClick={() => setSearch(!search)}
+          >
+            <BiSearch />
+          </button>
+          {/* <button className="flex justify-center items-center hover:cursor-pointer hover:border-0 focus:outline-none" onClick={onClickTrashBtn}>
           <BsFillTrash3Fill />
+        </button> */}
         </div>
-      </div>
-      <input className="p-2 shadow-sm" value={filter} placeholder="닉네임을 입력하세요" onChange={handleChange}></input>
-    </header>
+      </header>
+      {search && (
+        <input className="fixed top-16 px-4 py-3 shadow-sm w-full z-40" value={filter} placeholder="닉네임을 입력하세요" onChange={handleChange} />
+      )}
+    </>
   );
 };
 

@@ -1,22 +1,35 @@
-import axios from "axios";
-import jwtDecode from "jwt-decode";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { IoIosSend } from "react-icons/io";
+import Footer from "../common/Footer";
+import { JsonConfig } from "../API/AxiosModule";
+import { getUserId } from "../API/TokenAction";
 
-const CommentForm = ({ postId, comments, setComments }) => {
-  const [userId, setUserId] = useState();
+interface Comments {
+  commentId: number;
+  content: string;
+  createdAt: string;
+  imgPath: string;
+  memberId: number;
+  nickName: string;
+}
+
+interface CommentFormProps {
+  postId: number;
+  comments: {
+    commentId: number;
+    content: string;
+    createdAt: string;
+    imgPath: string;
+    memberId: number;
+    nickName: string;
+  }[];
+  setComments: Dispatch<SetStateAction<Comments[]>>;
+  setCommentCount: Dispatch<SetStateAction<number>>;
+}
+
+const CommentForm = ({ postId, comments, setComments, setCommentCount }: CommentFormProps) => {
   const [content, setContent] = useState("");
-  const accessToken = localStorage.getItem("accessToken");
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
+  const userId = getUserId();
 
   const handleResizeHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
@@ -26,6 +39,7 @@ const CommentForm = ({ postId, comments, setComments }) => {
 
   //댓글등록 서버로 보냄
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    window.scrollTo({ top: 0, behavior: "auto" });
     if (!userId) return;
     e.preventDefault();
 
@@ -34,42 +48,40 @@ const CommentForm = ({ postId, comments, setComments }) => {
       return;
     }
     const data = { content: content };
-    axios
-      .post(`http://43.200.78.88:8080/api/comment/${postId}/${userId}`, data, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        setComments([res.data, ...comments]);
-      });
+
+    JsonConfig("post", `api/comment/${postId}/${userId}`, data, undefined).then((res) => {
+      console.log(res);
+      setComments([res.data, ...comments]);
+    });
+    setCommentCount((prev) => prev + 1);
     setContent("");
   };
 
   return (
-    <form className="fixed bottom-0 w-full" onSubmit={handleSubmit}>
-      <div className="flex items-start gap-2 mx-3 my-4 px-4 py-2.5 rounded-3xl border-2 bg-white">
-        <textarea
-          className="w-full max-h-12 resize-none focus:outline-none"
-          placeholder="댓글을 입력해주세요."
-          value={content}
-          onChange={handleResizeHeight}
-          rows={1}
-          wrap="virtual"
-        />
-        <button
-          className={
-            content
-              ? "text-2xl border-0 focus:outline-0 text-main-400 hover:border-0 focus:outline-none"
-              : "text-2xl border-0 focus:outline-0 text-gray-400 hover:border-0 focus:outline-non"
-          }
-        >
-          <IoIosSend />
-        </button>
-      </div>
-    </form>
+    <>
+      <form className="fixed pb-11 bottom-0 w-full" onSubmit={handleSubmit}>
+        <div className="flex items-start gap-2 mx-1 my-4 px-4 py-2.5 rounded-3xl border-2 bg-white">
+          <textarea
+            className="w-full max-h-12 resize-none focus:outline-none"
+            placeholder="댓글을 입력해주세요."
+            value={content}
+            onChange={handleResizeHeight}
+            rows={1}
+            wrap="virtual"
+          />
+          <button
+            className={
+              content
+                ? "text-2xl border-0 focus:outline-0 text-main-400 hover:border-0 focus:outline-none"
+                : "text-2xl border-0 focus:outline-0 text-gray-400 hover:border-0 focus:outline-non"
+            }
+          >
+            <IoIosSend />
+          </button>
+        </div>
+      </form>
+      <Footer selected={false} userId={userId} />
+    </>
   );
 };
 

@@ -9,7 +9,17 @@ export default {
         "main-300": "#AAC4FF",
         "main-400": "#8F92FF",
       },
+      maxWidth:{
+        '4/5':'80%',
+      }
     },
+  },
+  screens: {
+    sm: "640px",
+
+    md: "1024px",
+
+    lg: "1280px",
   },
   plugins: [],
 };

@@ -1,50 +1,44 @@
-import axios from "axios";
-import jwtDecode from "jwt-decode";
+import { useNavigate } from "react-router";
+import { JsonConfig } from "../API/AxiosModule";
+import { Dispatch, SetStateAction } from "react";
+import { getUserId } from "../API/TokenAction";
 
-import { useState, useEffect } from "react";
+interface Comment {
+  commentId: number;
+  content: string;
+  createdAt: string;
+  imgPath: string;
+  memberId: number;
+  nickName: string;
+}
 
 interface CommentToolButtonsProps {
-  handleShow: () => void;
+  comments: Comment[];
+  setComments: Dispatch<SetStateAction<Comment[]>>;
+  editComment: () => void;
+  onClickClose: () => void;
+  commentData: Comment;
+  setShowCommentButtons: Dispatch<SetStateAction<boolean>>;
+  handleDelete: () => void;
+  myComment: boolean;
 }
 
 const CommentToolButtons = (props: CommentToolButtonsProps) => {
-  const {
-    comments,
-    commentId,
-    setComments,
-    editComment,
-    onClickClose,
-    commentData,
-    setShowCommentButtons,
-  } = props;
-  const [userId, setUserId] = useState();
-
-  //토큰에서 유저아이디 파싱
-  const accessToken = localStorage.getItem("accessToken");
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
-
-  // console.log(commentId);
-
-  // console.log(comments);
+  const { comments, setComments, editComment, onClickClose, commentData, setShowCommentButtons, handleDelete, myComment } = props;
+  const navigate = useNavigate();
+  const userId = getUserId();
+  const partner = {
+    membershipId: commentData.memberId,
+    imgPath: commentData.imgPath,
+    nickname: commentData.nickName,
+  };
 
   //댓글 삭제
   const deleteComment = () => {
-    axios
-      .delete(`http://43.200.78.88:8080/api/comment/${commentData.commentId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((res) => {
+    const ok = confirm("정말 삭제하시겠습니까😃?");
+
+    if (ok) {
+      JsonConfig("delete", `api/comment/${commentData.commentId}`, null, undefined).then((res) => {
         console.log(res);
         setComments(
           comments.filter((c) => {
@@ -52,36 +46,53 @@ const CommentToolButtons = (props: CommentToolButtonsProps) => {
           })
         );
       });
-    alert("삭제되었습니다");
-
+      handleDelete();
+    }
     setShowCommentButtons(false);
   };
 
-  //댓글 수정
+  const goChatRoom = async () => {
+    try {
+      const response = await JsonConfig("post", "api/chat/room", {
+        senderId: userId,
+        receiverId: commentData.memberId,
+      });
+      navigate(`/chat/${response.data}`, { state: partner });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <div onClick={props.handleShow}>
-      <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-black opacity-5" />
+    <div onClick={() => setShowCommentButtons(false)}>
+      <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-black opacity-30" />
       <div className="fixed bottom-4 flex flex-col items-center z-50 w-full text-md">
         <div className="mb-2 w-11/12 rounded-xl bg-white shadow opacity-80">
-          <button
-            className="block px-4 py-3 w-full border-0 border-b-2 border-gray-200 rounded-none hover:border-gray-200 focus:outline-none"
-            onClick={editComment}
-          >
-            댓글 수정
-          </button>
-          <button
-            className="block px-4 py-3 w-full border-0 rounded-t-none rounded-b-xl hover:border-0 focus:outline-none"
-            onClick={deleteComment}
-            // onClick={setDeletes(true)}
-          >
-            댓글 삭제
-          </button>
+          {myComment ? (
+            <>
+              <button
+                className="block px-4 py-3 w-full border-0 border-b-2 border-gray-200 rounded-none hover:border-gray-200 focus:outline-none"
+                onClick={editComment}
+              >
+                댓글 수정
+              </button>
+              <button
+                className="block px-4 py-3 w-full border-0 rounded-t-none rounded-b-xl hover:border-0 focus:outline-none"
+                onClick={deleteComment}
+              >
+                댓글 삭제
+              </button>
+            </>
+          ) : (
+            <button
+              className="block px-4 py-3 w-full border-0 border-b-2 border-gray-200 rounded-none hover:border-gray-200 focus:outline-none"
+              onClick={goChatRoom}
+            >
+              채팅 보내기
+            </button>
+          )}
         </div>
-        <button
-          className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none"
-          onClick={onClickClose}
-        >
+        <button className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none" onClick={onClickClose}>
           닫기
         </button>
       </div>

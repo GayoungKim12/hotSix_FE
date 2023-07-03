@@ -46,10 +46,7 @@ const AddImages = (props: AddImagesProps) => {
   return (
     <div>
       <div className="mt-4 mb-2 text-base">사진첨부(최대 5개)</div>
-      <label
-        htmlFor="input-file"
-        className="box-border px-4 w-4 h-8 rounded-xl border-2 border-main-400 bg-main-400 text-sm text-white"
-      >
+      <label htmlFor="input-file" className="box-border px-4 w-4 h-8 rounded-xl border-2 border-main-400 bg-main-400 text-sm text-white">
         이미지 파일 추가
       </label>
       <input className="hidden" type="file" multiple accept="image/*" id="input-file" onChange={handleImageUpload} />

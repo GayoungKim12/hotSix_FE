@@ -1,8 +1,6 @@
-import jwtDecode from "jwt-decode";
-import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { JsonConfig } from "../API/AxiosModule";
-import axios from "axios";
+import { getUserId } from "../API/TokenAction";
 
 interface LikeButtonProps {
   postId: number;
@@ -12,26 +10,9 @@ interface LikeButtonProps {
   setLikes?: (likes: number) => void;
 }
 
-interface DecodedToken {
-  id: string;
-}
-
 const LikeButton = (props: LikeButtonProps) => {
-  const URL = "http://43.200.78.88:8080";
-  const accessToken = localStorage.getItem("accessToken");
-  const [userId, setUserId] = useState<number | null>(null);
-
+  const userId = getUserId();
   const { postId, like, setLike, likes, setLikes } = props;
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const decodeToken = jwtDecode<DecodedToken>(accessToken);
-
-    if (decodeToken.id) {
-      console.log(Number(decodeToken.id));
-      setUserId(Number(decodeToken.id));
-    }
-  }, [accessToken]);
 
   // 좋아요 버튼 기능
   const handleLike = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,31 +20,18 @@ const LikeButton = (props: LikeButtonProps) => {
     (async () => {
       try {
         if (like) {
+          const response = await JsonConfig("delete", `api/likes/${postId}/${userId}`);
           if (setLikes && typeof likes === "number") {
             setLikes(likes - 1);
           }
-          await axios({
-            method: "delete",
-            url: `${URL}/api/likes/${postId}/${userId}`,
-            headers: {
-              Authorization: `${accessToken}`,
-            },
-          });
-          /* await JsonConfig("delete", `${URL}/api/likes/${postId}/${userId}`); */
+          setLike(response.data);
         } else {
+          const response = await JsonConfig("post", `api/likes/${postId}/${userId}`);
           if (setLikes && typeof likes === "number") {
             setLikes(likes + 1);
           }
-          await axios({
-            method: "post",
-            url: `${URL}/api/likes/${postId}/${userId}`,
-            headers: {
-              Authorization: `${accessToken}`,
-            },
-          });
-          /* await JsonConfig("post", `${URL}/api/likes/${postId}/${userId}`); */
+          setLike(response.data);
         }
-        setLike(!like);
       } catch (err) {
         console.error(err);
       }

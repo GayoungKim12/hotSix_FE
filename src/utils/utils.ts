@@ -1,12 +1,12 @@
 function validateForm(
   email: string,
   password: string,
-  passwordCheck: any,
+  passwordCheck: string,
   nickname: string,
-  personality: string | any[],
+  personality: string[],
   regionId: number | null,
-  birth: any,
-  introduction: any
+  birth: string,
+  introduction: string
 ) {
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
   if (!emailRegex.test(email)) {
@@ -122,4 +122,13 @@ const getDiffTime = (time: string) => {
   }
 };
 
-export default { validateForm, getCurrentYear, getYears, getMonths, getDays, getDiffTime };
+const changeLineBreak = (text: string) => {
+  const replacedText = text.replace(
+    /\n/g,
+    `
+    `
+  );
+  return replacedText;
+};
+
+export default { validateForm, getCurrentYear, getYears, getMonths, getDays, getDiffTime, changeLineBreak };
