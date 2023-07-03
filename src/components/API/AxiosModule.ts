@@ -9,7 +9,6 @@ axios.defaults.paramsSerializer = (params) => {
 };
 
 const axiosInstance = axios.create();
-const accessToken = getAccessToken();
 
 //요청 전 액션
 axiosInstance.interceptors.request.use(
@@ -111,6 +110,7 @@ const createKakaoRenewAccessTokenConfig = (method: string, grant_type: string, c
 //그외의 요청?
 
 const JsonConfig = (method: string, url: string, requestBody: unknown = null, params: object = {}) => {
+  const accessToken = getAccessToken();
   const config = {
     baseURL: `https://www.imnotalone.online/${url}`, //요청을보낼url
     method: method, //get,post,delete등 요청을 보낼방식
@@ -127,6 +127,7 @@ const JsonConfig = (method: string, url: string, requestBody: unknown = null, pa
 };
 
 const MultiConfig = (method: string, url: string, requestBody: unknown = null, params: object = {}) => {
+  const accessToken = getAccessToken();
   const config = {
     baseURL: `https://www.imnotalone.online/${url}`,
     method: method,
