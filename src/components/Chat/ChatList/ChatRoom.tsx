@@ -57,8 +57,11 @@ const ChatRoom = (props: isDeleteMode) => {
   };
 
   return (
-    <div className="flex justify-between items-center border-solid border-b-2 border-gray-300 p-3 w-full h-20 font-normal" onClick={clickChatRoom}>
-      <div className="flex justify-center items-center gap-3">
+    <div
+      className="flex justify-between items-center w-full border-solid border-b-2 border-gray-300 p-3 w-full h-20 font-normal"
+      onClick={clickChatRoom}
+    >
+      <div className="flex justify-start items-center gap-3 w-2/3">
         {isDeleteMode && (
           <button
             className="flex justify-center items-center border-none text-main-400 hover:border-none focus:outline-none"
@@ -76,12 +79,12 @@ const ChatRoom = (props: isDeleteMode) => {
             </div>
           )}
         </div>
-        <div className="mt-0.5 ">
-          <div className="font-semibold">{chat.partner.nickname}</div>
-          <div className="text-sm w-40 overflow-hidden text-ellipsis whitespace-nowrap">{chat.lastMessage}</div>
+        <div className="mt-0.5 w-3/4">
+          <div className="font-semibold w-full overflow-hidden text-ellipsis whitespace-nowrap">{chat.partner.nickname}</div>
+          <div className="text-sm w-full overflow-hidden text-ellipsis whitespace-nowrap">{chat.lastMessage}</div>
         </div>
       </div>
-      <div className="mr-1 w-14">
+      <div className="mr-1">
         <div className="flex justify-center items-center gap-2">
           <div className="text-sm">{utility.getDiffTime(chat.lastTime)}</div>
           {/* <div className="flex text-sm">
