@@ -15,7 +15,7 @@ const Findpassword = () => {
     createLoginConfig("post", "email/password", requestData)
       .then(() => {
         alert("이메일로 임시비밀번호가 전송되었습니다.");
-        navigate("/signin");
+        navigate("/");
       })
       .catch((error) => {
         console.error("이메일 전송 실패", error);
