@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Region from "../components/Signup/Region";
 import Personality from "../components/Signup/Personality";
 import GoBackButton from "../components/common/GoBackButton";
-import { SignupConfig, createLoginConfig } from "../components/API/AxiosModule";
+import { createLoginConfig } from "../components/API/AxiosModule";
 import utility from "../utils/utils";
 
 const SocialsignUp = () => {
