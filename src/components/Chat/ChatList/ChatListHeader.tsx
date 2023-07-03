@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import GoBackButton from "../../common/GoBackButton";
+import { useNavigate } from "react-router";
 
 interface ChatListHeaderProps {
   DeleteMode: () => void;
@@ -11,6 +11,7 @@ interface ChatListHeaderProps {
 const ChatListHeader = (props: ChatListHeaderProps) => {
   const { filter, setFilter } = props;
   const [search, setSearch] = useState(false);
+  const navigate = useNavigate();
 
   /* const onClickTrashBtn = () => {
     DeleteMode();
@@ -22,14 +23,11 @@ const ChatListHeader = (props: ChatListHeaderProps) => {
 
   return (
     <>
-      <header className="fixed top-0 flex flex-col justify-between items-center w-full z-50 bg-main-100 shadow-md">
-        <div className="flex justify-between items-center w-full h-16 px-4">
-          <div className="flex">
-            <GoBackButton />
-            <h2 className="ml-4 text-lg">채팅</h2>
-          </div>
+      <header className="fixed top-0 flex flex-col justify-between items-center w-full z-50 bg-main-100 shadow">
+        <div className="flex justify-between items-center w-full h-16 px-3">
+          <img src="/logo.png" className="w-16 cursor-pointer" onClick={() => navigate("/main")} />
           <button
-            className="flex justify-center items-center text-2xl hover:cursor-pointer hover:border-0 focus:outline-none"
+            className="flex justify-center items-center text-3xl text-main-400 hover:cursor-pointer hover:border-0 focus:outline-none"
             onClick={() => setSearch(!search)}
           >
             <BiSearch />
@@ -40,7 +38,7 @@ const ChatListHeader = (props: ChatListHeaderProps) => {
         </div>
       </header>
       {search && (
-        <input className="fixed top-14 px-4 py-3 shadow-sm w-full z-40" value={filter} placeholder="닉네임을 입력하세요" onChange={handleChange} />
+        <input className="fixed top-16 px-4 py-3 shadow-sm w-full z-40" value={filter} placeholder="닉네임을 입력하세요" onChange={handleChange} />
       )}
     </>
   );
