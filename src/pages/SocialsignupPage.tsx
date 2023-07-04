@@ -140,7 +140,7 @@ const SocialsignUp = () => {
 
   return (
     <div className="relative bg-main-100">
-      <div className="flex flex-row justify-center items-center h-16">
+      <div className="flex flex-row justify-center items-center shadow h-16">
         <div className="absolute left-5">
           <GoBackButton />
         </div>
@@ -255,7 +255,7 @@ const SocialsignUp = () => {
             className="h-40 p-4 mt-2.5"
           ></textarea>
         </div>
-        <button type="submit" className="rounded-none mt-16 w-full h-14 bg-main-400 text-white">
+        <button type="submit" className="fixed bottom-0 rounded-none mt-16 w-full h-14 bg-main-400 text-white">
           가입하기
         </button>
       </form>
