@@ -35,7 +35,7 @@ const Personality = ({ personality, handlePersonalityChange }: PersonalityProps)
       "흡연",
       "비흡연",
       "더위탐",
-      "취위탐",
+      "추위탐",
     ]);
   }, []);
 

@@ -40,7 +40,7 @@ const Editpassword = () => {
 
   return (
     <div className="relative min-h-screen bg-main-100">
-      <div className="flex flex-row justify-center items-center h-16">
+      <div className="flex flex-row justify-center items-center shadow h-16">
         <div className="absolute left-5">
           <GoBackButton />
         </div>
