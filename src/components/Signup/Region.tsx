@@ -72,7 +72,7 @@ const Region = ({ handleRegionIdChange, defaultRegionId }: RegionProps) => {
           ))}
         </select>
         <select onChange={handleSiggChange} className="w-5/12 text-sm" value={sigg}>
-          <option disabled>시군구</option>
+          <option>시군구</option>
           {regionOptions
             .filter((option) => option.sido === sido)
             .map((option) => (
