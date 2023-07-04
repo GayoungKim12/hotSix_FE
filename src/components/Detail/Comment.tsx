@@ -91,8 +91,7 @@ const Comment = (props: CommentProps) => {
             <div className="flex items-end w-full flex-wrap">
               <div className="text-sm font-semibold text-black mr-1">{commentData.nickName}</div>
               <div className="flex text-xs text-gray-400">
-                <div className="mr-1">{commentData.createdAt.split("T")[0]}</div>
-                <div className="text-right">{commentData.createdAt.split("T")[1]} </div>
+                <div className="mr-1">{commentData.createdAt}</div>
               </div>
             </div>
           </div>
