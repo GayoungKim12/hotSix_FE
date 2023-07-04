@@ -193,7 +193,7 @@ const Editprofile = () => {
         </div>
         <Region handleRegionIdChange={handleRegionIdChange} defaultRegionId={defaultRegionId} />
         <Personality personality={personality} handlePersonalityChange={handlePersonalityChange} />
-        <div className="flex flex-col mt-5 mx-auto w-9/12">
+        <div className="flex flex-col mt-5 pb-20 mx-auto w-9/12">
           <label htmlFor="input-about">자기소개</label>
           <textarea
             name="inttroduction"
