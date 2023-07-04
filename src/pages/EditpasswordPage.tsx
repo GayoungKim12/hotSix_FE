@@ -94,7 +94,7 @@ const Editpassword = () => {
           )}
         </div>
         <button type="submit" className="fixed bottom-0 rounded-none  w-full h-14 bg-main-400 text-white">
-          가입하기
+          수정하기
         </button>
       </form>
     </div>
