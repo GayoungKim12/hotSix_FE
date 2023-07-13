@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import axios from "axios";
+import { useAtom } from "jotai";
 
 interface ChatUtil {
   getChats: () => Message[];
@@ -35,11 +36,19 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
   // const client = Stomp.over(function () {
   //       return new SockJS("http://localhost:8080/ws");
   //   });
+
+//   여기서 한번더 소켓연결을 하지않으면 두가지문제가 있다
+// 첫번째: 채팅방을 들어갔을때 이게 로그인했을때 구독했던방인지 아닌지 구분해야 한다.
+// 이건 가능한데 그다음에 updatechats를 적용할수가없다.(로그인했을때 구독은 updatechats를 하지않는다 그 이유는 updatechats를 기존로그인할떄 하면 기존 채팅기록 가져오면서 로그인 이후에 왔던 채팅들은 두개씩 기록된다)
+
+// 두번째:connect랑 subscribe를 붙이지 않으면 connect가 자꾸 끊긴다.
+
   const client = useRef(Stomp.over(function () {
     return new SockJS("https://www.imnotalone.online/ws");
   }));
 
   useEffect(() => {
+
     // console.log("채팅방입장")
     const connectSocket = () => {
       client.current.connect(
@@ -72,8 +81,7 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
       console.log("채팅방나감");
       if (client.current) {
         subscription?.unsubscribe();
-        
-        
+        client.current.disconnect();
       }
   };
 

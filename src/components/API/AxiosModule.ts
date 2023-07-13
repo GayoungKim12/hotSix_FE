@@ -41,6 +41,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => {
     //응답 성공적이면
+
     console.log("3");
     return response;
   },
@@ -141,6 +142,25 @@ const MultiConfig = (method: string, url: string, requestBody: unknown = null, p
   return axiosInstance(config);
 };
 
+const logOutConfig = (method: string, url: string, requestBody: unknown = null) => { //로그아웃?
+  const accessToken = getAccessToken();
+  const config = {
+    baseURL: `https://www.imnotalone.online/${url}`,
+    method: method,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    data: requestBody,
+
+  };
+  
+  return axiosInstance(config);
+  
+};
+
+
+
 // createLoginConfig(원하는method,엔드포인트,요청본문에 들어갈거,params 넣을거).then((response)=>{
 //response 왔을때 할 행동 (response.data로 뭐 한다던지)
 // }).catch((error)=>{
@@ -148,4 +168,4 @@ const MultiConfig = (method: string, url: string, requestBody: unknown = null, p
 //   console.error(error);
 // });
 
-export { createLoginConfig, JsonConfig, createKakaoLoginConfig, MultiConfig, createKakaoRenewAccessTokenConfig, SignupConfig };
+export { createLoginConfig, logOutConfig,JsonConfig, createKakaoLoginConfig, MultiConfig, createKakaoRenewAccessTokenConfig, SignupConfig };
