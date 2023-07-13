@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import {CompatClient, Frame, Stomp, StompSubscription } from "@stomp/stompjs";
+import { useState } from "react";
+import {CompatClient, Frame, Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import { getAccessToken, getUserId } from "../../API/TokenAction";
 
