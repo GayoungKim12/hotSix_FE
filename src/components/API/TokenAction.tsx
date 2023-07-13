@@ -3,7 +3,7 @@
 import axios from "axios";
 import { setCookie, getCookie, removeCookie } from "./Cookies";
 import jwt_decode from "jwt-decode";
-import { createKakaoRenewAccessTokenConfig } from "./AxiosModule";
+import { createKakaoRenewAccessTokenConfig, logOutConfig } from "./AxiosModule";
 import jwtDecode from "jwt-decode";
 
 //-------------------------------------------------------------------------토큰 저장,삭제,가져오기 액션
@@ -64,12 +64,11 @@ const isTokenValid = async () => {
         isAccessTokenValid = checkTokenExpiration("accessToken");
         return true;
       } else if (!isAccessTokenValid && !isRefreshTokenValid) {
-        removeAccessToken();
-        removeRefreshToken();
+
 
         console.log("둘다 만료");
         alert("토큰이 만료됐습니다!");
-        window.location.href = "/";
+        logOut();
         return false;
 
         // 로그아웃
@@ -261,6 +260,21 @@ const refreshKakaoAccessToken = async () => {
       throw new Error("모르는에러?");
     }
   }
+};
+
+const logOut =() =>{ //로그아웃
+  logOutConfig("POST", "logout")
+  .then((response) => {
+    console.log(response);
+    removeAccessToken();
+    removeRefreshToken();
+    
+    window.location.href = "/";
+  })
+  .catch((error) => {
+    console.log("에러");
+    console.error(error);
+  });
 };
 
 // const refreshRefreshToken = async () => {

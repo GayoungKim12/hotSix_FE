@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { createLoginConfig } from "../API/AxiosModule";
 import { getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
-
+import {  socketAction,  } from "../Chat/ChatRoom/ChatUtil";
 interface TokenResponse {
   accessToken: string;
   refreshToken: string;
@@ -67,22 +67,29 @@ const Signin = () => {
     handleAuthorizationCode();
   };
 
-  const handleTokenResponse = (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {
+
+
+  const handleTokenResponse = async (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {
     if (tokenResponse.accessToken && tokenResponse.refreshToken) {
-      setAccessToken(tokenResponse.accessToken); // 로컬스토리지에 액세스토큰 저장
-      setRefreshToken(tokenResponse.refreshToken); // httponly 쿠키에 refresh 토큰 저장
+      setAccessToken(tokenResponse.accessToken);
+      setRefreshToken(tokenResponse.refreshToken);
       localStorage.setItem("tokenCategory", tokenResponse.tokenCategory);
       getTokenExpiration("accessToken", accessTokenExpire);
       getTokenExpiration("refreshToken", refreshTokenExpire);
-
-      isTokenValid().then((response) => {
-        if (response === true) {
-          //console.log(getUserId());
-          navigate("/main"); //메인페이지로 이동
-        }
-      });
+  
+      const isTokenValidResponse = await isTokenValid(); 
+      if (isTokenValidResponse === true) {
+        await socketAction();
+        navigate("/main");
+      }
     }
   };
+  
+
+
+
+ 
+  
 
   return (
     <div className="w-full h-screen pt-11 bg-main-100">
