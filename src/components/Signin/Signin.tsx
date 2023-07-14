@@ -80,7 +80,7 @@ const Signin = () => {
       const isTokenValidResponse = await isTokenValid(); 
       if (isTokenValidResponse === true) {
         await socketAction();
-        navigate("/main");
+        //navigate("/main");
       }
     }
   };
