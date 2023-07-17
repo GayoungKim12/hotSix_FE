@@ -9,9 +9,18 @@ export default {
         "main-300": "#AAC4FF",
         "main-400": "#8F92FF",
       },
-      maxWidth:{
-        '4/5':'80%',
-      }
+      maxWidth: {
+        "4/5": "80%",
+      },
+      keyframes: {
+        fadeInUp: {
+          "0%": { transform: "translateY(250px)" },
+          "100%": { transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        fadeInUp: "fadeInUp 0.25s ease-in-out",
+      },
     },
   },
   screens: {
