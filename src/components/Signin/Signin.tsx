@@ -62,7 +62,7 @@ const Signin = () => {
     removeRefreshToken();
     localStorage.setItem("Rest_api_key", "f97c55d9d92ac41363b532958776d378");
     // const Rest_api_key = localStorage.getItem("Rest_api_key");
-    const kakaoURL = `https://www.imnotalone.online/oauth2/authorization/kakao`;
+    const kakaoURL = `https://iamnotalone.vercel.app/oauth2/authorization/kakao`;
     window.location.href = kakaoURL;
     handleAuthorizationCode();
   };
