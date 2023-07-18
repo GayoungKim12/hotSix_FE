@@ -22,6 +22,8 @@ const Signin = () => {
 
   const handleAuthorizationCode = () => {
     const cookie = document.cookie;
+    console.log("^^^^^");
+
     if(cookie)
     {
       console.log(cookie);
