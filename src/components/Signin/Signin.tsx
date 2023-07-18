@@ -17,6 +17,7 @@ const Signin = () => {
   
 
   useEffect(() => {
+    handleAuthorizationCode();
     console.log("로그인")
   }, []);
 
@@ -66,7 +67,7 @@ const Signin = () => {
     // const Rest_api_key = localStorage.getItem("Rest_api_key");
     const kakaoURL = `https://www.imnotalone.online/oauth2/authorization/kakao`;
     window.location.href = kakaoURL;
-    handleAuthorizationCode();
+
   };
 
 
