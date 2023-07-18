@@ -67,9 +67,10 @@ const isTokenValid = async () => {
 
 
         console.log("둘다 만료");
-        alert("토큰이 만료됐습니다!");
-        logOut();
-        return false;
+        //alert("토큰이 만료됐습니다!");
+        //logOut();
+        //return false;
+        return true;
 
         // 로그아웃
       }
