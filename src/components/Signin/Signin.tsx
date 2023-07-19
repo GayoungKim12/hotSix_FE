@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { createLoginConfig } from "../API/AxiosModule";
+import { createKakaoLoginToServerLoginConfig, createLoginConfig } from "../API/AxiosModule";
 import { getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 import {  socketAction,  } from "../Chat/ChatRoom/ChatUtil";
 interface TokenResponse {
@@ -14,19 +14,13 @@ const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  
-
+  const redirect_uri = 'https://iamnotalone.vercel.app/';
+  const Rest_api_key = 'f97c55d9d92ac41363b532958776d378';
+  //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
   useEffect(() => {
     console.log("로그인")
+    handleAuthorizationCode();
   }, []);
-
-  const handleAuthorizationCode = () => {
-    const cookie = document.cookie;
-    if(cookie)
-    {
-      console.log(cookie);
-    }
-  };
 
   const defaultSignin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -57,16 +51,43 @@ const Signin = () => {
       });
   };
 
-  const kakaotalkSignIn = () => {
-    removeAccessToken();
-    removeRefreshToken();
-    localStorage.setItem("Rest_api_key", "f97c55d9d92ac41363b532958776d378");
-    // const Rest_api_key = localStorage.getItem("Rest_api_key");
-    const kakaoURL = `https://www.imnotalone.online/oauth2/authorization/kakao`;
-    window.location.href = kakaoURL;
-    handleAuthorizationCode();
+
+
+  const kakaotalkSignIn = async () => {
+    console.log("카카오로그인");
+
+  
+    await requestKakaoCode(redirect_uri, Rest_api_key);
+
+
   };
 
+    
+    
+  
+
+  const requestKakaoCode = async(redirect_uri:string,Rest_api_key:string) =>{
+    removeAccessToken();
+    removeRefreshToken();
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+    window.location.href = kakaoURL;
+  }
+
+
+
+  const handleAuthorizationCode = async() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      createKakaoLoginToServerLoginConfig("GET",code).then((response) => {
+        console.log(response);
+      })
+    .catch((error)=>{
+        console.log("에러")
+        console.error(error);
+      });
+    }
+  };
 
 
   const handleTokenResponse = async (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {

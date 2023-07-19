@@ -79,33 +79,50 @@ const SignupConfig = (method: string, url: string, requestBody: unknown) => {
   return axiosInstance(config);
 };
 
-//로그인할때만 필요
-const createKakaoLoginConfig = (method: string, grant_type: string, client_id: string, redirect_uri: string, code: string) => {
+
+
+//카카오 로그인할때만 필요
+// const createKakaoLoginConfig = (method: string, grant_type: string, client_id: string, redirect_uri: string, code: string,client_secret:string) => {
+//   const config = {
+//     baseURL: "https://kauth.kakao.com/oauth/token",
+//     method: method,
+//     headers: {
+//       "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+//     },
+//     data: { grant_type, client_id, redirect_uri, code ,client_secret},
+//   };
+
+//   return axiosInstance(config);
+// };
+
+//카카오 로그인할때만 필요
+const createKakaoLoginToServerLoginConfig = (method: string, code: string) => {
   const config = {
-    baseURL: "https://kauth.kakao.com/oauth/token",
+    baseURL: "https://www.imnotalone.online/login/oauth2/code/kakao",
     method: method,
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+      "Content-Type": "application/json",
     },
-    data: { grant_type, client_id, redirect_uri, code },
+    params:code,
   };
 
   return axiosInstance(config);
 };
+
 
 //카카오 액세스토큰 갱신
-const createKakaoRenewAccessTokenConfig = (method: string, grant_type: string, client_id: string, refresh_token: string) => {
-  const config = {
-    baseURL: "https://kauth.kakao.com/oauth/token",
-    method: method,
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-    },
-    data: { grant_type, client_id, refresh_token },
-  };
+// const createKakaoRenewAccessTokenConfig = (code:string) => {
+//   const config = {
+//     baseURL: "https://www.imnotalone.online/login/oauth2/code/kakao",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     params:code,
+//   };
 
-  return axiosInstance(config);
-};
+//   return axiosInstance(config);
+// };
+
 
 //requestBody 모듈화: unknwon으로 하던가 인터페이스 전부 적어놓고 if else같은걸로 그때그때 맞추던가 해야함
 //그외의 요청?
@@ -142,7 +159,7 @@ const MultiConfig = (method: string, url: string, requestBody: unknown = null, p
   return axiosInstance(config);
 };
 
-const logOutConfig = (method: string, url: string, requestBody: unknown = null) => { //로그아웃?
+const logOutConfig = (method: string, url: string) => { //로그아웃?
   const accessToken = getAccessToken();
   const config = {
     baseURL: `https://www.imnotalone.online/${url}`,
@@ -151,8 +168,6 @@ const logOutConfig = (method: string, url: string, requestBody: unknown = null) 
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
-    data: requestBody,
-
   };
   
   return axiosInstance(config);
@@ -168,4 +183,4 @@ const logOutConfig = (method: string, url: string, requestBody: unknown = null) 
 //   console.error(error);
 // });
 
-export { createLoginConfig, logOutConfig,JsonConfig, createKakaoLoginConfig, MultiConfig, createKakaoRenewAccessTokenConfig, SignupConfig };
+export { createLoginConfig, logOutConfig,JsonConfig,createKakaoLoginToServerLoginConfig, MultiConfig, SignupConfig };
