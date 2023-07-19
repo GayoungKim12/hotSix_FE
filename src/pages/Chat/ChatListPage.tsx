@@ -16,7 +16,9 @@ const ChatListPage = () => {
   };
 
   return (
+
     <div className="flex flex-col w-full min-h-screen bg-main-100">
+ 
       {isDeleteMode ? (
         <>
           <HeaderDeleteMode DeleteMode={DeleteMode} allSelect={allSelect} setAllSelect={setAllSelect} />

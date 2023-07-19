@@ -2,6 +2,7 @@ import { useState } from "react";
 import {CompatClient, Frame, Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import { getAccessToken, getUserId } from "../../API/TokenAction";
+import { atom, useAtom } from "jotai";
 
 export interface Message {
   chatRoomId: Number;
@@ -10,10 +11,20 @@ export interface Message {
   createdAt: String;
 }
 
+
+
 const ChatUtil = () => {
   const [chats, setChats] = useState<Message[]>([]);
 
+  const chatAtom = atom<Message | null>(null);
+  const useChatAtom = () => useAtom(chatAtom);
+
+  const [arrivalChat, setArrivalChat] = useChatAtom();
+
   const getChats = () => chats;
+
+  const getArrivalChats = () => arrivalChat;
+
 
   const updateChats = (newChats: Message[]) => {
     console.log(getChats());
@@ -22,9 +33,15 @@ const ChatUtil = () => {
     console.log(getChats());
   };
 
+  const updateChat = (newChats: Message) => {
+    setArrivalChat(newChats);
+  };
+
   return {
     getChats,
     updateChats,
+    getArrivalChats,
+    updateChat,
   };
 };
 
@@ -56,8 +73,7 @@ const connectSocket = async () => {
 const subscribe = async ( client:CompatClient ) => {
   const token = getAccessToken();
   const id = getUserId();
-  //let subscription: StompSubscription | null | undefined = null;//채팅방 목록에서 구독해제하려면 이거로 해야할듯?
-  console.log(client)
+  //const { getArrivalChats,updateChat } = ChatUtil();
   
   if(client)
   {
@@ -79,6 +95,8 @@ const subscribe = async ( client:CompatClient ) => {
           (arrivalChat) => {
             const newMessage = JSON.parse(arrivalChat.body) as Message;
             console.log(newMessage);
+           //updateChat(newMessage);
+           //console.log(getArrivalChats)
           }
          
         );

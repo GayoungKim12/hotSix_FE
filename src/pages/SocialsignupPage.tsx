@@ -107,6 +107,7 @@ const SocialsignUp = () => {
       };
       createLoginConfig("patch", `oauth/signup/${userId}`, data)
         .then((response) => {
+          
           const accessToken = response.data["Authorization"];
           const refreshToken = response.data["Authorization-refresh"];
 
