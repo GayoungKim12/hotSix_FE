@@ -3,7 +3,7 @@
 import axios from "axios";
 import { setCookie, getCookie, removeCookie } from "./Cookies";
 import jwt_decode from "jwt-decode";
-import { createKakaoRenewAccessTokenConfig, logOutConfig } from "./AxiosModule";
+import { logOutConfig } from "./AxiosModule";
 import jwtDecode from "jwt-decode";
 
 //-------------------------------------------------------------------------토큰 저장,삭제,가져오기 액션
@@ -76,7 +76,7 @@ const isTokenValid = async () => {
       }
     } else if (tokenCategory === "kakao") {
       if (!isAccessTokenValid && isRefreshTokenValid) {
-        await refreshKakaoAccessToken();
+        //await refreshKakaoAccessToken();
         console.log("$$$$$");
         isAccessTokenValid = checkTokenExpiration("accessToken");
         return true;
@@ -230,38 +230,38 @@ const refreshAccessToken = async () => {
   }
 };
 
-const refreshKakaoAccessToken = async () => {
-  try {
-    const refreshToken = getRefreshToken();
-    const Rest_api_key = localStorage.getItem("Rest_api_key");
-    console.log(Rest_api_key);
-    if (Rest_api_key) {
-      createKakaoRenewAccessTokenConfig("POST", "refresh_token", Rest_api_key, refreshToken)
-        .then((response) => {
-          const accessToken = response.data["access_token"];
+// const refreshKakaoAccessToken = async () => {
+//   try {
+//     const refreshToken = getRefreshToken();
+//     const Rest_api_key = localStorage.getItem("Rest_api_key");
+//     console.log(Rest_api_key);
+//     if (Rest_api_key) {
+//       createKakaoRenewAccessTokenConfig("POST", "refresh_token", Rest_api_key, refreshToken)
+//         .then((response) => {
+//           const accessToken = response.data["access_token"];
 
-          if (accessToken) {
-            setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
-            getTokenExpiration("accessToken", response.data["expires_in"]);
-            isTokenValid();
-          }
-        })
-        .catch((error) => {
-          console.log("에러");
-          console.error(error);
-        });
-    } else {
-      console.log("rest api key없음");
-    }
-    console.log("Access token 갱신.");
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "에러");
-    } else {
-      throw new Error("모르는에러?");
-    }
-  }
-};
+//           if (accessToken) {
+//             setAccessToken(accessToken); // 로컬스토리지에 액세스토큰 저장
+//             getTokenExpiration("accessToken", response.data["expires_in"]);
+//             isTokenValid();
+//           }
+//         })
+//         .catch((error) => {
+//           console.log("에러");
+//           console.error(error);
+//         });
+//     } else {
+//       console.log("rest api key없음");
+//     }
+//     console.log("Access token 갱신.");
+//   } catch (error: unknown) {
+//     if (axios.isAxiosError(error)) {
+//       throw new Error(error.response?.data?.message || "에러");
+//     } else {
+//       throw new Error("모르는에러?");
+//     }
+//   }
+// };
 
 const logOut =() =>{ //로그아웃
   logOutConfig("POST", "logout")
