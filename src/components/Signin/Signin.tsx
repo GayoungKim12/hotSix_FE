@@ -83,9 +83,12 @@ const Signin = () => {
 
   const handleAuthorizationCode = async() => {
     console.log("^^^^");
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log(urlParams);
-    const code = urlParams.get('code');
+    //const urlParams = new URLSearchParams(window.location.search);
+    //console.log(urlParams);
+    //const code = urlParams.get('code');
+    const url = new URL(window.location.href);
+    console.log(url);
+    const code = url.searchParams.get("code");
     console.log(code);
     if (code) {
       console.log(code);
