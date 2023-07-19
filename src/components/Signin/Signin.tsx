@@ -19,6 +19,7 @@ const Signin = () => {
   //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
   useEffect(() => {
     console.log("로그인")
+    console.log("^^^^);
     handleAuthorizationCode();
   }, []);
 
