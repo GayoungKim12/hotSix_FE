@@ -14,7 +14,7 @@ const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const redirect_uri = 'https://iamnotalone.vercel.app/login/oauth2/code/kakao';
+  const redirect_uri = 'https://hot-six-fe.vercel.app/login/oauth2/code/kakao';
   const Rest_api_key = 'f97c55d9d92ac41363b532958776d378';
   //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
   useEffect(() => {
