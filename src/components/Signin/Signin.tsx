@@ -18,7 +18,6 @@ const Signin = () => {
   const Rest_api_key = 'f97c55d9d92ac41363b532958776d378';
   //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
   useEffect(() => {
-    handleAuthorizationCode();
     console.log("로그인")
     handleAuthorizationCode();
   }, []);
@@ -85,6 +84,7 @@ const Signin = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code) {
+      console.log(code);
       createKakaoLoginToServerLoginConfig("GET",code).then((response) => {
         console.log(response);
       })
