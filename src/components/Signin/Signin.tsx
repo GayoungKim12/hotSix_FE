@@ -18,6 +18,7 @@ const Signin = () => {
   const Rest_api_key = 'f97c55d9d92ac41363b532958776d378';
   //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
   useEffect(() => {
+    handleAuthorizationCode();
     console.log("로그인")
     handleAuthorizationCode();
   }, []);
@@ -71,8 +72,13 @@ const Signin = () => {
     removeRefreshToken();
     const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
     window.location.href = kakaoURL;
-  }
 
+
+
+
+
+
+  };
 
 
   const handleAuthorizationCode = async() => {

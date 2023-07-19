@@ -71,6 +71,7 @@ const isTokenValid = async () => {
         logOut();
         return false;
 
+
         // 로그아웃
       }
     } else if (tokenCategory === "kakao") {
