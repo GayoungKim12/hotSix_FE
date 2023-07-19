@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { createKakaoLoginToServerLoginConfig, createLoginConfig } from "../API/AxiosModule";
+import {  createLoginConfig } from "../API/AxiosModule";
 import { getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 import {  socketAction,  } from "../Chat/ChatRoom/ChatUtil";
 interface TokenResponse {
@@ -20,9 +20,6 @@ const Signin = () => {
   useEffect(() => {
     console.log("로그인")
     console.log("^^^^");
-   setTimeout(() => {
-    handleAuthorizationCode();
-  }, 1000);
   }, []);
 
   const defaultSignin = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -61,7 +58,7 @@ const Signin = () => {
 
   
     await requestKakaoCode(redirect_uri, Rest_api_key);
-    handleAuthorizationCode();
+
 
   };
 
@@ -73,41 +70,37 @@ const Signin = () => {
     removeAccessToken();
     removeRefreshToken();
     const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${Rest_api_key}&redirect_uri=${redirect_uri}`;
-    //const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
     window.location.href = kakaoURL;
-
-  
-
-
-
-
+    setTimeout(() => {
+      console.log("^^^");
+    }, 3000);
   };
 
 
-  const handleAuthorizationCode = async() => {
-       setTimeout(() => {
-    console.log("^^^^");
-    //const urlParams = new URLSearchParams(window.location.search);
-    //console.log(urlParams);
-    //const code = urlParams.get('code');
-    const url = new URL(window.location.href);
-    console.log(url);
-    console.log(url.searchParams);
-    const code = url.searchParams.get("code");
-    console.log(code);
-    if (code) {
-      console.log(code);
-      createKakaoLoginToServerLoginConfig("GET",code).then((response) => {
-        console.log(response);
-      })
-    .catch((error)=>{
-        console.log("에러")
-        console.error(error);
-      });
-    }
-  }, 1000);
+  // const handleAuthorizationCode = async() => {
+
+  //   //console.log("^^^^");
+  //   //const urlParams = new URLSearchParams(window.location.search);
+  //   //console.log(urlParams);
+  //   //const code = urlParams.get('code');
+  //   const url = new URL(window.location.href);
+  //   console.log(url);
+  //   console.log(url.searchParams);
+  //   const code = url.searchParams.get("code");
+  //   console.log(code);
+  //   if (code) {
+  //     console.log(code);
+  //     createKakaoLoginToServerLoginConfig("GET",code).then((response) => {
+  //       console.log(response);
+  //     })
+  //   .catch((error)=>{
+  //       console.log("에러")
+  //       console.error(error);
+  //     });
+  //   }
+
     
-  };
+  // };
 
 
   const handleTokenResponse = async (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {
