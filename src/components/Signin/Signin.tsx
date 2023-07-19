@@ -83,7 +83,8 @@ const Signin = () => {
   };
 
 
-  const handleAuthorizationCode = async() => {
+  const handleAuthorizationCode = async() => 
+       setTimeout(() => {
     console.log("^^^^");
     //const urlParams = new URLSearchParams(window.location.search);
     //console.log(urlParams);
@@ -103,6 +104,8 @@ const Signin = () => {
         console.error(error);
       });
     }
+  }, 1000);
+    
   };
 
 
