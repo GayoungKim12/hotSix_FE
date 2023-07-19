@@ -83,7 +83,7 @@ const Signin = () => {
   };
 
 
-  const handleAuthorizationCode = async() => 
+  const handleAuthorizationCode = async() => {
        setTimeout(() => {
     console.log("^^^^");
     //const urlParams = new URLSearchParams(window.location.search);
