@@ -59,7 +59,7 @@ const Signin = () => {
 
   
     await requestKakaoCode(redirect_uri, Rest_api_key);
-
+    handleAuthorizationCode();
 
   };
 
@@ -72,7 +72,7 @@ const Signin = () => {
     removeRefreshToken();
     const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
     window.location.href = kakaoURL;
-    handleAuthorizationCode();
+
   
 
 
