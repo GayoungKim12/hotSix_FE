@@ -20,7 +20,9 @@ const Signin = () => {
   useEffect(() => {
     console.log("로그인")
     console.log("^^^^");
+   setTimeout(() => {
     handleAuthorizationCode();
+  }, 1000);
   }, []);
 
   const defaultSignin = (e: React.MouseEvent<HTMLButtonElement>) => {
