@@ -72,7 +72,8 @@ const Signin = () => {
   const requestKakaoCode = async(redirect_uri:string,Rest_api_key:string) =>{
     removeAccessToken();
     removeRefreshToken();
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${Rest_api_key}&redirect_uri=${redirect_uri}`;
+    //const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
     window.location.href = kakaoURL;
 
   
