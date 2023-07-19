@@ -85,6 +85,7 @@ const Signin = () => {
     console.log("^^^^");
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+    console.log(code);
     if (code) {
       console.log(code);
       createKakaoLoginToServerLoginConfig("GET",code).then((response) => {
