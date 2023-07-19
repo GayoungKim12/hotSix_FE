@@ -19,7 +19,7 @@ const Signin = () => {
   //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
   useEffect(() => {
     console.log("로그인")
-    console.log("^^^^);
+    console.log("^^^^");
     handleAuthorizationCode();
   }, []);
 
@@ -82,7 +82,7 @@ const Signin = () => {
 
 
   const handleAuthorizationCode = async() => {
-    console.log("^^^^);
+    console.log("^^^^");
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code) {
