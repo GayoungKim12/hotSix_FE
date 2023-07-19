@@ -88,6 +88,7 @@ const Signin = () => {
     //const code = urlParams.get('code');
     const url = new URL(window.location.href);
     console.log(url);
+    console.log(url.searchParams);
     const code = url.searchParams.get("code");
     console.log(code);
     if (code) {
