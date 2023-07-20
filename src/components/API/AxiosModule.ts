@@ -96,7 +96,7 @@ const SignupConfig = (method: string, url: string, requestBody: unknown) => {
 // };
 
 //카카오 로그인할때만 필요
-const createKakaoLoginToServerLoginConfig = (method: string, code: string) => {
+const createKakaoLoginToServerLoginConfig = (method: string, code: object) => {
   const config = {
     baseURL: "https://www.imnotalone.online/login/oauth2/code/kakao",
     method: method,
