@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { JsonConfig } from "../API/AxiosModule";
 import { removeAccessToken, removeRefreshToken } from "../API/TokenAction";
+import Modal from "../common/Modal";
 
 interface SettingButtonsProps {
   handleShow: () => void;
@@ -19,7 +20,6 @@ const SettingButtons = (props: SettingButtonsProps) => {
       removeAccessToken;
       navigate("/");
     });
-    handleShow;
   };
 
   return (
@@ -50,26 +50,7 @@ const SettingButtons = (props: SettingButtonsProps) => {
             회원탈퇴
           </button>
         </div>
-        {showModal && (
-          <div className="fixed top-1/2 -translate-y-2/4 flex flex-col items-center gap-4 px-8 py-7 rounded-xl bg-white">
-            <h2 className="text-center text-lg">회원 탈퇴를 하시겠습니까?</h2>
-            <div className="flex justify-center items-center gap-4">
-              <button type="button" className="px-3 py-1 bg-main-400 text-white" onClick={deleteUser}>
-                네
-              </button>
-              <button
-                type="button"
-                className="px-3 py-1 bg-main-400 text-white"
-                onClick={() => {
-                  setShowModal(false);
-                  handleShow;
-                }}
-              >
-                아니요
-              </button>
-            </div>
-          </div>
-        )}
+        {showModal && <Modal type="confirm" content={"회원 탈퇴를 하시겠습니까?"} handleModal={handleShow} handleDelete={deleteUser} />}
         <button className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none">닫기</button>
       </div>
     </div>
