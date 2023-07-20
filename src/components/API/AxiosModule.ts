@@ -20,7 +20,7 @@ axiosInstance.interceptors.request.use(
       const res = isTokenValid();
       console.log(res);
     }
-
+    console.log(config);
     // isTokenValid().then((response)=>{
     //   if(response === false){
     //     window.location.href = 'www.naver.com';
@@ -105,7 +105,7 @@ const createKakaoLoginToServerLoginConfig = (method: string, code: string) => {
     },
     data:code,
   };
-
+  
   return axiosInstance(config);
 };
 
