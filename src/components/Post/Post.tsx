@@ -6,8 +6,9 @@ import Content from "./Content";
 import AddImages from "./AddImages";
 import { MultiConfig } from "../API/AxiosModule";
 import { getUserId } from "../API/TokenAction";
+import Modal from "../common/Modal";
 
-const EditPost = () => {
+const Post = () => {
   const [boardId, setBoardId] = useState(0);
   const [regionId, setRegionId] = useState(0);
   const [address, setAddress] = useState("");
@@ -15,6 +16,8 @@ const EditPost = () => {
   const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
   const userId = getUserId();
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
 
   // 폼 db에 보내기
   const postData = async () => {
@@ -29,7 +32,6 @@ const EditPost = () => {
       } else {
         formData.append("files", new File([], ""));
       }
-
       const response = await MultiConfig("post", `api/post/${userId}`, formData);
       return response.data;
     } catch (err) {
@@ -42,17 +44,20 @@ const EditPost = () => {
     e.preventDefault();
 
     if (!boardId) {
-      alert("카테고리를 선택해주세요.");
+      setModalContent("카테고리를 선택해주세요.");
+      setShowModal(true);
       return;
     }
 
     if (!regionId) {
-      alert("지역을 선택해주세요.");
+      setModalContent("지역을 선택해주세요.");
+      setShowModal(true);
       return;
     }
 
     if (!content) {
-      alert("내용을 입력해주세요.");
+      setModalContent("내용을 입력해주세요.");
+      setShowModal(true);
       return;
     }
 
@@ -64,16 +69,19 @@ const EditPost = () => {
   };
 
   return (
-    <form className="pt-16 pb-12 min-w-0 min-h-screen overflow-auto" onSubmit={handleSubmit}>
-      <article className="px-4 pb-4">
-        <SelectCategory buttons={["방 구해요", "방 있어요"]} value={boardId} setValue={setBoardId} />
-        <SelectRegion regionId={regionId} address={address} setRegionId={setRegionId} setAddress={setAddress} />
-        <Content content={content} setContent={setContent} />
-        <AddImages files={files} setFiles={setFiles} />
-      </article>
-      <button className="fixed bottom-0 block w-full h-14 rounded-none bg-main-400 text-white focus:outline-none">등록하기</button>
-    </form>
+    <>
+      <form className="pt-16 pb-12 min-w-0 min-h-screen overflow-auto" onSubmit={handleSubmit}>
+        <article className="px-4 pb-4">
+          <SelectCategory buttons={["방 구해요", "방 있어요"]} value={boardId} setValue={setBoardId} />
+          <SelectRegion regionId={regionId} address={address} setRegionId={setRegionId} setAddress={setAddress} />
+          <Content content={content} setContent={setContent} />
+          <AddImages files={files} setFiles={setFiles} />
+        </article>
+        <button className="fixed bottom-0 block w-full h-14 rounded-none bg-main-400 text-white focus:outline-none">등록하기</button>
+      </form>
+      {showModal && <Modal type="alert" content={modalContent} handleModal={() => setShowModal(false)} />}
+    </>
   );
 };
 
-export default EditPost;
+export default Post;
