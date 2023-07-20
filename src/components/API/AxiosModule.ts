@@ -3,7 +3,7 @@ import { getAccessToken, isTokenValid } from "./TokenAction.tsx";
 import qs from "qs";
 
 axios.defaults.paramsSerializer = (params) => {
-  //params string으로바꾸기
+  //params string으로바꾸기 
   console.log("params는",params);
   console.log("params는",qs.stringify(params));
   console.log(typeof(qs.stringify(params)));
