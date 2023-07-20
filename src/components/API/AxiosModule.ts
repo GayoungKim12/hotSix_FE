@@ -4,7 +4,6 @@ import qs from "qs";
 
 axios.defaults.paramsSerializer = (params) => {
   //params string으로바꾸기
-  console.log(params);
   return qs.stringify(params);
 };
 
@@ -104,7 +103,7 @@ const createKakaoLoginToServerLoginConfig = (method: string, code: string) => {
     headers: {
       "Content-Type": "application/json",
     },
-    params:code,
+    data:code,
   };
 
   return axiosInstance(config);
