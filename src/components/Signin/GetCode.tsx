@@ -4,10 +4,13 @@ const ParamCode = () => {
   const url = new URL(window.location.href);
   console.log(url);
   console.log(url.searchParams);
-  const code = url.searchParams.get("code");
-  console.log(code);
-    if (code) {
-    console.log(code);
+  const codes = url.searchParams.get("code");
+  console.log(codes);
+    if (codes) {
+    console.log(codes);
+    const code ={
+      code:codes,
+    }
     createKakaoLoginToServerLoginConfig("GET",code).then((response) => {
       console.log(response);
     })
