@@ -11,7 +11,7 @@ const ParamCode = () => {
     const code ={
       code:codes,
     }
-    createKakaoLoginToServerLoginConfig("GET",code).then((response) => {
+    createKakaoLoginToServerLoginConfig("POST",code).then((response) => {
       console.log(response);
     })
   .catch((error)=>{
