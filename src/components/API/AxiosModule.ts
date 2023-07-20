@@ -4,6 +4,7 @@ import qs from "qs";
 
 axios.defaults.paramsSerializer = (params) => {
   //params string으로바꾸기
+  console.log(params);
   console.log("params는",qs.stringify(params));
   console.log(typeof(qs.stringify(params)));
   return qs.stringify(params);
