@@ -176,7 +176,8 @@ const handleTokenResponse = async (tokenResponse: TokenResponse, navigate:Naviga
       }
       else  {
         await socketAction();
-        navigate("https://iamnotalone.vercel.app/main"); 
+        //navigate("https://iamnotalone.vercel.app/main"); 
+        window.location.href ="https://iamnotalone.vercel.app/main";
       }
     }
 
