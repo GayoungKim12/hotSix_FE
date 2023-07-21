@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, NavigateFunction } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 import {  createLoginConfig } from "../API/AxiosModule";
 import { getTokenExpiration, getUserId, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 import {  socketAction,  } from "../Chat/ChatRoom/ChatUtil";
