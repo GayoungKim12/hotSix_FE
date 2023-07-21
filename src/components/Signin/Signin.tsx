@@ -14,7 +14,7 @@ interface TokenResponse {
 const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigate: NavigateFunction = useNavigate();
+  //const navigate: NavigateFunction = useNavigate();
   const redirect_uri = 'https://iamnotalone.vercel.app/login/oauth2/code/kakao';
   const Rest_api_key = 'f97c55d9d92ac41363b532958776d378';
   //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
@@ -45,7 +45,7 @@ const Signin = () => {
           firstLogin: false,
         };
 
-        handleTokenResponse(tokenResponse,navigate);
+        handleTokenResponse(tokenResponse);
       })
       .catch((error) => {
         console.log("에러");
@@ -158,7 +158,7 @@ const Signin = () => {
   );
 };
 
-const handleTokenResponse = async (tokenResponse: TokenResponse, navigate:NavigateFunction,accessTokenExpire = -1, refreshTokenExpire = -1) => {
+const handleTokenResponse = async (tokenResponse: TokenResponse,accessTokenExpire = -1, refreshTokenExpire = -1) => {
   if (tokenResponse.accessToken && tokenResponse.refreshToken) {
     setAccessToken(tokenResponse.accessToken);
     setRefreshToken(tokenResponse.refreshToken);
