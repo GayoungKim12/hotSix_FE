@@ -1,4 +1,4 @@
-import { NavigateFunction, useNavigate } from "react-router-dom";
+
 import { createKakaoLoginToServerLoginConfig } from "../API/AxiosModule";
 import { handleTokenResponse } from "./Signin";
 
@@ -9,7 +9,7 @@ interface TokenResponse {
   firstLogin:boolean;
 }
 const ParamCode = () => {
-  const navigate: NavigateFunction = useNavigate();
+ 
   const url = new URL(window.location.href);
   console.log(url);
   console.log(url.searchParams);
@@ -30,7 +30,7 @@ const ParamCode = () => {
         tokenCategory: "default",
         firstLogin:firstLogin,
       };
-      handleTokenResponse(tokenResponse,navigate);
+      handleTokenResponse(tokenResponse);
     })
   .catch((error)=>{
       console.log("에러")
