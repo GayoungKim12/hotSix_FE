@@ -14,6 +14,20 @@ interface TokenResponse {
   tokenCategory: string;
 }
 
+interface PersonalityProps {
+  personality: {
+    mbti: string;
+    smoking: string;
+    activeTime: string;
+    pets: string;
+    preferSmoking: string;
+    preferActiveTime: string;
+    preferPets: string;
+    preferAge: string;
+  };
+  onPersonalityChange: (newPersonality: PersonalityProps["personality"]) => void;
+}
+
 const SocialsignUp = () => {
   const [year, setYear] = useState<number | "year">("year");
   const [month, setMonth] = useState<number | "month">("month");
@@ -22,11 +36,24 @@ const SocialsignUp = () => {
   const [gender, setGender] = useState<number>();
   const [introduction, setIntroduction] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
-  const [personality, setPersonality] = useState<string[]>([]);
+  const [personality, setPersonality] = useState<PersonalityProps["personality"]>({
+    mbti: "",
+    smoking: "",
+    activeTime: "",
+    pets: "",
+    preferSmoking: "",
+    preferActiveTime: "",
+    preferPets: "",
+    preferAge: "",
+  });
   const [regionId, setRegionId] = useState<number | null>(null);
   const [verify, setVerify] = useState<string>("false");
   const [nicknameCheckError, setenicknameCheckError] = useState<string | null>("");
   const [countdown, setCountdown] = useState<number | null>(null);
+
+  const handlePersonalityChange = (newPersonality: PersonalityProps["personality"]) => {
+    setPersonality(newPersonality);
+  };
 
   const url = window.location.href;
   const userId = url.split("/").pop();
@@ -61,15 +88,6 @@ const SocialsignUp = () => {
     setRegionId(id);
   };
 
-  const handlePersonalityChange = (option: string) => {
-    if (personality.includes(option)) {
-      setPersonality(personality.filter((item: string) => item !== option));
-    } else {
-      if (personality.length < 5) {
-        setPersonality([...personality, option]);
-      }
-    }
-  };
   const navigate = useNavigate();
 
   const years = utility.getYears();
@@ -100,7 +118,7 @@ const SocialsignUp = () => {
         nickname,
         birth,
         gender,
-        personality: [...personality],
+        personality: { ...personality },
         regionId,
         introduction,
         verify,
@@ -207,7 +225,8 @@ const SocialsignUp = () => {
           </div>
         </div>
         <Region handleRegionIdChange={handleRegionIdChange} defaultRegionId={null} />
-        <Personality personality={personality} handlePersonalityChange={handlePersonalityChange} />
+        <Personality personality={personality} onPersonalityChange={handlePersonalityChange} />
+
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-gender" className="w-9/12 after:content-['*'] after:text-red-500">
             성별
