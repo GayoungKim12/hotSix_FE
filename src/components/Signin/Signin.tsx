@@ -172,7 +172,7 @@ const handleTokenResponse = async (tokenResponse: TokenResponse, navigate:Naviga
       if(tokenResponse.firstLogin === true ){
         const userId = getUserId();
         //navigate(`https://iamnotalone.vercel.app/socialsignup/${userId}`); 
-        window.location.href =`https://iamnotalone.vercel.app/socialsignup/${userId};
+        window.location.href =`https://iamnotalone.vercel.app/socialsignup/${userId}`;
       }
       else  {
         await socketAction();
