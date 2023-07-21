@@ -107,7 +107,6 @@ const Personality = ({ personality, onPersonalityChange }: PersonalityProps) => 
             <select name="pets" id="pets" className="w-20 text-center" value={petsValue} onChange={handlePetsChange}>
               <option value="0">o</option>
               <option value="1">x</option>
-              <option value="2">상관없음</option>
             </select>
           </div>
           <div>
