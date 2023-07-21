@@ -193,7 +193,7 @@ const MainPage = () => {
 
   return (
     <>
-      <div className="bg-main-100 h-full">
+      <div className="bg-main-100 min-h-screen">
         <section className="fixed w-full z-20 top-0 left-0 shadow bg-main-100">
           <Header />
           <div className="relative mt-16" onClick={handleAreaModal}>
@@ -226,8 +226,7 @@ const MainPage = () => {
 
           {boardOneList.length === 0 && boardTwoList.length === 0 && (
             <>
-              <div className="mt-20 pt-20 bg-main-200 text-center">
-                <h1 className="text-4xl mb-10">텅</h1>
+              <div className="pt-20  text-center">
                 <div className="text-xl h-20">게시물이 없습니다 😅</div>
               </div>
             </>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { partnerInfo } from "../../../pages/Chat/ChatRoomPage";
 import { FaUser } from "react-icons/fa";
 
+
 const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo }) => {
   const navigate = useNavigate();
   
@@ -24,8 +25,25 @@ const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo 
     }
   },[partnerInfomation]);
 
+  // const asd = () =>{
+  //   console.log("로그아웃");
+  //   logOutConfig("post", "api/logout")
+  //   .then((response) => {
+  //     console.log(response);
+  //     removeAccessToken();
+  //     removeRefreshToken();
+  //     window.location.href = "/";
+  //   })
+  //   .catch((error) => {
+  //     console.log("에러");
+  //     console.error(error);
+  //   });
+  // }
+
   return (
+    <>
     <div className="flex justify-between items-center h-16 px-3 border-solid border-black shadow-md">
+              
       <div className="flex items-center p-4">
         <div className="hover:cursor-pointer" onClick={onClickBackBtn}>
           <IoArrowBackOutline></IoArrowBackOutline>
@@ -42,6 +60,7 @@ const ChatRoomHeader = ({ partnerInfomation }: { partnerInfomation: partnerInfo 
       </div>
       <div className="mr-4">{nickname}</div>
     </div>
+    </>
   );
 };
 

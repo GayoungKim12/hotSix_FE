@@ -115,10 +115,10 @@ const Editprofile = () => {
     MultiConfig("put", `api/membership/update/${userId}`, formData)
       .then(() => {
         alert("수정이 완료되었습니다.");
-        navigate("/profile");
+        navigate(`/profile/${userId}`);
       })
       .catch((error) => {
-        console.log(error);
+        alert(error.response.data.message);
       });
   };
 
@@ -181,8 +181,8 @@ const Editprofile = () => {
   };
 
   return (
-    <div className="relative bg-main-100">
-      <div className="flex flex-row justify-center items-center h-16">
+    <div className="relative min-h-screen bg-main-100">
+      <div className="flex flex-row justify-center items-center shadow h-16">
         <div className="absolute left-5">
           <GoBackButton />
         </div>
@@ -245,7 +245,7 @@ const Editprofile = () => {
           onClick={() => {
             fileSubmit;
           }}
-          className="rounded-none mt-16 w-full h-14 bg-main-400 text-white"
+          className="fixed bottom-0 rounded-none mt-16 w-full h-14 bg-main-400 text-white"
         >
           수정 완료
         </button>

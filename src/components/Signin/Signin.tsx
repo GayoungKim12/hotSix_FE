@@ -1,52 +1,27 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { createKakaoLoginConfig, createLoginConfig } from "../API/AxiosModule";
-import { getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 
+import {  createLoginConfig } from "../API/AxiosModule";
+import { getTokenExpiration, getUserId, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
+import {  socketAction,  } from "../Chat/ChatRoom/ChatUtil";
 interface TokenResponse {
   accessToken: string;
   refreshToken: string;
   tokenCategory: string;
+  firstLogin:boolean;
 }
 
 const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigate = useNavigate();
-  const redirect_uri = "https://www.imnotalone.online/login/oauth2/code/kakao";
-
+  //const navigate: NavigateFunction = useNavigate();
+  const redirect_uri = 'https://iamnotalone.vercel.app/login/oauth2/code/kakao';
+  const Rest_api_key = 'f97c55d9d92ac41363b532958776d378';
+  //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
   useEffect(() => {
-    handleAuthorizationCode();
+    console.log("로그인")
+    console.log("^^^^");
   }, []);
-
-  const handleAuthorizationCode = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    const Rest_api_key = localStorage.getItem("Rest_api_key");
-
-    if (code && Rest_api_key) {
-      createKakaoLoginConfig("POST", "authorization_code", Rest_api_key, redirect_uri, code)
-        .then((response) => {
-          const accessToken = response.data["access_token"];
-          const refreshToken = response.data["refresh_token"];
-
-          const tokenResponse: TokenResponse = {
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-            tokenCategory: "kakao",
-          };
-          const accessTokenExpire = response.data["expires_in"];
-          const refreshTokenExpire = response.data["refresh_token_expires_in"];
-
-          handleTokenResponse(tokenResponse, accessTokenExpire, refreshTokenExpire);
-        })
-        .catch((error) => {
-          console.log("에러");
-          console.error(error);
-        });
-    }
-  };
 
   const defaultSignin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -67,6 +42,7 @@ const Signin = () => {
           accessToken: accessToken,
           refreshToken: refreshToken,
           tokenCategory: "default",
+          firstLogin: false,
         };
 
         handleTokenResponse(tokenResponse);
@@ -77,31 +53,64 @@ const Signin = () => {
       });
   };
 
-  const kakaotalkSignIn = () => {
+
+
+  const kakaotalkSignIn = async () => {
+    console.log("카카오로그인");
+
+  
+    await requestKakaoCode(redirect_uri, Rest_api_key);
+
+
+  };
+
+    
+    
+  
+
+  const requestKakaoCode = async(redirect_uri:string,Rest_api_key:string) =>{
     removeAccessToken();
     removeRefreshToken();
-    localStorage.setItem("Rest_api_key", "f97c55d9d92ac41363b532958776d378");
-    // const Rest_api_key = localStorage.getItem("Rest_api_key");
-    const kakaoURL = `https://www.imnotalone.online/oauth2/authorization/kakao`;
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${Rest_api_key}&redirect_uri=${redirect_uri}`;
     window.location.href = kakaoURL;
+    setTimeout(() => {
+      console.log("^^^");
+    }, 3000);
   };
 
-  const handleTokenResponse = (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {
-    if (tokenResponse.accessToken && tokenResponse.refreshToken) {
-      setAccessToken(tokenResponse.accessToken); // 로컬스토리지에 액세스토큰 저장
-      setRefreshToken(tokenResponse.refreshToken); // httponly 쿠키에 refresh 토큰 저장
-      localStorage.setItem("tokenCategory", tokenResponse.tokenCategory);
-      getTokenExpiration("accessToken", accessTokenExpire);
-      getTokenExpiration("refreshToken", refreshTokenExpire);
 
-      isTokenValid().then((response) => {
-        if (response === true) {
-          //console.log(getUserId());
-          navigate("/main"); //메인페이지로 이동
-        }
-      });
-    }
-  };
+  // const handleAuthorizationCode = async() => {
+
+  //   //console.log("^^^^");
+  //   //const urlParams = new URLSearchParams(window.location.search);
+  //   //console.log(urlParams);
+  //   //const code = urlParams.get('code');
+  //   const url = new URL(window.location.href);
+  //   console.log(url);
+  //   console.log(url.searchParams);
+  //   const code = url.searchParams.get("code");
+  //   console.log(code);
+  //   if (code) {
+  //     console.log(code);
+  //     createKakaoLoginToServerLoginConfig("GET",code).then((response) => {
+  //       console.log(response);
+  //     })
+  //   .catch((error)=>{
+  //       console.log("에러")
+  //       console.error(error);
+  //     });
+  //   }
+
+    
+  // };
+
+
+  
+
+
+
+ 
+  
 
   return (
     <div className="w-full h-screen pt-11 bg-main-100">
@@ -149,4 +158,29 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+const handleTokenResponse = async (tokenResponse: TokenResponse,accessTokenExpire = -1, refreshTokenExpire = -1) => {
+  if (tokenResponse.accessToken && tokenResponse.refreshToken) {
+    setAccessToken(tokenResponse.accessToken);
+    setRefreshToken(tokenResponse.refreshToken);
+    localStorage.setItem("tokenCategory", tokenResponse.tokenCategory);
+    getTokenExpiration("accessToken", accessTokenExpire);
+    getTokenExpiration("refreshToken", refreshTokenExpire);
+
+    const isTokenValidResponse = await isTokenValid(); 
+    if(isTokenValidResponse === true)
+    {
+      if(tokenResponse.firstLogin === true ){
+        const userId = getUserId();
+        //navigate(`https://iamnotalone.vercel.app/socialsignup/${userId}`); 
+        window.location.href =`https://iamnotalone.vercel.app/socialsignup/${userId}`;
+      }
+      else  {
+        await socketAction();
+        //navigate("https://iamnotalone.vercel.app/main"); 
+        window.location.href ="https://iamnotalone.vercel.app/main";
+      }
+    }
+
+  }
+};
+export {handleTokenResponse,Signin};

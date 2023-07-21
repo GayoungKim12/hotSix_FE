@@ -23,6 +23,7 @@ const ChatListHeader = (props: ChatListHeaderProps) => {
 
   return (
     <>
+
       <header className="fixed top-0 flex flex-col justify-between items-center w-full z-50 bg-main-100 shadow">
         <div className="flex justify-between items-center w-full h-16 px-3">
           <img src="/logo.png" className="w-16 cursor-pointer" onClick={() => navigate("/main")} />

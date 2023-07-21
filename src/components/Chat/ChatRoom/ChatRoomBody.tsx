@@ -3,7 +3,6 @@ import { ChatUtil } from "./ChatUtil";
 import { Message } from "./ChatUtil";
 import { getUserId } from "../../API/TokenAction";
 
-
 import { partnerInfo } from "../../../pages/Chat/ChatRoomPage";
 import { FaUser } from "react-icons/fa";
 
@@ -27,8 +26,6 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
   const [imgPath, setImgPath] = useState("");
   const [nickname, setNickname] = useState("null");
 
-
-
   useEffect(() => {
     if (partnerInfomation.nickname !== null) {
       setImgPath(partnerInfomation.imgPath);
@@ -39,17 +36,14 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
 
   useEffect(() => {
     if (getChats().length > 0) {
-
       console.log(getChats().length);
       setpreviousIndex(chats.length);
-      
     }
   }, [getChats()]);
 
   useEffect(() => {
     console.log(chats.length);
     setpreviousIndex(chats.length);
-
   }, [chats, previousIndex]);
 
   useEffect(() => {
@@ -78,14 +72,13 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
 
   useEffect(() => {
     const handleNewMessage = (newChats: Message[]) => {
-      console.log("테스트",getChats())
+      console.log("테스트", getChats());
       const visibleChats = newChats.slice(startIndex);
       setVisibleChats(visibleChats);
     };
 
     const chats = getChats();
     if (getChats().length > 0) {
-
       handleNewMessage(chats);
     }
   }, [getChats().length, startIndex]);
@@ -96,7 +89,7 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
         //스크롤이 화면 맨위로 올라갔을때
 
         console.log(getChats().length);
-        console.log(getChats()); 
+        console.log(getChats());
         //loadPreviousChats();
       }
     });
@@ -120,7 +113,6 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
             <ul>
               <li ref={startRef}></li>
               {visibleChats.map((message, index) => {
-                
                 /////////////////날짜 표시하는 로직
                 let targetTime = "";
                 targetTime = new Date(chats[index].createdAt as string).toLocaleDateString();
@@ -130,7 +122,7 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
                 }
                 if (index !== chats.length - 1) {
                   const isCreated = new Date(chats[index].createdAt as string).toLocaleDateString();
-                  const nextCreated = new Date(chats[index+1].createdAt as string).toLocaleDateString();
+                  const nextCreated = new Date(chats[index + 1].createdAt as string).toLocaleDateString();
                   if (isCreated !== nextCreated) {
                     targetTime = new Date(chats[index + 1].createdAt as string).toLocaleDateString();
                     [year, month, day] = targetTime.split(".");
@@ -141,6 +133,7 @@ const ChatRoomBody = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; par
                 return (
                   <ChatMessage
                     key={index}
+                    index={index}
                     message={message}
                     targetYear={year}
                     targetDay={day}
@@ -168,28 +161,51 @@ const ChatMessage = ({
   targetDay,
   targetMonth,
   targetYear,
+  index,
 }: {
-  targetYear:string;
+  targetYear: string;
   targetMonth: string;
   targetDay: string;
   message: Message;
   isMyChat: boolean;
   imgPath: string;
   nickname: string;
+  index: number;
 }) => {
   if (!message) {
     return null;
   } else {
     const targetDate = new Date(message.createdAt as string);
     let isSameDay = true;
+    let isFirstDay = false;
     if (targetYear !== undefined) {
       isSameDay = false;
     }
-    const hours = targetDate.getHours();
-    const minutes = targetDate.getMinutes();
+    if (index === 0) {
+      isFirstDay = true;
+    }
+    const hour = targetDate.getHours();
+    const minute = targetDate.getMinutes();
+    
+    const formatting = (hour: number, minute: number) => {
+      let hours = hour.toString();
+      let minutes = minute.toString();
+      if (hour < 10) {
+        hours = "0" + hours;
+      }
+      if (minute < 10) {
+        minutes = "0" + minutes;
+      }
+      return { hours: hours, minutes: minutes };
+    };
+
+    const value = formatting(hour, minute);
+    const hours = value.hours;
+    const minutes = value.minutes;
+
     return (
       <>
-        {!isSameDay ? (
+        {isFirstDay ? (
           <div className="text-center">
             {targetMonth}월{targetDay}일
           </div>
@@ -206,11 +222,14 @@ const ChatMessage = ({
             </>
           ) : (
             <>
-              
               {imgPath.length ? (
                 <img className="rounded-full ml-1 w-12 h-12" src={imgPath} alt="" />
               ) : (
-                <div className={"flex top-3 justify-center rounded-full items-center pt-3  ml-1 w-12 h-12 border-2 text-4xl text-main-200 bg-white overflow-hidden "}>
+                <div
+                  className={
+                    "flex top-3 justify-center rounded-full items-center pt-3  ml-1 w-12 h-12 border-2 text-4xl text-main-200 bg-white overflow-hidden "
+                  }
+                >
                   <FaUser />
                 </div>
               )}
@@ -224,6 +243,11 @@ const ChatMessage = ({
             </>
           )}
         </li>
+        {!isSameDay && !isFirstDay ? (
+          <div className="text-center">
+            {targetMonth}월{targetDay}일
+          </div>
+        ) : null}
       </>
     );
   }

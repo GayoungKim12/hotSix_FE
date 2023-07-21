@@ -1,9 +1,20 @@
+interface PersonalityData {
+  mbti: string;
+  smoking: string;
+  activeTime: string;
+  pets: string;
+  preferSmoking: string;
+  preferActiveTime: string;
+  preferPets: string;
+  preferAge: string;
+}
+
 function validateForm(
   email: string,
   password: string,
   passwordCheck: string,
   nickname: string,
-  personality: string[],
+  personality: PersonalityData,
   regionId: number | null,
   birth: string,
   introduction: string
@@ -30,8 +41,17 @@ function validateForm(
     return false;
   }
 
-  if (personality.length === 0) {
-    alert("성향을 1개 이상 골라주세요.");
+  if (
+    !personality.mbti ||
+    !personality.smoking ||
+    !personality.activeTime ||
+    !personality.pets ||
+    !personality.preferSmoking ||
+    !personality.preferActiveTime ||
+    !personality.preferPets ||
+    !personality.preferAge
+  ) {
+    alert("성향을 모두 선택해주세요.");
     return false;
   }
 
@@ -53,14 +73,23 @@ function validateForm(
   return true;
 }
 
-function socialvalidateForm(nickname: string, personality: string[], regionId: number | null, birth: string, introduction: string) {
+function socialvalidateForm(nickname: string, personality: PersonalityData, regionId: number | null, birth: string, introduction: string) {
   if (nickname.length < 2) {
     alert("닉네임을 2글자 이상으로 해주세요.");
     return false;
   }
 
-  if (personality.length === 0) {
-    alert("성향을 1개 이상 골라주세요.");
+  if (
+    !personality.mbti ||
+    !personality.smoking ||
+    !personality.activeTime ||
+    !personality.pets ||
+    !personality.preferSmoking ||
+    !personality.preferActiveTime ||
+    !personality.preferPets ||
+    !personality.preferAge
+  ) {
+    alert("성향을 모두 선택해주세요.");
     return false;
   }
 

@@ -125,10 +125,10 @@ const SignUp = () => {
       console.log(formData);
       SignupConfig("post", "signup", formData)
         .then(() => {
-          navigate("/signin");
+          navigate("/");
         })
         .catch((error) => {
-          console.log(error);
+          alert(error.response.data.message);
         });
     }
   };
@@ -188,7 +188,7 @@ const SignUp = () => {
 
   return (
     <div className="relative bg-main-100">
-      <div className="flex flex-row justify-center items-center h-16">
+      <div className="flex flex-row justify-center items-center shadow h-16">
         <div className="absolute left-5">
           <GoBackButton />
         </div>
@@ -401,7 +401,7 @@ const SignUp = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col mt-5 mx-auto w-9/12">
+        <div className="flex flex-col mt-5 pb-20 mx-auto w-9/12">
           <label htmlFor="input-about" className="after:content-['*'] after:text-red-500">
             자기소개
           </label>
@@ -414,7 +414,7 @@ const SignUp = () => {
             className="h-40 p-4 mt-2.5"
           ></textarea>
         </div>
-        <button type="submit" className="rounded-none mt-16 w-full h-14 bg-main-400 text-white">
+        <button type="submit" className="fixed bottom-0 rounded-none mt-16 w-full h-14 bg-main-400 text-white">
           가입하기
         </button>
       </form>

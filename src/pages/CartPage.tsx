@@ -87,7 +87,7 @@ const CartPage = () => {
   console.log(cartList);
   return (
     <>
-      <div className="h-full bg-main-100">
+      <div className="min-h-screen bg-main-100">
         <Header />
 
         <section className="mt-10  pt-5 pb-16">

@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true; //httponly 쿠키에 접근가능하게 �
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   //<React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter>w
       <App />
     </BrowserRouter>
   //</React.StrictMode>

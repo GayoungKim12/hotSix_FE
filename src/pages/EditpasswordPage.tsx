@@ -2,11 +2,14 @@ import GoBackButton from "../components/common/GoBackButton";
 import { useState } from "react";
 import { JsonConfig } from "../components/API/AxiosModule";
 import { getUserId } from "../components/API/TokenAction";
+import { useNavigate } from "react-router-dom";
 
 const Editpassword = () => {
   const [password, setPassword] = useState<string>("");
   const [changepassword, setChangePassword] = useState<string>("");
   const [passwordCheck, setPasswordCheck] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const userId = getUserId();
   const validatePassword = () => {
@@ -28,6 +31,7 @@ const Editpassword = () => {
     JsonConfig("put", `api/membership/update/password/${userId}`, requestData)
       .then(() => {
         console.log("전송 성공");
+        navigate(`/profile/${userId}`);
       })
       .catch((error) => {
         console.log("전송 실패", error);
@@ -36,7 +40,7 @@ const Editpassword = () => {
 
   return (
     <div className="relative min-h-screen bg-main-100">
-      <div className="flex flex-row justify-center items-center h-16">
+      <div className="flex flex-row justify-center items-center shadow h-16">
         <div className="absolute left-5">
           <GoBackButton />
         </div>
@@ -90,7 +94,7 @@ const Editpassword = () => {
           )}
         </div>
         <button type="submit" className="fixed bottom-0 rounded-none  w-full h-14 bg-main-400 text-white">
-          가입하기
+          수정하기
         </button>
       </form>
     </div>

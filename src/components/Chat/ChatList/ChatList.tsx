@@ -110,6 +110,8 @@ const ChatList = (props: ChatListProps) => {
   return (
     <>
       <div className="flex flex-col pt-16">
+        {!chatRoomList && <div>Loading...</div>}
+        {chatRoomList && chatRoomList.length === 0 && <div className="p-4 text-center">채팅 목록이 존재하지 않습니다.</div>}
         {chatRoomList &&
           chatRoomList.map((chat) => {
             return (

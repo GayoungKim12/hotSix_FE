@@ -4,9 +4,29 @@ import { useNavigate } from "react-router-dom";
 import Region from "../components/Signup/Region";
 import Personality from "../components/Signup/Personality";
 import GoBackButton from "../components/common/GoBackButton";
-import { SignupConfig, createLoginConfig } from "../components/API/AxiosModule";
+import { createLoginConfig } from "../components/API/AxiosModule";
 import utility from "../utils/utils";
-import { getUserId } from "../components/API/TokenAction";
+import { getTokenExpiration, isTokenValid, setAccessToken, setRefreshToken } from "../components/API/TokenAction";
+
+interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
+  tokenCategory: string;
+}
+
+interface PersonalityProps {
+  personality: {
+    mbti: string;
+    smoking: string;
+    activeTime: string;
+    pets: string;
+    preferSmoking: string;
+    preferActiveTime: string;
+    preferPets: string;
+    preferAge: string;
+  };
+  onPersonalityChange: (newPersonality: PersonalityProps["personality"]) => void;
+}
 
 const SocialsignUp = () => {
   const [year, setYear] = useState<number | "year">("year");
@@ -16,13 +36,43 @@ const SocialsignUp = () => {
   const [gender, setGender] = useState<number>();
   const [introduction, setIntroduction] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
-  const [personality, setPersonality] = useState<string[]>([]);
+  const [personality, setPersonality] = useState<PersonalityProps["personality"]>({
+    mbti: "",
+    smoking: "",
+    activeTime: "",
+    pets: "",
+    preferSmoking: "",
+    preferActiveTime: "",
+    preferPets: "",
+    preferAge: "",
+  });
   const [regionId, setRegionId] = useState<number | null>(null);
   const [verify, setVerify] = useState<string>("false");
   const [nicknameCheckError, setenicknameCheckError] = useState<string | null>("");
   const [countdown, setCountdown] = useState<number | null>(null);
 
-  const userId = getUserId();
+  const handlePersonalityChange = (newPersonality: PersonalityProps["personality"]) => {
+    setPersonality(newPersonality);
+  };
+
+  const url = window.location.href;
+  const userId = url.split("/").pop();
+
+  const handleTokenResponse = (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {
+    if (tokenResponse.accessToken && tokenResponse.refreshToken) {
+      setAccessToken(tokenResponse.accessToken); // 로컬스토리지에 액세스토큰 저장
+      setRefreshToken(tokenResponse.refreshToken); // httponly 쿠키에 refresh 토큰 저장
+      localStorage.setItem("tokenCategory", tokenResponse.tokenCategory);
+      getTokenExpiration("accessToken", accessTokenExpire);
+      getTokenExpiration("refreshToken", refreshTokenExpire);
+      isTokenValid().then((response) => {
+        if (response === true) {
+          //console.log(getUserId());
+          navigate("/main"); //메인페이지로 이동
+        }
+      });
+    }
+  };
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -38,15 +88,6 @@ const SocialsignUp = () => {
     setRegionId(id);
   };
 
-  const handlePersonalityChange = (option: string) => {
-    if (personality.includes(option)) {
-      setPersonality(personality.filter((item: string) => item !== option));
-    } else {
-      if (personality.length < 5) {
-        setPersonality([...personality, option]);
-      }
-    }
-  };
   const navigate = useNavigate();
 
   const years = utility.getYears();
@@ -68,7 +109,7 @@ const SocialsignUp = () => {
       setGender(0);
     }
   };
-
+  console.log(userId);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const isValid = utility.socialvalidateForm(nickname, personality, regionId, birth, introduction);
     e.preventDefault();
@@ -77,17 +118,24 @@ const SocialsignUp = () => {
         nickname,
         birth,
         gender,
-        personality: [...personality],
+        personality: { ...personality },
         regionId,
         introduction,
         verify,
       };
-      const formData = new FormData();
-      formData.append("form", new Blob([JSON.stringify(data)], { type: "application/json" }));
+      createLoginConfig("patch", `oauth/signup/${userId}`, data)
+        .then((response) => {
+          
+          const accessToken = response.data["Authorization"];
+          const refreshToken = response.data["Authorization-refresh"];
 
-      SignupConfig("patch", `/oauth/signup/${userId}`, formData)
-        .then(() => {
-          navigate("/signin");
+          const tokenResponse: TokenResponse = {
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            tokenCategory: "default",
+          };
+
+          handleTokenResponse(tokenResponse);
         })
         .catch((error) => {
           console.log(error);
@@ -111,7 +159,7 @@ const SocialsignUp = () => {
 
   return (
     <div className="relative bg-main-100">
-      <div className="flex flex-row justify-center items-center h-16">
+      <div className="flex flex-row justify-center items-center shadow h-16">
         <div className="absolute left-5">
           <GoBackButton />
         </div>
@@ -177,7 +225,8 @@ const SocialsignUp = () => {
           </div>
         </div>
         <Region handleRegionIdChange={handleRegionIdChange} defaultRegionId={null} />
-        <Personality personality={personality} handlePersonalityChange={handlePersonalityChange} />
+        <Personality personality={personality} onPersonalityChange={handlePersonalityChange} />
+
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-gender" className="w-9/12 after:content-['*'] after:text-red-500">
             성별
@@ -226,7 +275,7 @@ const SocialsignUp = () => {
             className="h-40 p-4 mt-2.5"
           ></textarea>
         </div>
-        <button type="submit" className="rounded-none mt-16 w-full h-14 bg-main-400 text-white">
+        <button type="submit" className="fixed bottom-0 rounded-none mt-16 w-full h-14 bg-main-400 text-white">
           가입하기
         </button>
       </form>
