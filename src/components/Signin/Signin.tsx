@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavigateFunction } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {  createLoginConfig } from "../API/AxiosModule";
-import { getTokenExpiration, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
+import { getTokenExpiration, getUserId, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
 import {  socketAction,  } from "../Chat/ChatRoom/ChatUtil";
 interface TokenResponse {
   accessToken: string;
   refreshToken: string;
   tokenCategory: string;
+  firstLogin:boolean;
 }
 
 const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
   const redirect_uri = 'https://iamnotalone.vercel.app/login/oauth2/code/kakao';
   const Rest_api_key = 'f97c55d9d92ac41363b532958776d378';
   //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
@@ -41,9 +42,10 @@ const Signin = () => {
           accessToken: accessToken,
           refreshToken: refreshToken,
           tokenCategory: "default",
+          firstLogin: false,
         };
 
-        handleTokenResponse(tokenResponse);
+        handleTokenResponse(tokenResponse,navigate);
       })
       .catch((error) => {
         console.log("에러");
@@ -103,21 +105,6 @@ const Signin = () => {
   // };
 
 
-  const handleTokenResponse = async (tokenResponse: TokenResponse, accessTokenExpire = -1, refreshTokenExpire = -1) => {
-    if (tokenResponse.accessToken && tokenResponse.refreshToken) {
-      setAccessToken(tokenResponse.accessToken);
-      setRefreshToken(tokenResponse.refreshToken);
-      localStorage.setItem("tokenCategory", tokenResponse.tokenCategory);
-      getTokenExpiration("accessToken", accessTokenExpire);
-      getTokenExpiration("refreshToken", refreshTokenExpire);
-  
-      const isTokenValidResponse = await isTokenValid(); 
-      if (isTokenValidResponse === true) {
-        await socketAction();
-        navigate("/main");
-      }
-    }
-  };
   
 
 
@@ -171,4 +158,27 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+const handleTokenResponse = async (tokenResponse: TokenResponse, navigate:NavigateFunction,accessTokenExpire = -1, refreshTokenExpire = -1) => {
+  if (tokenResponse.accessToken && tokenResponse.refreshToken) {
+    setAccessToken(tokenResponse.accessToken);
+    setRefreshToken(tokenResponse.refreshToken);
+    localStorage.setItem("tokenCategory", tokenResponse.tokenCategory);
+    getTokenExpiration("accessToken", accessTokenExpire);
+    getTokenExpiration("refreshToken", refreshTokenExpire);
+
+    const isTokenValidResponse = await isTokenValid(); 
+    if(isTokenValidResponse === true)
+    {
+      if(tokenResponse.firstLogin === true ){
+        const userId = getUserId();
+        navigate(`./socialsignup/${userId}`)
+      }
+      else  {
+        await socketAction();
+        navigate("./main");
+      }
+    }
+
+  }
+};
+export {handleTokenResponse,Signin};
