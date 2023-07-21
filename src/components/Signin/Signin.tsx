@@ -175,6 +175,7 @@ const handleTokenResponse = async (tokenResponse: TokenResponse,accessTokenExpir
         window.location.href =`https://iamnotalone.vercel.app/socialsignup/${userId}`;
       }
       else  {
+        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
         await socketAction();
         //navigate("https://iamnotalone.vercel.app/main"); 
         window.location.href ="https://iamnotalone.vercel.app/main";
