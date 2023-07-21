@@ -19,9 +19,31 @@ interface UserData {
     sigg: string;
   };
 }
+interface PersonalityProps {
+  personality: {
+    mbti: string;
+    smoking: string;
+    activeTime: string;
+    pets: string;
+    preferSmoking: string;
+    preferActiveTime: string;
+    preferPets: string;
+    preferAge: string;
+  };
+  onPersonalityChange: (newPersonality: PersonalityProps["personality"]) => void;
+}
 const Editprofile = () => {
   const [imgFile, setImgFile] = useState<File | null>(null);
-  const [personality, setPersonality] = useState<string[]>([]);
+  const [personality, setPersonality] = useState<PersonalityProps["personality"]>({
+    mbti: "",
+    smoking: "",
+    activeTime: "",
+    pets: "",
+    preferSmoking: "",
+    preferActiveTime: "",
+    preferPets: "",
+    preferAge: "",
+  });
   const [nickname, setNickname] = useState<string>("");
   const [regionId, setRegionId] = useState<number | null>(null);
   const [introduction, setIntroduction] = useState<string>("");
@@ -30,6 +52,9 @@ const Editprofile = () => {
   const [nicknameCheckError, setenicknameCheckError] = useState<string | null>("");
   const defaultRegionId = userData?.region?.id || null;
 
+  const handlePersonalityChange = (newPersonality: PersonalityProps["personality"]) => {
+    setPersonality(newPersonality);
+  };
   const userId = getUserId();
 
   const saveImgFile = () => {
@@ -43,16 +68,6 @@ const Editprofile = () => {
     setRegionId(id);
   };
 
-  const handlePersonalityChange = (option: string) => {
-    if (personality.includes(option)) {
-      setPersonality(personality.filter((item: string) => item !== option));
-    } else {
-      if (personality.length < 5) {
-        setPersonality([...personality, option]);
-      }
-    }
-  };
-
   const fileSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -60,8 +75,17 @@ const Editprofile = () => {
       alert("닉네임을 2글자이상으로 해주세요 .");
       return;
     }
-    if (personality.length === 0) {
-      alert("성향을 1개 이상 골라주세요.");
+    if (
+      !personality.mbti ||
+      !personality.smoking ||
+      !personality.activeTime ||
+      !personality.pets ||
+      !personality.preferSmoking ||
+      !personality.preferActiveTime ||
+      !personality.preferPets ||
+      !personality.preferAge
+    ) {
+      alert("성향을 모두 선택해주세요.");
       return false;
     }
 
@@ -75,7 +99,7 @@ const Editprofile = () => {
     }
     const data = {
       nickname,
-      personality: [...personality],
+      personality: { ...personality },
       regionId,
       introduction,
       imgPath: userData && userData.imgPath,
@@ -111,8 +135,20 @@ const Editprofile = () => {
 
   useEffect(() => {
     if (userData) {
-      if (userData.personality) {
-        setPersonality([...userData.personality]);
+      if (userData.personality !== null) {
+        setPersonality(userData.personality as unknown as PersonalityProps["personality"]);
+      } else {
+        // If userData.personality is null, set default empty values
+        setPersonality({
+          mbti: "",
+          smoking: "",
+          activeTime: "",
+          pets: "",
+          preferSmoking: "",
+          preferActiveTime: "",
+          preferPets: "",
+          preferAge: "",
+        });
       }
       if (userData.introduction) {
         setIntroduction(userData.introduction);
@@ -192,8 +228,8 @@ const Editprofile = () => {
           <span className="text-red-500 text-sm w-9/12">{nicknameCheckError}</span>
         </div>
         <Region handleRegionIdChange={handleRegionIdChange} defaultRegionId={defaultRegionId} />
-        <Personality personality={personality} handlePersonalityChange={handlePersonalityChange} />
-        <div className="flex flex-col mt-5 pb-20 mx-auto w-9/12">
+        <Personality personality={personality} onPersonalityChange={handlePersonalityChange} />
+        <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-about">자기소개</label>
           <textarea
             name="inttroduction"

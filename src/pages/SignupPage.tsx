@@ -8,6 +8,20 @@ import { SignupConfig, createLoginConfig } from "../components/API/AxiosModule";
 import { FaUser } from "react-icons/fa";
 import utility from "../utils/utils";
 
+interface PersonalityProps {
+  personality: {
+    mbti: string;
+    smoking: string;
+    activeTime: string;
+    pets: string;
+    preferSmoking: string;
+    preferActiveTime: string;
+    preferPets: string;
+    preferAge: string;
+  };
+  onPersonalityChange: (newPersonality: PersonalityProps["personality"]) => void;
+}
+
 const SignUp = () => {
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [year, setYear] = useState<number | "year">("year");
@@ -22,7 +36,19 @@ const SignUp = () => {
   const [password, setPassword] = useState<string>("");
   const [passwordCheck, setPasswordCheck] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
-  const [personality, setPersonality] = useState<string[]>([]);
+  const [personality, setPersonality] = useState<PersonalityProps["personality"]>({
+    mbti: "",
+    smoking: "",
+    activeTime: "",
+    pets: "",
+    preferSmoking: "",
+    preferActiveTime: "",
+    preferPets: "",
+    preferAge: "",
+  });
+  const handlePersonalityChange = (newPersonality: PersonalityProps["personality"]) => {
+    setPersonality(newPersonality);
+  };
   const [regionId, setRegionId] = useState<number | null>(null);
   const [verify, setVerify] = useState<string>("false");
   const [emailerror, setEmailerror] = useState<string | null>("");
@@ -43,15 +69,6 @@ const SignUp = () => {
     setRegionId(id);
   };
 
-  const handlePersonalityChange = (option: string) => {
-    if (personality.includes(option)) {
-      setPersonality(personality.filter((item: string) => item !== option));
-    } else {
-      if (personality.length < 5) {
-        setPersonality([...personality, option]);
-      }
-    }
-  };
   const navigate = useNavigate();
 
   const saveImgFile = () => {
@@ -92,7 +109,7 @@ const SignUp = () => {
         nickname,
         birth,
         gender,
-        personality: [...personality],
+        personality: { ...personality },
         regionId,
         introduction,
         verify,
@@ -162,7 +179,6 @@ const SignUp = () => {
         setenicknameCheckError(error.response?.data?.message);
       });
   };
-
   const formattedCountdown =
     countdown !== null
       ? `${Math.floor(countdown / 60)
@@ -337,7 +353,19 @@ const SignUp = () => {
           </div>
         </div>
         <Region handleRegionIdChange={handleRegionIdChange} defaultRegionId={null} />
-        <Personality personality={personality} handlePersonalityChange={handlePersonalityChange} />
+        <Personality
+  personality={{
+    mbti: "",
+    smoking: "",
+    activeTime: "",
+    pets: "",
+    preferSmoking: "",
+    preferActiveTime: "",
+    preferPets: "",
+    preferAge: "",
+  }}
+  onPersonalityChange={handlePersonalityChange}
+/>
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-gender" className="w-9/12 after:content-['*'] after:text-red-500">
             성별
