@@ -262,7 +262,7 @@ const SocialsignUp = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col mt-5 mx-auto w-9/12">
+        <div className="flex flex-col mt-5 pb-20 mx-auto w-9/12">
           <label htmlFor="input-about" className="after:content-['*'] after:text-red-500">
             자기소개
           </label>
