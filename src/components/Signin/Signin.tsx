@@ -171,11 +171,11 @@ const handleTokenResponse = async (tokenResponse: TokenResponse, navigate:Naviga
     {
       if(tokenResponse.firstLogin === true ){
         const userId = getUserId();
-        navigate(`./socialsignup/${userId}`)
+        navigate(`https://iamnotalone.vercel.app/socialsignup/${userId}`); 
       }
       else  {
         await socketAction();
-        navigate("./main");
+        navigate("https://iamnotalone.vercel.app/main"); 
       }
     }
 
