@@ -1,17 +1,37 @@
 import { useState } from "react";
-import {CompatClient, Frame, Stomp } from "@stomp/stompjs";
+import { CompatClient, Frame, Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import { getAccessToken, getUserId } from "../../API/TokenAction";
-
+import { atom } from "jotai";
 
 export interface Message {
-  chatRoomId: Number;
-  senderId: Number;
-  message: String;
-  createdAt: String;
+  chatRoomId: number;
+  senderId: number;
+  message: string;
+  createdAt: string;
 }
 
+export interface SendMessage {
+  chatRoomId: number;
+  membership: {
+    membershipId: number;
+    imgPath: string;
+    nickname: string;
+  };
+  message: string;
+  createdAt: string;
+}
 
+export const lastMessage = atom<SendMessage>({
+  chatRoomId: 0,
+  membership: {
+    membershipId: 0,
+    imgPath: "",
+    nickname: "",
+  },
+  message: "",
+  createdAt: "",
+});
 
 const ChatUtil = () => {
   const [chats, setChats] = useState<Message[]>([]);
@@ -24,7 +44,7 @@ const ChatUtil = () => {
   const updateChats = (newChats: Message[]) => {
     console.log(getChats());
     console.log(newChats);
-    setChats((prevChats: Message[]) => [...prevChats, ...newChats]);//배열을 업데이트 하는 코드
+    setChats((prevChats: Message[]) => [...prevChats, ...newChats]); //배열을 업데이트 하는 코드
     console.log(getChats());
   };
 
@@ -35,44 +55,28 @@ const ChatUtil = () => {
   };
 };
 
-const socketAction = async () => {
+const socketAction = async (callback: (m: SendMessage) => void) => {
   const client = await connectSocket();
-  console.log(client);
-    if(client)
-    {
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      await subscribe(client);
-    }
-    else{
-      console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-    }
-
+  if (client) {
+    await subscribe(client, callback);
+  }
 };
 
 const connectSocket = async () => {
-
   const newClient = Stomp.over(function () {
     return new SockJS("https://www.imnotalone.online/ws");
   });
-  console.log(newClient,"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-  if(newClient)
-  {
+  if (newClient) {
     return newClient;
   }
-  
 };
 
-
-
-
-
-const subscribe = async ( client:CompatClient ) => {
+const subscribe = async (client: CompatClient, callback: (m: SendMessage) => void) => {
   const token = getAccessToken();
   const id = getUserId();
   //const { getArrivalChats,updateChat } = ChatUtil();
 
-  if(client)
-  {
+  if (client) {
     client.connect(
       {
         Authorization: `${token}`,
@@ -84,27 +88,20 @@ const subscribe = async ( client:CompatClient ) => {
           return;
         }
 
-        async () => {
-        console.log("^^")
-        client.subscribe(
-          `/sub/membership/${id}`,
-          (arrivalChat) => {
-            const newMessage = JSON.parse(arrivalChat.body) as Message;
+        (async () => {
+          console.log("^^");
+          client.subscribe(`/sub/membership/${id}`, (arrivalChat) => {
+            console.log(arrivalChat);
+            const newMessage = JSON.parse(arrivalChat.body) as SendMessage;
             console.log(newMessage);
-           //updateChat(newMessage);
-           //console.log(getArrivalChats)
-          }
-         
-        );
+            callback(newMessage);
+            //updateChat(newMessage);
+            //console.log(getArrivalChats)
+          });
+        })();
       }
-      
-    
-   
-  });
+    );
   }
-
 };
-
-
 
 export { ChatUtil, socketAction };

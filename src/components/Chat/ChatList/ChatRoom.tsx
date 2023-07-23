@@ -13,6 +13,7 @@ interface ChatRoomType {
   };
   chatRoomId: number;
   lastTime: string;
+  unRead: number;
 }
 
 interface isDeleteMode {
@@ -85,13 +86,13 @@ const ChatRoom = (props: isDeleteMode) => {
         </div>
       </div>
       <div className="mr-1">
-        <div className="flex justify-center items-center gap-2">
+        <div className="flex flex-col justify-center items-center gap-2">
           <div className="text-sm">{utility.getDiffTime(chat.lastTime)}</div>
-          {/* <div className="flex text-sm">
+          {chat.unRead !== 0 && (
             <span className="flex justify-center items-center bg-main-400 rounded-full px-2 py-1 text-white text-sm font-normal leading-none">
-              {3 > 999 ? "999+" : 3}
+              {chat.unRead}
             </span>
-          </div> */}
+          )}
         </div>
       </div>
     </div>

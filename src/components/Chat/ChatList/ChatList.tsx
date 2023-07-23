@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import ChatRoom from "./ChatRoom";
-import { useQuery } from "react-query";
 import { JsonConfig } from "../../API/AxiosModule";
 import { getUserId } from "../../API/TokenAction";
+import { useAtomValue } from "jotai";
+import { lastMessage } from "../ChatRoom/ChatUtil";
 
 interface ChatListProps {
   isDeleteMode: boolean;
@@ -20,14 +21,44 @@ interface ChatRoomType {
   };
   chatRoomId: number;
   lastTime: string;
+  unRead: number;
 }
 
 const ChatList = (props: ChatListProps) => {
   const { allSelect, isDeleteMode, setAllSelect, filter } = props;
-  const [chatRooms, setChatRooms] = useState<ChatRoomType[] | null>(null);
+  const [chatRooms, setChatRooms] = useState<ChatRoomType[] | null>(null); // 모든 채팅방 목록
   const [deleteList, setDeleteList] = useState<number[]>([]);
-  const [chatRoomList, setChatRoomList] = useState<ChatRoomType[] | null>(null);
+  const [chatRoomList, setChatRoomList] = useState<ChatRoomType[] | null>(null); // 필터링된 채팅방 목록
   const userId = getUserId();
+  const message = useAtomValue(lastMessage);
+
+  // 안읽은 메세지 +1
+
+  useEffect(() => {
+    console.log(message);
+    setChatRooms((prev) => {
+      if (!prev) return null;
+
+      const prevChatRooms = prev.find((room) => {
+        return room.chatRoomId == message.chatRoomId;
+      });
+
+      const newChatRooms = prev.filter((room) => {
+        return room.chatRoomId !== message.chatRoomId;
+      });
+      console.log(newChatRooms);
+
+      newChatRooms.unshift({
+        lastMessage: message.message,
+        partner: message.membership,
+        chatRoomId: message.chatRoomId,
+        lastTime: message.createdAt,
+        unRead: prevChatRooms ? prevChatRooms.unRead + 1 : 1,
+      });
+
+      return newChatRooms;
+    });
+  }, [message]);
 
   useEffect(() => {
     if (!chatRooms) return;
@@ -39,10 +70,9 @@ const ChatList = (props: ChatListProps) => {
     }
   }, [chatRooms, filter, isDeleteMode]);
 
-  const getChatRooms = async (uid: number | null) => {
+  const getChatRooms = async (uid: number) => {
     try {
       const response = await JsonConfig("get", `api/chat/room`, null, { memberId: uid });
-      console.log(response);
       return response.data;
     } catch (error) {
       console.error("채팅방 목록을 가져오는 중에 에러가 발생했습니다:", error);
@@ -50,21 +80,12 @@ const ChatList = (props: ChatListProps) => {
     }
   };
 
-  const { data, refetch } = useQuery(
-    ["chatRooms", userId],
-    async () => await getChatRooms(userId),
-    { refetchInterval: 5000 } // 5초마다 데이터 갱신
-  );
-
-  // chatRooms 데이터 업데이트 시 실행되는 부분
   useEffect(() => {
-    setChatRooms(data);
-  }, [data]);
-
-  // 컴포넌트 렌더링 후 초기 데이터 요청
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
+    (async () => {
+      const data = await getChatRooms(userId);
+      setChatRooms(data);
+    })();
+  }, [userId]);
 
   // deleteMode가 실행되면 deleteList 초기화
   useEffect(() => {
@@ -109,8 +130,12 @@ const ChatList = (props: ChatListProps) => {
 
   return (
     <>
-      <div className="flex flex-col pt-16">
-        {!chatRoomList && <div>Loading...</div>}
+      <div className="flex flex-col items-center pt-16">
+        {!chatRoomList && (
+          <div className="p-4 text-center">
+            <img src="/loading.gif" className="w-16 cursor-pointer" />
+          </div>
+        )}
         {chatRoomList && chatRoomList.length === 0 && <div className="p-4 text-center">채팅 목록이 존재하지 않습니다.</div>}
         {chatRoomList &&
           chatRoomList.map((chat) => {
