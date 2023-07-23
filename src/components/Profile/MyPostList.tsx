@@ -33,8 +33,10 @@ const MyPostList = () => {
       if (datas.length !== limit) {
         setMore(false);
       }
-      setLastPostId(datas[datas.length - 1].postId);
-      setPostList([...datas]);
+      setPostList(datas);
+      if (datas.length) {
+        setLastPostId(datas[datas.length - 1].postId);
+      }
       setIsLoading(false);
     } catch (err) {
       console.log(err);
@@ -110,17 +112,18 @@ const MyPostList = () => {
     <div className="flex flex-col items-center justify-center w-full pb-14">
       <h3 className="flex items-center justify-center w-full h-12 border-b-2 text-black text-md">게시물</h3>
       <div className="flex flex-col items-center p-4 gap-4 w-full">
-        {postList !== null && postList.length
-          ? postList.map((post) => {
-              return <Card post={post} key={post.postId} setPostList={setPostList} />;
-            })
-          : "작성한 게시물이 없습니다."}
+        {postList !== null &&
+          postList.length !== 0 &&
+          postList.map((post) => {
+            return <Card post={post} key={post.postId} setPostList={setPostList} />;
+          })}
+        {postList !== null && !postList.length && <div className="p-2">작성한 게시물이 없습니다.</div>}
+        {more && (
+          <div ref={target}>
+            <img src="/loading.gif" className="w-16 cursor-pointer" />
+          </div>
+        )}
       </div>
-      {more && (
-        <div className="p-4">
-          <div ref={target}>Loading...</div>
-        </div>
-      )}
     </div>
   );
 };
