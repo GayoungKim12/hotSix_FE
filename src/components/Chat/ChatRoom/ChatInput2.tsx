@@ -6,20 +6,26 @@ import { getAccessToken, getUserId, isTokenValid } from "../../API/TokenAction";
 
 import { Message } from "./ChatUtil";
 
-
+import { partnerInfo } from "../../../pages/Chat/ChatRoomPage";
 import { useParams } from "react-router-dom";
 
 import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import axios from "axios";
 
-
+interface sendMessage {
+  chatRoomId: Number;
+  senderId: Number;
+  receiverId:Number;
+  message: String;
+  createdAt: String;
+}
 interface ChatUtil {
   getChats: () => Message[];
   updateChats: (newChats: Message[]) => void;
 }
 
-const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
+const ChatInput2 = ({ chatUtil ,partnerInfomation }: { chatUtil: ChatUtil;partnerInfomation: partnerInfo }) => {
   const newChatRef = useRef<HTMLInputElement>(null);
   const {getChats, updateChats } = chatUtil;
   let subscription: StompSubscription | null | undefined = null;
@@ -122,13 +128,14 @@ const ChatInput2 = ({ chatUtil }: { chatUtil: ChatUtil }) => {
       const now = new Date();
       const inputValue = newChatRef.current.value;
 
-      const messageData: Message = {
+      const messageData: sendMessage = {
         chatRoomId: roomId,
         senderId: userId,
+        receiverId:partnerInfomation.membershipId,
         message: inputValue,
         createdAt: new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString(),
       };
-
+      console.log(messageData);
       const headers = new StompHeaders();
       headers["content-type"] = "application/json";
       headers["Authorization"] = `${token}`;

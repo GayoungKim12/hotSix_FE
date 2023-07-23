@@ -167,6 +167,7 @@ const handleTokenResponse = async (tokenResponse: TokenResponse,accessTokenExpir
     getTokenExpiration("refreshToken", refreshTokenExpire);
 
     const isTokenValidResponse = await isTokenValid(); 
+    console.log(isTokenValidResponse);
     if(isTokenValidResponse === true)
     {
       if(tokenResponse.firstLogin === true ){

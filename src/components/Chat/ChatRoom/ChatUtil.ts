@@ -47,9 +47,14 @@ const ChatUtil = () => {
 
 const socketAction = async () => {
   const client = await connectSocket();
+  console.log(client);
     if(client)
     {
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
       await subscribe(client);
+    }
+    else{
+      console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     }
 
 };
@@ -59,6 +64,7 @@ const connectSocket = async () => {
   const newClient = Stomp.over(function () {
     return new SockJS("https://www.imnotalone.online/ws");
   });
+  console.log(newClient,"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
   if(newClient)
   {
     return newClient;
@@ -74,7 +80,7 @@ const subscribe = async ( client:CompatClient ) => {
   const token = getAccessToken();
   const id = getUserId();
   //const { getArrivalChats,updateChat } = ChatUtil();
-  
+
   if(client)
   {
     client.connect(

@@ -7,7 +7,8 @@ import { useLocation } from "react-router-dom";
 
 export interface partnerInfo{
   imgPath:string,
-  nickname:string
+  nickname:string,
+  membershipId:Number,
 }
 
 
@@ -17,25 +18,27 @@ function ChatRoomPage() {
 
   const [imgPath, setImgPath] = useState("");
   const [nickname, setNickname] = useState("null");
-
+  const [membershipId , setMembershipId]= useState(0);
   useEffect(() => {
     console.log("채팅방입장 1")
     const partnerInfo = location.state;
     setImgPath(partnerInfo.imgPath);
-    
+    setMembershipId(partnerInfo.membershipId)
     setNickname(partnerInfo.nickname);
+    console.log(partnerInfo)
   },[]);
 
   const partnerInfomation :partnerInfo ={
     imgPath:imgPath,
-    nickname:nickname
+    nickname:nickname,
+    membershipId:membershipId,
   };
 
   return (
     <div className="absolute flex flex-col w-full h-screen bg-main-100">
       <ChatRoomHeader partnerInfomation={partnerInfomation}/>
       <ChatRoomBody chatUtil={chatUtil} partnerInfomation={partnerInfomation} />
-      <ChatInput2 chatUtil={chatUtil} />
+      <ChatInput2 chatUtil={chatUtil} partnerInfomation={partnerInfomation} />
     </div>
   );
 }

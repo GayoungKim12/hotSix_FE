@@ -1,8 +1,8 @@
 interface ModalProps {
   type: "alert" | "confirm";
   content: string;
-  handleModal: () => void;
-  handleDelete?: () => void;
+  handleModal: () => void;  //모달을 닫는 함수
+  handleDelete?: () => void; //로그아웃함수
 }
 
 const Modal = (props: ModalProps) => {
