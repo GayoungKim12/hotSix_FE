@@ -28,7 +28,7 @@ interface ChatUtil {
 const ChatInput2 = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; partnerInfomation: partnerInfo }) => {
   const newChatRef = useRef<HTMLInputElement>(null);
   const { getChats, updateChats } = chatUtil;
-  const subscription: StompSubscription | null | undefined = null;
+  let subscription: StompSubscription | null | undefined = null;
   // const client = connectSocket(); //이건 원래 여기서 하는게 아님(소켓연결 자체는 로그인 하자마자 함)
 
   const roomId = Number(useParams().chatRoomId);
@@ -68,7 +68,7 @@ const ChatInput2 = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; partn
             return;
           }
 
-          client.current.subscribe(
+          subscription = client.current.subscribe(
             `/sub/room/${roomId}`,
             (arrivalChat) => {
               const newMessage = JSON.parse(arrivalChat.body) as Message;
@@ -176,3 +176,4 @@ const ChatInput2 = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; partn
 };
 
 export default ChatInput2;
+
