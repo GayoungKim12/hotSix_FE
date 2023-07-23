@@ -186,7 +186,7 @@ const ChatMessage = ({
     }
     const hour = targetDate.getHours();
     const minute = targetDate.getMinutes();
-    
+
     const formatting = (hour: number, minute: number) => {
       let hours = hour.toString();
       let minutes = minute.toString();

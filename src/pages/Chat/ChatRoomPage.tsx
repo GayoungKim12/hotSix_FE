@@ -5,12 +5,11 @@ import { ChatUtil } from "../../components/Chat/ChatRoom/ChatUtil";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-export interface partnerInfo{
-  imgPath:string,
-  nickname:string,
-  membershipId:Number,
+export interface partnerInfo {
+  imgPath: string;
+  nickname: string;
+  membershipId: number;
 }
-
 
 function ChatRoomPage() {
   const chatUtil = ChatUtil();
@@ -18,25 +17,25 @@ function ChatRoomPage() {
 
   const [imgPath, setImgPath] = useState("");
   const [nickname, setNickname] = useState("null");
-  const [membershipId , setMembershipId]= useState(0);
+  const [membershipId, setMembershipId] = useState(0);
   useEffect(() => {
-    console.log("채팅방입장 1")
+    console.log("채팅방입장 1");
     const partnerInfo = location.state;
     setImgPath(partnerInfo.imgPath);
-    setMembershipId(partnerInfo.membershipId)
+    setMembershipId(partnerInfo.membershipId);
     setNickname(partnerInfo.nickname);
-    console.log(partnerInfo)
-  },[]);
+    console.log(partnerInfo);
+  }, []);
 
-  const partnerInfomation :partnerInfo ={
-    imgPath:imgPath,
-    nickname:nickname,
-    membershipId:membershipId,
+  const partnerInfomation: partnerInfo = {
+    imgPath: imgPath,
+    nickname: nickname,
+    membershipId: membershipId,
   };
 
   return (
     <div className="absolute flex flex-col w-full h-screen bg-main-100">
-      <ChatRoomHeader partnerInfomation={partnerInfomation}/>
+      <ChatRoomHeader partnerInfomation={partnerInfomation} />
       <ChatRoomBody chatUtil={chatUtil} partnerInfomation={partnerInfomation} />
       <ChatInput2 chatUtil={chatUtil} partnerInfomation={partnerInfomation} />
     </div>

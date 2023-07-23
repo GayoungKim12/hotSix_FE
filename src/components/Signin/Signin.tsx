@@ -1,25 +1,38 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 
-import {  createLoginConfig } from "../API/AxiosModule";
-import { getTokenExpiration, getUserId, isTokenValid, removeAccessToken, removeRefreshToken, setAccessToken, setRefreshToken } from "../API/TokenAction";
-import {  socketAction,  } from "../Chat/ChatRoom/ChatUtil";
+import { createLoginConfig } from "../API/AxiosModule";
+import {
+  getTokenExpiration,
+  getUserId,
+  isTokenValid,
+  removeAccessToken,
+  removeRefreshToken,
+  setAccessToken,
+  setRefreshToken,
+} from "../API/TokenAction";
+import { SendMessage, lastMessage, socketAction } from "../Chat/ChatRoom/ChatUtil";
+import { useSetAtom } from "jotai";
+
 interface TokenResponse {
   accessToken: string;
   refreshToken: string;
   tokenCategory: string;
-  firstLogin:boolean;
+  firstLogin: boolean;
 }
 
 const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   //const navigate: NavigateFunction = useNavigate();
-  const redirect_uri = 'https://iamnotalone.vercel.app/login/oauth2/code/kakao';
-  const Rest_api_key = 'f97c55d9d92ac41363b532958776d378';
+  const redirect_uri = "https://iamnotalone.vercel.app/login/oauth2/code/kakao";
+  const Rest_api_key = "f97c55d9d92ac41363b532958776d378";
   //const client_secret = "2y9KooWag1nZnGRfPeHbZeY8yiian4ty";
+  const setSendMessage = useSetAtom(lastMessage);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    console.log("로그인")
+    console.log("로그인");
     console.log("^^^^");
   }, []);
 
@@ -45,7 +58,7 @@ const Signin = () => {
           firstLogin: false,
         };
 
-        handleTokenResponse(tokenResponse);
+        handleTokenResponse(tokenResponse, -1, -1, (m: SendMessage) => setSendMessage(m), navigate);
       })
       .catch((error) => {
         console.log("에러");
@@ -53,22 +66,13 @@ const Signin = () => {
       });
   };
 
-
-
   const kakaotalkSignIn = async () => {
     console.log("카카오로그인");
 
-  
     await requestKakaoCode(redirect_uri, Rest_api_key);
-
-
   };
 
-    
-    
-  
-
-  const requestKakaoCode = async(redirect_uri:string,Rest_api_key:string) =>{
+  const requestKakaoCode = async (redirect_uri: string, Rest_api_key: string) => {
     removeAccessToken();
     removeRefreshToken();
     const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${Rest_api_key}&redirect_uri=${redirect_uri}`;
@@ -77,7 +81,6 @@ const Signin = () => {
       console.log("^^^");
     }, 3000);
   };
-
 
   // const handleAuthorizationCode = async() => {
 
@@ -101,16 +104,7 @@ const Signin = () => {
   //     });
   //   }
 
-    
   // };
-
-
-  
-
-
-
- 
-  
 
   return (
     <div className="w-full h-screen pt-11 bg-main-100">
@@ -158,7 +152,14 @@ const Signin = () => {
   );
 };
 
-const handleTokenResponse = async (tokenResponse: TokenResponse,accessTokenExpire = -1, refreshTokenExpire = -1) => {
+const handleTokenResponse = async (
+  tokenResponse: TokenResponse,
+  accessTokenExpire = -1,
+  refreshTokenExpire = -1,
+  callback: (m: SendMessage) => void,
+  navigate: NavigateFunction
+) => {
+  console.log("token");
   if (tokenResponse.accessToken && tokenResponse.refreshToken) {
     setAccessToken(tokenResponse.accessToken);
     setRefreshToken(tokenResponse.refreshToken);
@@ -166,23 +167,18 @@ const handleTokenResponse = async (tokenResponse: TokenResponse,accessTokenExpir
     getTokenExpiration("accessToken", accessTokenExpire);
     getTokenExpiration("refreshToken", refreshTokenExpire);
 
-    const isTokenValidResponse = await isTokenValid(); 
-    console.log(isTokenValidResponse);
-    if(isTokenValidResponse === true)
-    {
-      if(tokenResponse.firstLogin === true ){
+    const isTokenValidResponse = await isTokenValid();
+    if (isTokenValidResponse === true) {
+      if (tokenResponse.firstLogin === true) {
         const userId = getUserId();
-        //navigate(`https://iamnotalone.vercel.app/socialsignup/${userId}`); 
-        window.location.href =`https://iamnotalone.vercel.app/socialsignup/${userId}`;
-      }
-      else  {
-        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        await socketAction();
-        //navigate("https://iamnotalone.vercel.app/main"); 
-        window.location.href ="https://iamnotalone.vercel.app/main";
+        navigate(`/socialsignup/${userId}`);
+        //window.location.href = `http://localhost:5173/socialsignup/${userId}`;
+      } else {
+        await socketAction(callback);
+        navigate("/main");
+        //window.location.href = "http://localhost:5173/main";
       }
     }
-
   }
 };
-export {handleTokenResponse,Signin};
+export { handleTokenResponse, Signin };

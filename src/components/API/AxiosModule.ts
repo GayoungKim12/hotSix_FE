@@ -7,7 +7,6 @@ axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
 };
 
-
 const axiosInstance = axios.create();
 
 //요청 전 액션
@@ -79,8 +78,6 @@ const SignupConfig = (method: string, url: string, requestBody: unknown) => {
   return axiosInstance(config);
 };
 
-
-
 //카카오 로그인할때만 필요
 // const createKakaoLoginConfig = (method: string, grant_type: string, client_id: string, redirect_uri: string, code: string,client_secret:string) => {
 //   const config = {
@@ -103,12 +100,11 @@ const createKakaoLoginToServerLoginConfig = (method: string, code: object) => {
     headers: {
       "Content-Type": "application/json",
     },
-    data:code,
+    data: code,
   };
-  
+
   return axiosInstance(config);
 };
-
 
 //카카오 액세스토큰 갱신
 // const createKakaoRenewAccessTokenConfig = (code:string) => {
@@ -122,7 +118,6 @@ const createKakaoLoginToServerLoginConfig = (method: string, code: object) => {
 
 //   return axiosInstance(config);
 // };
-
 
 //requestBody 모듈화: unknwon으로 하던가 인터페이스 전부 적어놓고 if else같은걸로 그때그때 맞추던가 해야함
 //그외의 요청?
@@ -159,7 +154,8 @@ const MultiConfig = (method: string, url: string, requestBody: unknown = null, p
   return axiosInstance(config);
 };
 
-const logOutConfig = (method: string, url: string) => { //로그아웃?
+const logOutConfig = (method: string, url: string) => {
+  //로그아웃?
   const accessToken = getAccessToken();
   const config = {
     baseURL: `https://www.imnotalone.online/${url}`,
@@ -169,12 +165,9 @@ const logOutConfig = (method: string, url: string) => { //로그아웃?
       "Content-Type": "application/json",
     },
   };
-  
+
   return axiosInstance(config);
-  
 };
-
-
 
 // createLoginConfig(원하는method,엔드포인트,요청본문에 들어갈거,params 넣을거).then((response)=>{
 //response 왔을때 할 행동 (response.data로 뭐 한다던지)
@@ -183,4 +176,4 @@ const logOutConfig = (method: string, url: string) => { //로그아웃?
 //   console.error(error);
 // });
 
-export { createLoginConfig, logOutConfig,JsonConfig,createKakaoLoginToServerLoginConfig, MultiConfig, SignupConfig };
+export { createLoginConfig, logOutConfig, JsonConfig, createKakaoLoginToServerLoginConfig, MultiConfig, SignupConfig };

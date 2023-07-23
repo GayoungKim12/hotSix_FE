@@ -100,7 +100,7 @@ interface DecodedToken {
 }
 
 //토큰의 유효기간을 추출(테스트 완료)
-const getTokenExpiration = (tokenName: string, kakaoExpire: number = -1) => {
+const getTokenExpiration = (tokenName: string, kakaoExpire = -1) => {
   const token = tokenName === "refreshToken" ? getRefreshToken() : tokenName === "accessToken" ? getAccessToken() : null;
   let expirationTime = new Date();
 
@@ -135,9 +135,7 @@ const getTokenExpiration = (tokenName: string, kakaoExpire: number = -1) => {
     const remainingTimeInSeconds = kakaoExpire;
     expirationTime = new Date(currentTime + remainingTimeInSeconds * 1000);
 
-
     console.log(`${tokenName} 만료시간:`, expirationTime.toISOString());
-
   } else {
     console.log(`${tokenName} 없음.`);
   }
@@ -151,22 +149,20 @@ const getTokenExpiration = (tokenName: string, kakaoExpire: number = -1) => {
 //토큰이 만료되기 30분전인지 확인 (테스트 완료)
 //let a = 0;
 const checkTokenExpiration = (tokenName: string) => {
-  const expirationTimeString  =
-    tokenName === "refreshToken" ? 
-    getCookie("refreshTokenExpire") : tokenName === "accessToken" ? 
-    localStorage.getItem("accessTokenExpire") : null;
-    const tokenCategory = localStorage.getItem("tokenCategory");
+  const expirationTimeString =
+    tokenName === "refreshToken" ? getCookie("refreshTokenExpire") : tokenName === "accessToken" ? localStorage.getItem("accessTokenExpire") : null;
+  const tokenCategory = localStorage.getItem("tokenCategory");
 
   if (expirationTimeString && tokenCategory === "default") {
     const offset = 9 * 60;
-    console.log("예상종료시간",expirationTimeString)
-    const  expirationTime  = new Date(expirationTimeString);
+    console.log("예상종료시간", expirationTimeString);
+    const expirationTime = new Date(expirationTimeString);
     expirationTime.setMinutes(expirationTime.getMinutes() - offset);
     const currentTime = new Date();
     const expirationTimeMs = expirationTime.getTime();
     const currentTimeMs = currentTime.getTime();
-    let timeDiffMinutes = Math.ceil((expirationTimeMs - currentTimeMs) / 1000 / 60);
-    
+    const timeDiffMinutes = Math.ceil((expirationTimeMs - currentTimeMs) / 1000 / 60);
+
     // if (tokenName === "accessToken" && a < 1) {
     //   a++;
     //   timeDiffMinutes = timeDiffMinutes - 99999999999;
@@ -180,11 +176,10 @@ const checkTokenExpiration = (tokenName: string) => {
       console.log(`${tokenName}이 유효합니다.`);
       return true;
     }
-  }
-  else if(expirationTimeString && tokenCategory === "kakao"){
+  } else if (expirationTimeString && tokenCategory === "kakao") {
     const currentTime = new Date();
-    console.log("예상종료시간",expirationTimeString)
-    let timeDiffMinutes = Math.round((new Date(expirationTimeString).getTime() - currentTime.getTime()) / (1000 * 60));
+    console.log("예상종료시간", expirationTimeString);
+    const timeDiffMinutes = Math.round((new Date(expirationTimeString).getTime() - currentTime.getTime()) / (1000 * 60));
     if (timeDiffMinutes <= 5) {
       console.log(`${tokenName}이 만료되기 5분전입니다. 갱신합니다`);
       return false;
@@ -192,7 +187,7 @@ const checkTokenExpiration = (tokenName: string) => {
       console.log(`${tokenName}이 유효합니다.`);
       return true;
     }
-  }else{
+  } else {
     console.log("유효하지 않은 토큰");
   }
 };
