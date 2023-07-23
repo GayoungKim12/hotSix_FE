@@ -2,7 +2,7 @@ import { useState } from "react";
 import {CompatClient, Frame, Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import { getAccessToken, getUserId } from "../../API/TokenAction";
-import { atom, useAtom } from "jotai";
+
 
 export interface Message {
   chatRoomId: Number;
@@ -16,32 +16,22 @@ export interface Message {
 const ChatUtil = () => {
   const [chats, setChats] = useState<Message[]>([]);
 
-  const chatAtom = atom<Message | null>(null);
-  const useChatAtom = () => useAtom(chatAtom);
-
-  const [arrivalChat, setArrivalChat] = useChatAtom();
+  // 다른 컴포넌트에서 chats 상태를 참조할 수 있는 함수
 
   const getChats = () => chats;
 
-  const getArrivalChats = () => arrivalChat;
-
-
+  // 다른 컴포넌트에서 setChats 함수를 호출하여 chats 상태를 업데이트할 수 있는 함수
   const updateChats = (newChats: Message[]) => {
     console.log(getChats());
     console.log(newChats);
-    setChats((prevChats: Message[]) => [...prevChats, ...newChats]);
+    setChats((prevChats: Message[]) => [...prevChats, ...newChats]);//배열을 업데이트 하는 코드
     console.log(getChats());
   };
 
-  const updateChat = (newChats: Message) => {
-    setArrivalChat(newChats);
-  };
-
   return {
+    //return해서 다른 컴포넌트에서 쓸수있게 함
     getChats,
     updateChats,
-    getArrivalChats,
-    updateChat,
   };
 };
 
