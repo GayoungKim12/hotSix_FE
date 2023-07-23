@@ -189,4 +189,23 @@ const changeLineBreak = (text: string) => {
   return replacedText;
 };
 
-export default { validateForm, socialvalidateForm, getCurrentYear, getYears, getMonths, getDays, getDiffTime, changeLineBreak };
+const getAge = (date: string) => {
+  const today = new Date();
+  const birth = new Date(date);
+
+  let age = today.getFullYear() - birth.getFullYear();
+
+  const monthDiff = today.getMonth() - birth.getMonth();
+
+  if (monthDiff < 0) {
+    age = age - 1;
+  } else if (monthDiff === 0) {
+    const dateDiff = today.getDate() - birth.getDate();
+    if (dateDiff < 0) {
+      age = age - 1;
+    }
+  }
+  return age;
+};
+
+export default { validateForm, socialvalidateForm, getCurrentYear, getYears, getMonths, getDays, getDiffTime, changeLineBreak, getAge };

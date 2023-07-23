@@ -2,6 +2,18 @@ import { useEffect, useState } from "react";
 import { JsonConfig } from "../API/AxiosModule";
 import { FaUser } from "react-icons/fa";
 import { GiFemale, GiMale } from "react-icons/gi";
+import utility from "../../utils/utils";
+
+interface Personality {
+  mbti: string;
+  smoking: number;
+  activeTime: number;
+  pets: number;
+  preferSmoking: number;
+  preferActiveTime: number;
+  preferPets: number;
+  preferAge: number;
+}
 
 interface ProfileType {
   nickname: string;
@@ -14,7 +26,7 @@ interface ProfileType {
     sigg: string;
   };
   introduction: string;
-  personality: string[];
+  personality: Personality;
 }
 
 interface PartnerType {
@@ -72,8 +84,11 @@ const Profile = (props: ProfileProps) => {
         <div className="flex flex-col items-start gap-2 text-sm rounded-sm">
           <div className="w-16 h-4 bg-gray-300 rounded"></div>
           <div className="w-32 h-4 bg-gray-300 rounded"></div>
-          <div className="w-20 h-4 bg-gray-300 rounded"></div>
           <div className="w-48 h-4 bg-gray-300 rounded"></div>
+          <div className="mt-2 w-16 h-4 bg-gray-300 rounded"></div>
+          <div className="w-60 h-4 bg-gray-300 rounded"></div>
+          <div className="w-28 h-4 bg-gray-300 rounded"></div>
+          <div className="w-60 h-4 bg-gray-300 rounded"></div>
         </div>
       </div>
     );
@@ -96,14 +111,47 @@ const Profile = (props: ProfileProps) => {
         </div>
       </div>
       <div className="flex flex-col items-start gap-0.5 text-sm">
-        <div>{profile.birth}</div>
+        <div>{`만 ${utility.getAge(profile.birth)}살`}</div>
         <div>{`${profile.region.sido} ${profile.region.sigg}`}</div>
-        <div className="flex items-center flex-wrap gap-1">
-          {profile.personality.map((item: string) => {
-            return <div key={item}>{`#${item}`}</div>;
-          })}
-        </div>
         <div className="flex-wrap break-all">{profile.introduction}</div>
+        <div className="mt-2">성향 키워드</div>
+        <ul className="flex flex-wrap gap-1 text-main-400">
+          <li className="rounded-full border border-main-400 px-2">{profile.personality.mbti}</li>
+          <li className="rounded-full border border-main-400 px-2">{profile.personality.smoking === 0 ? "흡연" : "비흡연"}</li>
+          <li className="rounded-full border border-main-400 px-2">
+            {profile.personality.activeTime === 0
+              ? "00 ~ 06시"
+              : profile.personality.activeTime === 1
+              ? "06 ~ 12시"
+              : profile.personality.activeTime === 2
+              ? "12 ~ 18시"
+              : "18 ~ 24시"}
+          </li>
+          <li className="rounded-full border border-main-400 px-2">{profile.personality.pets === 0 ? "반려동물 있음" : "반려동물 없음"}</li>
+        </ul>
+        <div>선호하는 성향 키워드</div>
+        <ul className="flex flex-wrap gap-1 text-main-400">
+          <li className="rounded-full border border-main-400 px-2">{`${profile.personality.preferAge} 대`}</li>
+          <li className="rounded-full border border-main-400 px-2">
+            {profile.personality.preferSmoking === 0 ? "흡연" : profile.personality.preferSmoking === 1 ? "비흡연" : "흡연여부 상관없음"}
+          </li>
+          <li className="rounded-full border border-main-400 px-2">
+            {profile.personality.preferActiveTime === 0
+              ? "00 ~ 06시"
+              : profile.personality.preferActiveTime === 1
+              ? "06 ~ 12시"
+              : profile.personality.preferActiveTime === 2
+              ? "12 ~ 18시"
+              : "18 ~ 24시"}
+          </li>
+          <li className="rounded-full border border-main-400 px-2">
+            {profile.personality.preferPets === 0
+              ? "반려동물 있음"
+              : profile.personality.preferPets === 1
+              ? "반려동물 없음"
+              : "반려동물 유무 상관없음"}
+          </li>
+        </ul>
       </div>
     </div>
   );
