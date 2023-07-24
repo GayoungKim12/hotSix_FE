@@ -175,8 +175,8 @@ const handleTokenResponse = async (
         //window.location.href = `http://localhost:5173/socialsignup/${userId}`;
       } else {
         await socketAction(setSendMessage);
-        //navigate("/main");
-        window.location.href = "https://iamnotalone.vercel.app/main";
+        navigate("/main");
+        //window.location.href = "https://iamnotalone.vercel.app/main";
       }
     }
   }
