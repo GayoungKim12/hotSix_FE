@@ -84,6 +84,7 @@ const Personality = ({ personality, onPersonalityChange }: PersonalityProps) => 
               MBTI
             </label>
             <select name="preferenceMbti" id="preferenceMbti" className="w-20 text-center" value={mbtiValue} onChange={handleMbtiChange}>
+              <option>선택</option>
               {mbtiOptions.map((mbti) => (
                 <option key={mbti} value={mbti}>
                   {mbti}
@@ -96,6 +97,7 @@ const Personality = ({ personality, onPersonalityChange }: PersonalityProps) => 
               흡연여부
             </label>
             <select name="smoking" id="smoking" className="w-20 text-center" value={smokingValue} onChange={handleSmokingChange}>
+              <option>선택</option>
               <option value="0">o</option>
               <option value="1">x</option>
             </select>
@@ -105,6 +107,7 @@ const Personality = ({ personality, onPersonalityChange }: PersonalityProps) => 
               반려동물
             </label>
             <select name="pets" id="pets" className="w-20 text-center" value={petsValue} onChange={handlePetsChange}>
+              <option>선택</option>
               <option value="0">o</option>
               <option value="1">x</option>
             </select>
@@ -114,6 +117,7 @@ const Personality = ({ personality, onPersonalityChange }: PersonalityProps) => 
               활동시간
             </label>
             <select name="activeTime" id="activeTime" className="w-20 text-center" value={activeTimeValue} onChange={handleActiveTimeChange}>
+              <option>선택</option>
               <option value="0">24~06</option>
               <option value="1">06~12</option>
               <option value="2">12~18</option>
@@ -138,6 +142,7 @@ const Personality = ({ personality, onPersonalityChange }: PersonalityProps) => 
               value={preferSmokingValue}
               onChange={handlePreferSmokingChange}
             >
+              <option>선택</option>
               <option value="0">o</option>
               <option value="1">x</option>
               <option value="2">상관없음</option>
@@ -148,6 +153,7 @@ const Personality = ({ personality, onPersonalityChange }: PersonalityProps) => 
               반려동물
             </label>
             <select name="preferPets" id="preferPets" className="w-20 text-center" value={preferPetsValue} onChange={handlePreferPetsChange}>
+              <option>선택</option>
               <option value="0">o</option>
               <option value="1">x</option>
               <option value="2">상관없음</option>
@@ -164,6 +170,7 @@ const Personality = ({ personality, onPersonalityChange }: PersonalityProps) => 
               value={preferActiveTimeValue}
               onChange={handlePreferActiveTimeChange}
             >
+              <option>선택</option>
               <option value="0">24~06</option>
               <option value="1">06~12</option>
               <option value="2">12~18</option>
@@ -175,6 +182,7 @@ const Personality = ({ personality, onPersonalityChange }: PersonalityProps) => 
               연령대(만)
             </label>
             <select name="preferAge" id="preferAge" className="w-20 text-center" value={preferAgeValue} onChange={handlePreferAgeValueChange}>
+              <option>선택</option>
               <option value="10">10대</option>
               <option value="20">20대</option>
               <option value="30">30대</option>
