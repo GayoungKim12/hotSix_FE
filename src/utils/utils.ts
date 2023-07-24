@@ -14,7 +14,7 @@ function validateForm(
   password: string,
   passwordCheck: string,
   nickname: string,
-  personality: PersonalityData,
+  //personality: PersonalityData,
   regionId: number | null,
   birth: string,
   introduction: string
