@@ -71,7 +71,6 @@ const SettingButtons = (props: SettingButtonsProps) => {
 };
 
 export const logoutUser = (navigate: NavigateFunction) => {
-  console.log("로그아웃");
   logOutConfig("post", "api/logout").then(() => {
     removeRefreshToken();
     removeAccessToken();
