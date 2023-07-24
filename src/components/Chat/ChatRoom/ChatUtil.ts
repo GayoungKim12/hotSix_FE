@@ -55,10 +55,10 @@ const ChatUtil = () => {
   };
 };
 
-const socketAction = async (setSendMessage: (m: SendMessage) => void) => {
+const socketAction = async (callback: (m: SendMessage) => void) => {
   const client = await connectSocket();
   if (client) {
-    await subscribe(client, setSendMessage);
+    await subscribe(client, callback);
   }
 };
 
@@ -71,7 +71,7 @@ const connectSocket = async () => {
   }
 };
 
-const subscribe = async (client: CompatClient, setSendMessage: (meesage: SendMessage) => void) => {
+const subscribe = async (client: CompatClient, callback: (m: SendMessage) => void) => {
   const token = getAccessToken();
   const id = getUserId();
   //const { getArrivalChats,updateChat } = ChatUtil();
@@ -94,7 +94,7 @@ const subscribe = async (client: CompatClient, setSendMessage: (meesage: SendMes
             console.log(arrivalChat);
             const newMessage = JSON.parse(arrivalChat.body) as SendMessage;
             console.log(newMessage);
-            setSendMessage(newMessage);
+            callback(newMessage);
             //updateChat(newMessage);
             //console.log(getArrivalChats)
           });
