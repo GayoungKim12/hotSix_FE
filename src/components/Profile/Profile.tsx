@@ -116,40 +116,40 @@ const Profile = (props: ProfileProps) => {
         <div className="flex-wrap break-all">{profile.introduction}</div>
         <div className="mt-2">성향 키워드</div>
         <ul className="flex flex-wrap gap-1 text-main-400">
-          <li className="rounded-full border border-main-400 px-2">{profile.personality.mbti}</li>
-          <li className="rounded-full border border-main-400 px-2">{profile.personality.smoking === 0 ? "흡연" : "비흡연"}</li>
+          <li className="rounded-full border border-main-400 px-2">{`#${profile.personality.mbti}`}</li>
+          <li className="rounded-full border border-main-400 px-2">{profile.personality.smoking === 0 ? "#흡연" : "#비흡연"}</li>
           <li className="rounded-full border border-main-400 px-2">
             {profile.personality.activeTime === 0
-              ? "00 ~ 06시"
+              ? "#00 ~ 06시"
               : profile.personality.activeTime === 1
-              ? "06 ~ 12시"
+              ? "#06 ~ 12시"
               : profile.personality.activeTime === 2
-              ? "12 ~ 18시"
-              : "18 ~ 24시"}
+              ? "#12 ~ 18시"
+              : "#18 ~ 24시"}
           </li>
-          <li className="rounded-full border border-main-400 px-2">{profile.personality.pets === 0 ? "반려동물 있음" : "반려동물 없음"}</li>
+          <li className="rounded-full border border-main-400 px-2">{profile.personality.pets === 0 ? "#반려동물 있음" : "#반려동물 없음"}</li>
         </ul>
         <div>선호하는 성향 키워드</div>
         <ul className="flex flex-wrap gap-1 text-main-400">
-          <li className="rounded-full border border-main-400 px-2">{`${profile.personality.preferAge} 대`}</li>
+          <li className="rounded-full border border-main-400 px-2">{`#${profile.personality.preferAge}대`}</li>
           <li className="rounded-full border border-main-400 px-2">
-            {profile.personality.preferSmoking === 0 ? "흡연" : profile.personality.preferSmoking === 1 ? "비흡연" : "흡연여부 상관없음"}
+            {profile.personality.preferSmoking === 0 ? "#흡연" : profile.personality.preferSmoking === 1 ? "#비흡연" : "#흡연여부 상관없음"}
           </li>
           <li className="rounded-full border border-main-400 px-2">
             {profile.personality.preferActiveTime === 0
-              ? "00 ~ 06시"
+              ? "#00 ~ 06시"
               : profile.personality.preferActiveTime === 1
-              ? "06 ~ 12시"
+              ? "#06 ~ 12시"
               : profile.personality.preferActiveTime === 2
-              ? "12 ~ 18시"
-              : "18 ~ 24시"}
+              ? "#12 ~ 18시"
+              : "#18 ~ 24시"}
           </li>
           <li className="rounded-full border border-main-400 px-2">
             {profile.personality.preferPets === 0
-              ? "반려동물 있음"
+              ? "#반려동물 있음"
               : profile.personality.preferPets === 1
-              ? "반려동물 없음"
-              : "반려동물 유무 상관없음"}
+              ? "#반려동물 없음"
+              : "#반려동물 유무 상관없음"}
           </li>
         </ul>
       </div>

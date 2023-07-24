@@ -16,6 +16,7 @@ import Findpassword from "./pages/FindpasswordPage";
 import Editpassword from "./pages/EditpasswordPage";
 import SocialsignUp from "./pages/SocialsignupPage";
 import GetCode from "./components/Signin/GetCode";
+import RecommendPage from "./pages/RecommendPage";
 const queryClient = new QueryClient();
 
 function App() {
@@ -25,12 +26,13 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <Routes>
             <Route path="/" element={<SigninPage />}></Route>
-            <Route path="/login/oauth2/code/kakao" element={<GetCode/>}></Route>
+            <Route path="/login/oauth2/code/kakao" element={<GetCode />}></Route>
             <Route path="/main" element={<MainPage />}></Route>
             <Route path="/post" element={<PostPage />}></Route>
             <Route path="/edit/:postId" element={<PostPage />}></Route>
             <Route path="/detail/:postId" element={<DetailPage />}></Route>
             <Route path="/cart" element={<CartPage />}></Route>
+            <Route path="/recommend" element={<RecommendPage />}></Route>
             <Route path="/profile/:profileId" element={<ProfilePage />}></Route>
             <Route path="/chatlist" element={<ChatListPage />}></Route>
             <Route path="/chat/:chatRoomId" element={<ChatRoomPage />}></Route>

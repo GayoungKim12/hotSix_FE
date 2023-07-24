@@ -21,13 +21,14 @@ export default {
       animation: {
         fadeInUp: "fadeInUp 0.25s ease-in-out",
       },
+      width: {
+        "48%": "48%",
+      },
     },
   },
   screens: {
     sm: "640px",
-
     md: "1024px",
-
     lg: "1280px",
   },
   plugins: [],
