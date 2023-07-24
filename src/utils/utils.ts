@@ -14,7 +14,7 @@ function validateForm(
   password: string,
   passwordCheck: string,
   nickname: string,
-  //personality: PersonalityData, 
+  personality: PersonalityData, 
   regionId: number | null,
   birth: string,
   introduction: string
@@ -41,19 +41,19 @@ function validateForm(
     return false;
   }
 
-  // if (
-  //   !personality.mbti ||
-  //   !personality.smoking ||
-  //   !personality.activeTime ||
-  //   !personality.pets ||
-  //   !personality.preferSmoking ||
-  //   !personality.preferActiveTime ||
-  //   !personality.preferPets ||
-  //   !personality.preferAge
-  // ) {
-  //   alert("성향을 모두 선택해주세요.");
-  //   return false;
-  // }
+  if (
+    !personality.mbti ||
+    !personality.smoking ||
+    !personality.activeTime ||
+    !personality.pets ||
+    !personality.preferSmoking ||
+    !personality.preferActiveTime ||
+    !personality.preferPets ||
+    !personality.preferAge
+  ) {
+    alert("성향을 모두 선택해주세요.");
+    return false;
+  }
 
   if (regionId === null) {
     alert("지역을 선택해주세요.");
