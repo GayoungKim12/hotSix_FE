@@ -34,7 +34,7 @@ const ParamCode = () => {
           tokenCategory: "default",
           firstLogin: firstLogin,
         };
-        handleTokenResponse(tokenResponse, -1, -1, (m: SendMessage) => setSendMessage(m), navigate);
+        handleTokenResponse(tokenResponse, -1, -1, (message: SendMessage) => setSendMessage(message), navigate);
       })
       .catch((error) => {
         console.log("에러");
