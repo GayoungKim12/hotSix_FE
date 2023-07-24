@@ -22,7 +22,7 @@ interface sendMessage {
 }
 interface ChatUtil {
   getChats: () => Message[];
-  updateChats: (newChats: Message[]) => void;
+  updateChats: (newChats: Message[]) => void; 
 }
 
 const ChatInput2 = ({ chatUtil, partnerInfomation }: { chatUtil: ChatUtil; partnerInfomation: partnerInfo }) => {
