@@ -16,3 +16,20 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical
 }
+
+.style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.perspective-600 {
+  perspective-origin: center;
+  perspective: 600px;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
