@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { JsonConfig, logOutConfig } from "../API/AxiosModule";
 import { removeAccessToken, removeRefreshToken } from "../API/TokenAction";
 import Modal from "../common/Modal";
@@ -11,7 +11,7 @@ interface SettingButtonsProps {
 
 const SettingButtons = (props: SettingButtonsProps) => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [isLogOut , setIsLogOut] = useState<boolean>(false);
+  const [isLogOut, setIsLogOut] = useState<boolean>(false);
   const { userId, handleShow } = props;
   const navigate = useNavigate();
 
@@ -19,15 +19,6 @@ const SettingButtons = (props: SettingButtonsProps) => {
     JsonConfig("delete", `api/membership/delete/${userId}`).then(() => {
       removeRefreshToken;
       removeAccessToken;
-      navigate("/");
-    });
-  };
-
-  const logoutUser = () => {
-    console.log("로그아웃")
-    logOutConfig("post", "api/logout").then(() => {
-      removeRefreshToken();
-      removeAccessToken();
       navigate("/");
     });
   };
@@ -69,12 +60,23 @@ const SettingButtons = (props: SettingButtonsProps) => {
             회원탈퇴
           </button>
         </div>
-        {isLogOut && <Modal type="confirm" content={"로그 아웃을 하시겠습니까?"} handleModal={handleShow} handleDelete={logoutUser} />}
+        {isLogOut && (
+          <Modal type="confirm" content={"로그 아웃을 하시겠습니까?"} handleModal={handleShow} handleDelete={() => logoutUser(navigate)} />
+        )}
         {showModal && <Modal type="confirm" content={"회원 탈퇴를 하시겠습니까?"} handleModal={handleShow} handleDelete={deleteUser} />}
         <button className="px-4 py-3 w-11/12 border-0 rounded-xl shadow bg-white hover:border-0 focus:outline-none">닫기</button>
       </div>
     </div>
   );
+};
+
+export const logoutUser = (navigate: NavigateFunction) => {
+  console.log("로그아웃");
+  logOutConfig("post", "api/logout").then(() => {
+    removeRefreshToken();
+    removeAccessToken();
+    navigate("/");
+  });
 };
 
 export default SettingButtons;
