@@ -58,7 +58,7 @@ const Signin = () => {
           firstLogin: false,
         };
 
-        handleTokenResponse(tokenResponse, -1, -1, (message: SendMessage) => setSendMessage(message), navigate);
+        handleTokenResponse(tokenResponse, -1, -1, (m: SendMessage) => setSendMessage(m), navigate);
       })
       .catch((error) => {
         console.log("에러");
@@ -156,7 +156,7 @@ const handleTokenResponse = async (
   tokenResponse: TokenResponse,
   accessTokenExpire = -1,
   refreshTokenExpire = -1,
-  setSendMessage: (m: SendMessage) => void,
+  callback: (m: SendMessage) => void,
   navigate: NavigateFunction
 ) => {
   console.log("token");
@@ -174,7 +174,7 @@ const handleTokenResponse = async (
         navigate(`/socialsignup/${userId}`);
         //window.location.href = `http://localhost:5173/socialsignup/${userId}`;
       } else {
-        await socketAction(setSendMessage);
+        await socketAction(callback);
         navigate("/main");
         //window.location.href = "http://localhost:5173/main";
       }
