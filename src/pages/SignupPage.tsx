@@ -100,7 +100,7 @@ const SignUp = () => {
     return password === passwordCheck;
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const isValid = utility.validateForm(email, password, passwordCheck, nickname, regionId, birth, introduction);
+    const isValid = utility.validateForm(email, password, passwordCheck, nickname,personality, regionId, birth, introduction);
     e.preventDefault();
     if (isValid) {
       const data = {
