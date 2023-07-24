@@ -353,19 +353,7 @@ const SignUp = () => {
           </div>
         </div>
         <Region handleRegionIdChange={handleRegionIdChange} defaultRegionId={null} />
-        <Personality
-  personality={{
-    mbti: "",
-    smoking: "",
-    activeTime: "",
-    pets: "",
-    preferSmoking: "",
-    preferActiveTime: "",
-    preferPets: "",
-    preferAge: "",
-  }}
-  onPersonalityChange={handlePersonalityChange}
-/>
+        <Personality personality={personality} onPersonalityChange={handlePersonalityChange} />
         <div className="flex flex-col mt-5 mx-auto w-9/12">
           <label htmlFor="input-gender" className="w-9/12 after:content-['*'] after:text-red-500">
             성별
