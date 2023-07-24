@@ -42,14 +42,22 @@ function validateForm(
   }
 
   if (
-    !personality.mbti ||
-    !personality.smoking ||
-    !personality.activeTime ||
-    !personality.pets ||
-    !personality.preferSmoking ||
-    !personality.preferActiveTime ||
-    !personality.preferPets ||
-    !personality.preferAge
+    personality.mbti === null ||
+    personality.mbti === "" ||
+    personality.smoking === null ||
+    personality.smoking === "" ||
+    personality.activeTime === null ||
+    personality.activeTime === "" ||
+    personality.pets === null ||
+    personality.pets === "" ||
+    personality.preferSmoking === null ||
+    personality.preferSmoking === "" ||
+    personality.preferActiveTime === null ||
+    personality.preferActiveTime === "" ||
+    personality.preferPets === null ||
+    personality.preferPets === "" ||
+    personality.preferAge === null ||
+    personality.preferAge === ""
   ) {
     alert("성향을 모두 선택해주세요.");
     return false;
@@ -80,14 +88,22 @@ function socialvalidateForm(nickname: string, personality: PersonalityData, regi
   }
 
   if (
-    !personality.mbti ||
-    !personality.smoking ||
-    !personality.activeTime ||
-    !personality.pets ||
-    !personality.preferSmoking ||
-    !personality.preferActiveTime ||
-    !personality.preferPets ||
-    !personality.preferAge
+    personality.mbti === null ||
+    personality.mbti === "" ||
+    personality.smoking === null ||
+    personality.smoking === "" ||
+    personality.activeTime === null ||
+    personality.activeTime === "" ||
+    personality.pets === null ||
+    personality.pets === "" ||
+    personality.preferSmoking === null ||
+    personality.preferSmoking === "" ||
+    personality.preferActiveTime === null ||
+    personality.preferActiveTime === "" ||
+    personality.preferPets === null ||
+    personality.preferPets === "" ||
+    personality.preferAge === null ||
+    personality.preferAge === ""
   ) {
     alert("성향을 모두 선택해주세요.");
     return false;
