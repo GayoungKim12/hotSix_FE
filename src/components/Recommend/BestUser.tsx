@@ -16,7 +16,7 @@ interface UserInfo {
 }
 
 interface BestUserProps {
-  data: UserInfo | undefined;
+  data: UserInfo;
   color: string;
 }
 
@@ -25,10 +25,6 @@ const BestUser = (props: BestUserProps) => {
   const navigate = useNavigate();
 
   console.log(data);
-
-  if (!data) {
-    return <div>지역과 성별이 동일한 유저가 존재하지 않습니다.</div>;
-  }
 
   return (
     <div
