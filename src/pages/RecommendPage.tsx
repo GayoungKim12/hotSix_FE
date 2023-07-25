@@ -44,6 +44,7 @@ const RecommendPage = () => {
             <img src="/loading.gif" className="w-16 cursor-pointer" />
           </div>
         )}
+        {recommendList && recommendList.length === 0 && <div>추천 가능한 유저가 존재하지 않습니다.</div>}
         {recommendList && recommendList.length !== 0 && <BestUser data={recommendList[0]} color={colors[index]} />}
         <div className="flex flex-wrap justify-between items-start content-start w-full">
           {recommendList &&
