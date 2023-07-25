@@ -49,7 +49,7 @@ const RecommendModal = ({ data }: RecommendDataProps) => {
           </div>
 
           <article className="flex flex-col gap-1 text-xs">
-            <p>{data.age}살</p>
+            <p>{data.age}세</p>
             <p>{data.region}</p>
             <section className=" text-main-400">
               <button className="border-2 border-main-400 rounded-full px-2 py-1 mr-1">
