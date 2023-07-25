@@ -4,3 +4,4 @@ import { atom } from "jotai";
 export const isSelectedFindRoomAtom = atom<boolean>(true);
 export const isSelectedHasRoomAtom = atom<boolean>(false);
 export const regionIdAtom = atom<number | undefined>(undefined);
+export const recommendAtom = atom(true);
