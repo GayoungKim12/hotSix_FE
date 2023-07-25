@@ -62,13 +62,6 @@ const MainPage = () => {
   useEffect(() => {
     if (!userId) return;
 
-    //모달창 뒤에 스크롤방지
-    document.body.style.cssText = `
-    position: fixed; 
-    top: -${window.scrollY}px;
-    overflow-y: scroll;
-    width: 100%;`;
-
     //추천인 불러오기
     JsonConfig("get", `api/personality/${userId}/1`, null, undefined)
       .then((response) => {
@@ -78,11 +71,6 @@ const MainPage = () => {
       .catch((error) => {
         console.log(error);
       });
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = "";
-      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
-    };
   }, [userId]);
 
   //방 구해요 게시물 불러오는 함수 useCallback 씌우기 (의존성 배열 issue)
@@ -189,7 +177,8 @@ const MainPage = () => {
   }, [intersectionCallback]);
 
   // console.log(regionList);
-  // console.log(`userId : ${userId}`);
+
+  console.log(`userId : ${userId}`);
   console.log("boardOneList :", boardOneList);
   // console.log("boardTwoList :", boardTwoList);
   // console.log(`regionId : ${regionId}`);
