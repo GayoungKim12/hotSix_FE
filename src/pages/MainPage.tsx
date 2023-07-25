@@ -252,7 +252,7 @@ const MainPage = () => {
             </>
           )}
 
-          <div className="flex justify-end mb-10 pt-1 pb-6 mr-5">
+          <div className="flex justify-end mb-10 pt-5 pb-6 mr-5">
             <div
               className="fixed bottom-20 right-5 flex justify-center items-center w-12 h-12 bg-main-300 rounded-full"
               onClick={() => navigate("/post")}
