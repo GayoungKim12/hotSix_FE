@@ -18,8 +18,10 @@ const AddImages = (props: AddImagesProps) => {
     }
     if (!e.target.files) return null;
 
-    const file = e.target.files[0];
-    setFiles([...files, file]);
+    if (e.target.files?.[0] instanceof File) {
+      const file = e.target.files[0];
+      setFiles([...files, file]);
+    }
   };
 
   const deleteImgPath = (e: React.MouseEvent<HTMLButtonElement>, url: string) => {
