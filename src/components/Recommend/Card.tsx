@@ -74,7 +74,7 @@ const Card = (props: CardProps) => {
             </span>
             <span className="rounded-full border border-white px-2">{data.personality.pets === 0 ? "#반려동물 있음" : "#반려동물 없음"}</span>
           </div>
-          <button className="absolute flex items-center justify-center bottom-3 right-3 text-xl" onClick={clickMore}>
+          <button className="absolute flex items-center w-4 h-4 rounded-full justify-center bottom-3 right-3 text-xl" onClick={clickMore}>
             <HiOutlineChevronRight />
           </button>
         </div>
