@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { FaUser } from "react-icons/fa";
 import { recommendAtom } from "./Jotai";
+import { useNavigate } from "react-router-dom";
 
 interface RecommendDataProps {
   data: {
@@ -19,12 +20,17 @@ interface RecommendDataProps {
   };
 }
 const RecommendModal = ({ data }: RecommendDataProps) => {
+  const navigate = useNavigate();
   const [recommend, setRecommend] = useAtom(recommendAtom);
 
   const onCloseRecommendModal = () => {
     setRecommend(!recommend);
   };
   console.log(data);
+
+  const moveToProfilePage = () => {
+    navigate(`/profile/${data.memberId}`);
+  };
   return (
     <>
       <section className="fixed top-0 left-0 right-0 bottom-0 z-40 bg-black opacity-40"></section>
@@ -64,7 +70,9 @@ const RecommendModal = ({ data }: RecommendDataProps) => {
           </article>
         </div>
         <section className="flex flex-rows w-full rounded-b-2xl bg-main-400 text-white text-sm font-light">
-          <button className="flex-1 px-3 py-2 cursor-pointer border-white border-r-2">자세히 보기</button>
+          <button className="flex-1 px-3 py-2 cursor-pointer border-white border-r-2" onClick={moveToProfilePage}>
+            자세히 보기
+          </button>
           <button className="flex-1 px-3 py-2 cursor-pointer" onClick={onCloseRecommendModal}>
             닫기
           </button>
