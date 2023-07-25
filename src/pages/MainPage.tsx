@@ -6,12 +6,14 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import AreaModal from "../components/Main/AreaModal";
 import { useNavigate } from "react-router-dom";
-import { SetStateAction, useAtom } from "jotai";
+import { SetStateAction, useAtom, useAtomValue } from "jotai";
 import { Dispatch } from "react";
 import RoomExistence from "../components/Main/RoomExistence";
 import { getFindRoomPostData, getHasRoomPostData, loadMoreFindRoom, loadMoreHasRoom, regionAll } from "../components/Main/ApiCall";
-import { isSelectedFindRoomAtom, isSelectedHasRoomAtom, regionIdAtom } from "../components/Main/Jotai";
+import { isSelectedFindRoomAtom, isSelectedHasRoomAtom, recommendAtom, regionIdAtom } from "../components/Main/Jotai";
 import { getUserId } from "../components/API/TokenAction";
+import RecommendModal from "../components/Main/RecommendModal";
+import { JsonConfig } from "../components/API/AxiosModule";
 
 interface RegionProps {
   regionId: number;
@@ -42,6 +44,8 @@ interface GetFindRoomProps {
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const recommend = useAtomValue(recommendAtom);
+  const [recommendData, setRecommendData] = useState([]);
   const [isSelectedFindRoom, setIsSelectedFindRoom] = useAtom(isSelectedFindRoomAtom);
   const [isSelectedHasRoom, setIsSelectedHasRoom] = useAtom(isSelectedHasRoomAtom);
   const [activeAreaModal, setActiveAreaModal] = useState<boolean>(false);
@@ -55,6 +59,32 @@ const MainPage = () => {
   const target = useRef<HTMLDivElement | null>(null);
   const userId = getUserId();
 
+  useEffect(() => {
+    if (!userId) return;
+
+    //모달창 뒤에 스크롤방지
+    document.body.style.cssText = `
+    position: fixed; 
+    top: -${window.scrollY}px;
+    overflow-y: scroll;
+    width: 100%;`;
+
+    //추천인 불러오기
+    JsonConfig("get", `api/personality/${userId}/1`, null, undefined)
+      .then((response) => {
+        console.log(response);
+        setRecommendData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    };
+  }, [userId]);
+
   //방 구해요 게시물 불러오는 함수 useCallback 씌우기 (의존성 배열 issue)
   const getFindRoomPostDataCall = useCallback(async ({ setBoardOneList, regionId, setLastPostId, userId }: GetFindRoomProps) => {
     await getFindRoomPostData({ setBoardOneList, regionId, setLastPostId, userId });
@@ -65,12 +95,7 @@ const MainPage = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
     setBoardTwoList([]);
     setIsSelectedHasRoom(false);
-    getFindRoomPostData({
-      setBoardOneList,
-      regionId,
-      setLastPostId,
-      userId,
-    });
+    getFindRoomPostDataCall({ setBoardOneList, regionId, setLastPostId, userId });
     setIsSelectedFindRoom(true);
   };
 
@@ -95,17 +120,19 @@ const MainPage = () => {
   };
 
   //첫화면 지역데이터 가져오기
+  const regionAllCallback = useCallback(regionAll, [regionId, setRegionId, userId]);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
     if (!userId) return;
-    regionAll({
+    regionAllCallback({
       setRegionList,
       setUserRegion,
       setRegionId,
       regionId,
       userId,
     });
-  }, [regionId, setRegionId, setRegionList, userId]);
+  }, [regionAllCallback, regionId, setRegionId, setRegionList, userId]);
 
   //첫화면 모든지역 게시물 가져오기(방구해요)
   useEffect(() => {
@@ -164,7 +191,7 @@ const MainPage = () => {
   // console.log(regionList);
   // console.log(`userId : ${userId}`);
   console.log("boardOneList :", boardOneList);
-  console.log("boardTwoList :", boardTwoList);
+  // console.log("boardTwoList :", boardTwoList);
   // console.log(`regionId : ${regionId}`);
   // console.log(`userRegion : ${userRegion}`);
   // console.log(`lastPostId : ${lastPostId}`);
@@ -195,6 +222,10 @@ const MainPage = () => {
     <>
       <div className="bg-main-100 min-h-screen">
         <section className="fixed w-full z-20 top-0 left-0 shadow bg-main-100">
+          {recommend &&
+            recommendData.map((datas) => {
+              return <RecommendModal data={datas} />;
+            })}
           <Header />
           <div className="relative mt-16" onClick={handleAreaModal}>
             <div className="px-4 py-2 text-center bg-white">{regionName}</div>
