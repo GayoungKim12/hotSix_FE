@@ -217,7 +217,7 @@ const MainPage = () => {
             })}
           <Header />
           <div className="relative mt-16" onClick={handleAreaModal}>
-            <div className="px-4 py-2 text-center bg-white">{regionName}</div>
+            <div className="px-4 py-2 text-center bg-white cursor-pointer">{regionName}</div>
             <div className="absolute bottom-2 right-2 cursor-pointer">
               <RxTriangleDown className="text-3xl text-main-300" />
             </div>
