@@ -66,7 +66,7 @@ const CommentToolButtons = (props: CommentToolButtonsProps) => {
   return (
     <div onClick={() => setShowCommentButtons(false)}>
       <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-black opacity-30" />
-      <div className="fixed bottom-4 flex flex-col items-center z-50 w-full text-md">
+      <div className="fixed bottom-4 flex flex-col items-center z-50 w-full text-md animate-[fadeInUp_0.25s_ease-in-out]">
         <div className="mb-2 w-11/12 rounded-xl bg-white shadow opacity-80">
           {myComment ? (
             <>
