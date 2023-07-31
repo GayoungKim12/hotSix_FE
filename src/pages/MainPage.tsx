@@ -180,6 +180,7 @@ const MainPage = () => {
 
   console.log(`userId : ${userId}`);
   console.log("boardOneList :", boardOneList);
+  console.log("이거봐라!!!!!!!!!!!!!!!!!!!!!!!!!!!", recommend);
   // console.log("boardTwoList :", boardTwoList);
   // console.log(`regionId : ${regionId}`);
   // console.log(`userRegion : ${userRegion}`);
