@@ -1,16 +1,21 @@
+import { useSetAtom } from "jotai";
+import { recommendAtom } from "../Main/Jotai";
+
 interface ModalProps {
   type: "alert" | "confirm";
   content: string;
-  handleModal: () => void;  //모달을 닫는 함수
+  handleModal: () => void; //모달을 닫는 함수
   handleDelete?: () => void; //로그아웃함수
 }
 
 const Modal = (props: ModalProps) => {
   const { type, content, handleModal, handleDelete } = props;
+  const setRecommend = useSetAtom(recommendAtom);
 
   const handleClick = () => {
     if (handleDelete) {
       handleDelete();
+      setRecommend(true);
     }
     handleModal();
   };
