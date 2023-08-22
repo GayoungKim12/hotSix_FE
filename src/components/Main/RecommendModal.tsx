@@ -42,7 +42,7 @@ const RecommendModal = ({ data }: RecommendDataProps) => {
               {data.userImage === "" ? (
                 <FaUser className="w-full h-full rounded-full border-2 object-contain  bg-white text-main-200" />
               ) : (
-                <img src={data.userImage} className="w-full h-full rounded-full border-2 object-cover" />
+                <img src={data.userImage} alt="추천인 정보" className="w-full h-full rounded-full border-2 object-cover" loading="lazy" />
               )}
             </div>
             <div className="text-center font-bold">{data.nickName}</div>

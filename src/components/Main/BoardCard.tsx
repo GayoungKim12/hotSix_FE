@@ -118,7 +118,7 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
                 <div className="flex items-center gap-2 ">
                   <div className="relative flex justify-center items-center w-12 h-12 border-2 rounded-full bg-white text-black overflow-hidden">
                     {board.userFile !== "" ? (
-                      <img className="w-full h-full object-cover" src={board.userFile} alt={`${board.nickName}의 프로필 이미지`} />
+                      <img className="w-full h-full object-cover" src={board.userFile} alt={`${board.nickName}의 프로필 이미지`} loading="lazy" />
                     ) : (
                       <div className={"absolute top-3 flex justify-center items-center text-4xl text-main-200"}>
                         <FaUser />
@@ -161,7 +161,13 @@ const BoardCard: React.FC<Props> = ({ userId, board, boardList, setBoardList }: 
 
           {board.roomFiles !== "" && (
             <div className="w-full inline-flex flex-col items-center justfiy-center mb-3">
-              <img src={board.roomFiles} className="w-full h-60 object-cover rounded-lg" draggable="false" />
+              <img
+                src={board.roomFiles}
+                alt={`${board.nickName}의 게시글 이미지`}
+                className="w-full h-60 object-cover rounded-lg"
+                draggable="false"
+                loading="lazy"
+              />
             </div>
           )}
 
