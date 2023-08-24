@@ -40,7 +40,7 @@ const Footer = ({ userId }: Props) => {
           <div className="text-xs">프로필</div>
         </div>
         <div className="flex flex-col items-center justify-center w-full text-center text-3xl cursor-pointer" onClick={moveToCart}>
-          {location.pathname.includes("/cart") ? <AiFillHeart className="" /> : <AiOutlineHeart />}
+          {location.pathname.includes("/cart") ? <AiFillHeart /> : <AiOutlineHeart />}
           <div className="text-xs">관심목록</div>
         </div>
         <div className="flex flex-col items-center justify-center w-full text-center text-3xl cursor-pointer" onClick={moveToHome}>

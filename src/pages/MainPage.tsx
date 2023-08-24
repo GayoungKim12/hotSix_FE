@@ -4,16 +4,17 @@ import Header from "../components/Main/Header";
 import { RxTriangleDown } from "react-icons/rx";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { FaPencilAlt } from "react-icons/fa";
-import AreaModal from "../components/Main/AreaModal";
+// import AreaModal from "../components/Main/AreaModal";
 import { useNavigate } from "react-router-dom";
 import { SetStateAction, useAtom, useAtomValue } from "jotai";
 import { Dispatch } from "react";
 import RoomExistence from "../components/Main/RoomExistence";
-import { getFindRoomPostData, getHasRoomPostData, loadMoreFindRoom, loadMoreHasRoom, regionAll } from "../components/Main/ApiCall";
+import { getFindRoomPostData, regionAll } from "../components/Main/ApiCall";
 import { isSelectedFindRoomAtom, isSelectedHasRoomAtom, recommendAtom, regionIdAtom } from "../components/Main/Jotai";
 import { getUserId } from "../components/API/TokenAction";
 import RecommendModal from "../components/Main/RecommendModal";
 import { JsonConfig } from "../components/API/AxiosModule";
+import { lazy } from "react";
 
 interface RegionProps {
   regionId: number;
@@ -41,6 +42,12 @@ interface GetFindRoomProps {
   setLastPostId: Dispatch<SetStateAction<number | null>>;
   userId: number | undefined;
 }
+
+const ApiCallModule = await import("../components/Main/ApiCall");
+const loadMoreFindRoom = ApiCallModule.loadMoreFindRoom;
+const loadMoreHasRoom = ApiCallModule.loadMoreHasRoom;
+const getHasRoomPostData = ApiCallModule.getHasRoomPostData;
+const AreaModal = lazy(() => import("../components/Main/AreaModal"));
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -180,7 +187,7 @@ const MainPage = () => {
 
   console.log(`userId : ${userId}`);
   console.log("boardOneList :", boardOneList);
-  console.log("이거봐라!!!!!!!!!!!!!!!!!!!!!!!!!!!", recommend);
+  // console.log( recommend)
   // console.log("boardTwoList :", boardTwoList);
   // console.log(`regionId : ${regionId}`);
   // console.log(`userRegion : ${userRegion}`);
