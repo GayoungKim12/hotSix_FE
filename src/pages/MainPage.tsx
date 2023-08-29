@@ -65,6 +65,7 @@ const MainPage = () => {
   const [lastPostId, setLastPostId] = useState<number | null>(null);
   const target = useRef<HTMLDivElement | null>(null);
   const userId = getUserId();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!userId) return;
@@ -72,7 +73,6 @@ const MainPage = () => {
     //추천인 불러오기
     JsonConfig("get", `api/personality/${userId}/1`, null, undefined)
       .then((response) => {
-        console.log(response);
         setRecommendData(response.data);
       })
       .catch((error) => {
@@ -131,6 +131,7 @@ const MainPage = () => {
 
   //첫화면 모든지역 게시물 가져오기(방구해요)
   useEffect(() => {
+    setLoading(true);
     //화면에 표시되는 유저가 선택한 첫 지역담기
     const userRegionSigg = regionList?.filter((re) => {
       return re.regionId === regionId;
@@ -142,6 +143,7 @@ const MainPage = () => {
     const fetchData = async () => {
       if (userRegion && isSelectedFindRoom && userId) {
         await getFindRoomPostDataCall({ setBoardOneList, regionId, setLastPostId, userId });
+        setLoading(false);
       } else if (userRegion && isSelectedHasRoom && userId) {
         await getHasRoomPostData({
           setBoardTwoList,
@@ -149,6 +151,7 @@ const MainPage = () => {
           setLastPostId,
           userId,
         });
+        setLoading(false);
       }
     };
     fetchData();
@@ -158,10 +161,7 @@ const MainPage = () => {
   const intersectionCallback = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const entry = entries[0];
-      // console.log("entry", entry);
       if (entry.isIntersecting) {
-        console.log("교차");
-
         if (isSelectedFindRoom) {
           loadMoreFindRoom({ regionId, lastPostId, userId, setBoardOneList, setLastPostId });
         } else if (isSelectedHasRoom) {
@@ -182,17 +182,6 @@ const MainPage = () => {
       observer.disconnect();
     };
   }, [intersectionCallback]);
-
-  // console.log(regionList);
-
-  console.log(`userId : ${userId}`);
-  console.log("boardOneList :", boardOneList);
-  // console.log( recommend)
-  // console.log("boardTwoList :", boardTwoList);
-  // console.log(`regionId : ${regionId}`);
-  // console.log(`userRegion : ${userRegion}`);
-  // console.log(`lastPostId : ${lastPostId}`);
-  // console.log("isLoading :", isLoading);
 
   //지역 선택 시 해당 게시물 가져오기
   const handleRegionArea = (region: RegionProps) => {
@@ -236,6 +225,11 @@ const MainPage = () => {
         </section>
 
         <section className=" mt-20 pt-20">
+          {loading && (
+            <div className="flex justify-center">
+              <img src="/loading.gif" className="w-16 cursor-pointer" />
+            </div>
+          )}
           {boardOneList?.length > 0
             ? boardOneList.map((b, i) => {
                 return (
@@ -252,7 +246,7 @@ const MainPage = () => {
                 );
               })}
 
-          {boardOneList.length === 0 && boardTwoList.length === 0 && (
+          {!loading && boardOneList.length === 0 && boardTwoList.length === 0 && (
             <>
               <div className="pt-20  text-center">
                 <div className="text-xl h-20">게시물이 없습니다 😅</div>
