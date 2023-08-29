@@ -25,18 +25,20 @@ const CartPage = () => {
   const [cartList, setCartList] = useState<CartProps[]>([]);
   const target = useRef<HTMLDivElement | null>(null);
   const userId = getUserId();
+  const [loading, setLoading] = useState(true);
 
   const getLikesData = useCallback(async () => {
     const params = { lastPostId: null, size: 10 };
     await JsonConfig("get", `api/membership/like/${userId}`, null, params).then((response) => {
-      console.log(response.data);
       setCartList(response.data.likeListPost);
       setLastPostId(response.data.lastPostId);
+      setLoading(false);
     });
   }, [userId]);
 
   //좋아요 누른 게시물 불러오는 첫 화면
   useEffect(() => {
+    setLoading(true);
     window.scrollTo({ top: 0, behavior: "auto" });
     if (!userId) return;
     getLikesData();
@@ -48,7 +50,6 @@ const CartPage = () => {
       try {
         const params = { lastPostId: lastPostId, size: 10 };
         const response = await JsonConfig("get", `api/membership/like/${userId}`, null, params);
-        console.log(response.data);
         setCartList((prev) => [...prev, ...response.data.likeListPost]);
         setLastPostId(response.data.lastPostId);
       } catch (error) {
@@ -62,7 +63,6 @@ const CartPage = () => {
     (entries: IntersectionObserverEntry[]) => {
       const entry = entries[0];
       if (entry.isIntersecting) {
-        console.log("교차");
         loadMore();
       }
     },
@@ -79,18 +79,18 @@ const CartPage = () => {
       observer.disconnect();
     };
   }, [intersectionCallback]);
-  // console.log(`target.current :`, target.current);
-  // console.log(`lastPostId : ${lastPostId}`);
-  // console.log(`cartList :`, cartList);
-  // console.log(`loading :${isLoading}`);
-  // console.log(`offset : ${offset}`);
-  console.log(cartList);
+
   return (
     <>
       <div className="min-h-screen bg-main-100">
         <Header />
 
         <section className="mt-10  pt-5 pb-16">
+          {loading && (
+            <div className="flex justify-center">
+              <img src="/loading.gif" className="w-16 cursor-pointer" />
+            </div>
+          )}
           {cartList?.map(
             (cart: {
               postId: number;
@@ -112,7 +112,7 @@ const CartPage = () => {
               );
             }
           )}
-          {cartList.length === 0 && <div className="h-screen text-center p-10 text-xl"> 찜한 게시물이 없습니다 😂</div>}
+          {!loading && cartList.length === 0 && <div className="h-screen text-center p-10 text-xl"> 찜한 게시물이 없습니다 😂</div>}
           <div ref={target}></div>
         </section>
       </div>
